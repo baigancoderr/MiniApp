@@ -45,7 +45,7 @@ const Hero = () => {
         {/* ===== EXISTING CARD (same as before) ===== */}
         <div
           className="rounded-2xl p-4
-          bg-gradient-to-br from-[#0b1220] via-[#0f1a2e] to-[#0b1220]
+          
           border border-blue-500/20 shadow-lg backdrop-blur-xl"
         >
           {/* Top Header */}
@@ -126,7 +126,7 @@ const Hero = () => {
 
         {/* ===== NEW: Ready To Mine Card ===== */}
 <div className="rounded-2xl p-4 
-bg-gradient-to-br  from-[#0b1220] via-[#0f1a2e] to-[#0b1220]
+
 border border-blue-500/20 shadow-lg text-center">
 
   {/* Circle */}
@@ -207,7 +207,7 @@ border border-blue-500/20 shadow-lg text-center">
       {/* Referral Box */}
       <div className="bg-[#111c33] rounded-xl p-3 text-center mb-3 border border-white/10">
         <p className="text-white font-semibold tracking-wide">
-          LMX1696812885
+         CPR1696812885
         </p>
       </div>
 

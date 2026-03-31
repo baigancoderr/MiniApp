@@ -28,7 +28,7 @@ const Footer = () => {
             <span>Wallet</span>
           </div>
 
-          <div onClick={() => navigate("/add-fund")} className={itemClass}>
+          <div onClick={() => navigate("/addfund")} className={itemClass}>
   <Plus size={20} />
   <span>Add Fund</span>
 </div>

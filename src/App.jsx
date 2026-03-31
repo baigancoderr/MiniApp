@@ -4,6 +4,7 @@ import Wallet from "./Pages/Wallet";
 import Upgrade from "./Pages/Upgrade";
 import Settings from "./Pages/Settings";
 import MagicRings from "./Layout/MagicRings";
+import AddFund from "./Pages/AddFund";
 
 function App() {
   return (
@@ -29,12 +30,16 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/upgrade" element={<Upgrade />} />
+          <Route path="/addfund" element={<AddFund />} />
 
           {/* 🔥 SETTINGS ROUTES */}
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/privacy" element={<Settings />} />
           <Route path="/settings/TermCondition" element={<Settings />} />
           <Route path="/settings/FAQ" element={<Settings />} />
+          <Route path="/settings/WalletBreakdown" element={<Settings />} />
+          <Route path="/settings/Referral" element={<Settings />} />
+          <Route path="/settings/Profile" element={<Settings />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -11,10 +11,10 @@ const SettingsComponent = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { icon: <User size={20} />, label: "Profile" },
-    { icon: <Users size={20} />, label: "My Referrals" },
+    { icon: <User size={20} />, label: "Profile" , action: () => navigate("/settings/Profile"),},
+    { icon: <Users size={20} />, label: "My Referrals" , action: () => navigate("/settings/Referral"),},
     { icon: <TrendingUp size={20} />, label: "Referral Earnings History" },
-    { icon: <Wallet size={20} />, label: "Wallet Breakdown" },
+    { icon: <Wallet size={20} />, label: "Wallet Breakdown" , action: () => navigate("/settings/WalletBreakdown"),},
     { icon: <Plus size={20} />, label: "Add Funds" },
     { icon: <Clock size={20} />, label: "Deposit History" },
     { icon: <Download size={20} />, label: "Withdraw USDT" },
@@ -34,7 +34,7 @@ const SettingsComponent = () => {
   ];
 
   return (
-    <div className="pb-24 bg-gradient-to-br from-[#060b18] via-[#0b1225] to-[#060b18] min-h-screen">
+    <div className="pb-24  min-h-screen">
       <div className="w-full max-w-md mx-auto px-2 pt-5">
 
         <motion.div 

@@ -53,7 +53,7 @@ const UpgradeHero = () => {
       <div className="w-full max-w-md space-y-6">
 
         <div className="rounded-xl p-3 
-          bg-gradient-to-br from-[#0a1325] via-[#0f1b33] to-[#0a1325]
+          
           border border-white/10 shadow-2xl backdrop-blur-2xl">
 
           <h2 className="text-white text-lg font-semibold mb-3">Investment Plans</h2>

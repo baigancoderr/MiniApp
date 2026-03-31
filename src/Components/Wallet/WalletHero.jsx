@@ -79,7 +79,7 @@ const WalletHero = () => {
 
         {/* ===== WALLET OVERVIEW ===== */}
         <div className="rounded-2xl p-3
-          bg-gradient-to-br from-[#0a1428] via-[#0f1a2e] to-[#0a1428]
+          
           border border-blue-500/20 shadow-2xl backdrop-blur-2xl">
 
           {/* Header */}
