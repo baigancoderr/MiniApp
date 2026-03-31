@@ -1,4 +1,4 @@
-import { ShieldCheck, ArrowLeft, Lock, Eye, Clock, Users , Settings } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Settings, CheckCircle } from "lucide-react";
 import { useState } from "react";
 
 const TermCondition = ({ onBack }) => {
@@ -7,137 +7,133 @@ const TermCondition = ({ onBack }) => {
   const sections = [
     {
       id: 1,
-      
-      title: "Information We Collect",
-      content: "We collect only the essential information needed to provide you with a seamless and personalized experience. This includes your name, email, and usage data to improve our services.",
+      title: "Acceptance",
+      content: "By accessing, purchasing, or using CIPERA (CIP) tokens or any related services, you agree to be bound by these Terms & Conditions and any future updates. If you do not agree with any part of these Terms, you must not access or use the CIPERA ecosystem.",
       color: "from-blue-500 to-cyan-500"
     },
     {
       id: 2,
-     
-      title: "How We Protect Your Data",
+      title: "Eligibility",
       content: "Your data is encrypted using industry-leading AES-256 encryption and stored on secure servers. We never sell, rent, or share your personal information with third parties for marketing purposes.",
       color: "from-emerald-500 to-teal-500"
     },
     {
       id: 3,
-      
-      title: "Your Rights & Control",
-      content: "You have full control over your data. You can request access, correction, deletion, or export of your data at any time. We respect your privacy choices and make it easy for you to manage them.",
+      title: "Tokenized Property Investment Terms – CIPERA",
+      isList: true, // Flag to identify list section
+      content: [
+        "CIPERA (CIP) is a digital asset built on the Ethereum blockchain using ERC-20 standards.",
+        "The total supply of CIPERA tokens is 100,000,000 (100 million) with an initial launch price of $0.01 USDT.",
+        "CIPERA tokens are designed for utility purposes, including ecosystem payments, trading, liquidity participation, and governance.",
+        "Holding CIPERA tokens does not represent ownership, equity, or legal rights in any company or physical assets.",
+        "The value of CIPERA tokens may fluctuate due to market conditions, and no guarantees of profit or returns are provided.",
+        "Participation in staking, liquidity, or DeFi activities involves risks, including potential loss of funds.",
+        " Users are solely responsible for managing their private keys, wallets, and security measures.",
+        "CIPERA operates in a decentralized environment, and transactions executed via smart contracts are irreversible.",
+        "The project may introduce deflationary mechanisms, vesting schedules, and governance models to maintain long-term ecosystem sustainability.",
+        "By participating in CIPERA, users agree to all associated risks related to blockchain technology, smart contracts, and market volatility."
+      ],
       color: "from-violet-500 to-purple-500"
     },
-    {
-      id: 4,
-      
-      title: "Data Retention",
-      content: "We retain your data only as long as necessary to fulfill the purposes for which it was collected or as required by law. Once no longer needed, your data is securely deleted.",
-      color: "from-amber-500 to-orange-500"
-    },
-    {
-      id: 5,
-    
-      title: "Third-Party Services",
-      content: "We may use trusted third-party services (like analytics and payment processors) that adhere to strict privacy standards. These services have limited access and are bound by confidentiality agreements.",
-      color: "from-rose-500 to-pink-500"
-    }
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-2 py-1 pb-20
-      text-white overflow-hidden">
-
+    <div className="min-h-screen flex items-center justify-center px-2 py-1 pb-20 text-white overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(at_50%_30%,rgba(59,130,246,0.15),transparent)]" />
 
-      {/* <div className="w-full max-w-md  relative z-10"> */}
-         <div className="w-full max-w-md mx-auto px-2 pt-1">
-
+      <div className="w-full max-w-md mx-auto px-1 pt-1">
         {/* Header */}
-       <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
-                    <div className="flex items-center gap-3">
-                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
-                            <ArrowLeft size={20} />
-                        </button>
-                        <h1 className="text-lg font-[Manrope] font-bold">Term & Condition</h1>
-                    </div>
-                    <Settings size={20} className="text-white" />
-                </div>
+        <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2 rounded-xl">
+          <div className="flex items-center gap-3">
+            <button className="p-1.5 rounded-md text-white hover:bg-white/10 transition-colors">
+              <ArrowLeft size={20} />
+            </button>
+            <h1 className="text-lg font-[Manrope] font-bold">Terms & Conditions</h1>
+          </div>
+          <Settings size={20} className="text-white" />
+        </div>
 
-        {/* Main Card with 3D Premium Look */}
-        <div className="rounded-2xl p-3 backdrop-blur-2xl 
-          bg-white/5 border border-white/10 shadow-xl shadow-black/50
-          relative overflow-hidden group">
+        {/* Main Card */}
+        <div className="rounded-2xl p-2 
+          bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] 
+          border border-white/10 shadow-xl shadow-black/50 relative overflow-hidden">
 
           {/* Inner glow effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-50" />
 
           {/* Header inside card */}
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-2 rounded-md bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30 
-                          transition-transform duration-500 group-hover:rotate-12">
-              <ShieldCheck size={20} className="text-white" />
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 rounded-xl bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] shadow-lg shadow-blue-500/30">
+              <ShieldCheck size={24} className="text-white" />
             </div>
             <div>
-              <p className="text-lg font-semibold tracking-tight">We Value Your Privacy</p>
-              <p className="text-gray-400 text-sm">Your trust is our top priority</p>
+              <p className="text-lg font-semibold tracking-tight">We Value Your Trust</p>
+              <p className="text-gray-400 text-xs">Please read carefully before proceeding</p>
             </div>
           </div>
 
-          {/* Privacy Sections with 3D Hover Effect */}
-          <div className="space-y-2">
+          {/* Sections */}
+          <div className="space-y-4">
             {sections.map((section, index) => (
               <div
                 key={section.id}
                 onMouseEnter={() => setHoveredSection(section.id)}
                 onMouseLeave={() => setHoveredSection(null)}
-                className={`group/section rounded-xl p-3 border border-white/10 bg-white/5 
-                  backdrop-blur-xl transition-all duration-500 cursor-pointer
-                  hover:border-white/30 hover:shadow-2xl hover:shadow-black/40
+                className={`group/section rounded-2xl p-5 border border-white/10 
+                  bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]
+                  transition-all duration-500 cursor-pointer hover:border-white/30 
+                  hover:shadow-2xl hover:shadow-black/40
                   ${hoveredSection === section.id 
-                    ? 'scale-[1.03] -translate-y-1 shadow-2xl' 
-                    : 'hover:scale-[1.01]'}`}
+                    ? 'scale-[1.02] -translate-y-1 shadow-2xl' 
+                    : 'hover:scale-[1.005]'}`}
                 style={{
-                  transitionDelay: `${index * 30}ms`,
-                  boxShadow: hoveredSection === section.id 
-                    ? '0 25px 50px -12px rgb(0 0 0 / 0.5)' 
-                    : '0 10px 15px -3px rgb(0 0 0 / 0.3)'
+                  transitionDelay: `${index * 40}ms`,
                 }}
               >
-                <div className="flex items-start gap-5">
-                 
+              {/* Top Row: Icon + Title */}
+<div className="flex items-center gap-3 mb-3">
+  <CheckCircle size={20} className="text-emerald-400 flex-shrink-0" />
+  
+  <h3 className="font-semibold text-lg tracking-tight text-white">
+    {section.title}
+  </h3>
+</div>
 
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-2 tracking-tight text-white">
-                      {section.title}
-                    </h3>
-                    <p className="text-gray-300 text-[14px]">
-                      {section.content}
-                    </p>
-                  </div>
-                </div>
+{/* Full Width Content */}
+<div>
+  {section.isList ? (
+    <ul className="space-y-3 text-[14px] text-gray-300">
+      {section.content.map((item, i) => (
+        <li key={i} className="flex gap-3">
+          <span className="text-emerald-400 mt-1.5">•</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p className="text-gray-300 text-[14px] leading-relaxed">
+      {section.content}
+    </p>
+  )}
+</div>
 
-                {/* Subtle shine effect on hover */}
+                {/* Shine effect on hover */}
                 {hoveredSection === section.id && (
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent 
-                    -skew-x-12 animate-[shine_1.5s_ease-in-out] pointer-events-none" />
+                    -skew-x-12 animate-[shine_1.8s_ease-in-out] pointer-events-none" />
                 )}
               </div>
             ))}
           </div>
 
           {/* Footer Note */}
-          {/* <div className="mt-10 text-center">
-            <p className="text-xs text-gray-500 max-w-xs mx-auto">
-              This Privacy Policy is designed to be transparent and user-friendly. 
-              If you have any questions, feel free to contact us.
+          <div className="mt-8 text-center">
+            <p className="text-xs text-gray-500">
+              By continuing, you acknowledge that you have read and understood these Terms & Conditions.
             </p>
-          </div> */}
-
-         
+          </div>
         </div>
-
-        {/* Trust Badges */}
-      
       </div>
     </div>
   );

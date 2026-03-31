@@ -65,7 +65,7 @@ const AddFundHero = () => {
         <div className="mb-5">
           <p className="text-sm text-gray-400 mb-2">Enter Amount</p>
 
-          <div className="flex items-center justify-between bg-gradient-to-r from-[#0f1a2e] to-[#1a2a45] border border-cyan-400/30 rounded-xl px-4 py-2 relative">
+          <div className="flex items-center justify-between bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] border border-cyan-400/30 rounded-xl px-4 py-2 relative">
             <input
               type="number"
               placeholder="0.00"
@@ -94,7 +94,7 @@ const AddFundHero = () => {
             {open && (
               <div
                 ref={dropdownRef}
-                className="absolute top-full right-3 mt-2 w-40 bg-[#000] border border-white rounded-md shadow-2xl z-50 overflow-hidden py-1"
+                className="absolute top-full right-3 mt-2 w-28 bg-[#000] border border-white rounded-md shadow-2xl z-50 overflow-hidden py-1"
               >
                 {coins.map((coin) => (
                   <div
@@ -103,16 +103,16 @@ const AddFundHero = () => {
                       setSelected(coin);
                       setOpen(false);
                     }}
-                    className={`px-4 py-3 flex items-center gap-3 hover:bg-white/10 cursor-pointer transition ${
+                    className={`px-3 py-1 flex items-center gap-1 hover:bg-white/10 cursor-pointer transition ${
                       selected.name === coin.name ? "bg-white/10" : ""
                     }`}
                   >
-                    <img
+                    {/* <img
                       src={coin.icon}
                       alt={coin.name}
                       className="w-6 h-6 rounded-full"
                       onError={(e) => (e.target.src = "https://via.placeholder.com/24?text=?")}
-                    />
+                    /> */}
                     <span className="text-white font-medium">{coin.name}</span>
                   </div>
                 ))}
@@ -142,7 +142,7 @@ const AddFundHero = () => {
             PAYMENT INSTRUCTIONS
           </p>
 
-          <div className="rounded-2xl p-[1px] bg-gradient-to-br from-blue-500/40 via-purple-500/30 to-cyan-500/40 border border-white shadow-xl overflow-hidden">
+          <div className="rounded-xl p-[0.7px] bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] border border-white shadow-xl overflow-hidden">
             <div className="rounded-2xl p-5 bg-white/5 backdrop-blur-xl border border-white/10 space-y-5">
               
               {/* First Item - Icon + Text in same row */}
@@ -191,8 +191,8 @@ const AddFundHero = () => {
         </div>
 
         {/* Button */}
-        <button className="w-full py-3 rounded-xl font-semibold text-md tracking-wide
-          bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500
+        <button className="w-full py-3  rounded-xl font-semibold text-md tracking-wide
+        bg-[linear-gradient(0deg,_#587FFF_0%,_#09239F_70%)] 
           shadow-xl shadow-blue-500/40 hover:brightness-110 transition active:scale-[0.98]">
          Submit
         </button>

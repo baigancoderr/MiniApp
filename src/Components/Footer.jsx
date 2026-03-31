@@ -24,13 +24,13 @@ const Footer = () => {
 
           {/* Wallet */}
           <div onClick={() => navigate("/wallet")} className={itemClass}>
-            <Wallet size={20} />
-            <span>Wallet</span>
+            <Wallet size={16} />
+            <span className="text-[10px]">Wallet</span>
           </div>
 
           <div onClick={() => navigate("/addfund")} className={itemClass}>
-  <Plus size={20} />
-  <span>Add Fund</span>
+  <Plus size={16} />
+  <span className="text-[10px]">Add Fund</span>
 </div>
 
           {/* Center Button */}
@@ -43,7 +43,7 @@ const Footer = () => {
 
   {/* Button */}
   <div
-    className="relative w-12 h-12 flex items-center justify-center rounded-xl
+    className="relative w-10 h-10 flex items-center justify-center rounded-xl
     bg-gradient-to-r from-blue-500 to-cyan-400
     transition-all duration-300
     group-hover:scale-110 
@@ -51,24 +51,24 @@ const Footer = () => {
     group-hover:rotate-6
     group-hover:shadow-[0_10px_25px_rgba(0,114,255,0.5)]"
   >
-    <Home size={28} className="text-white group-hover:drop-shadow-lg transition" />
+    <Home size={20} className="text-white group-hover:drop-shadow-lg transition" />
   </div>
 
-  <p className="text-white text-sm text-center mt-1 transition">
+  <p className="text-white text-[12px] text-center mt-1 transition">
     Home
   </p>
 </div>
 
           {/* Upgrades */}
           <div onClick={() => navigate("/upgrade")} className={itemClass}>
-            <TrendingUp size={20} />
-            <span>Invest Now</span>
+            <TrendingUp size={16} />
+            <span className="text-[10px]">Invest Now</span>
           </div>
 
           {/* Settings */}
           <div onClick={() => navigate("/settings")} className={itemClass}>
-            <Settings size={20} />
-            <span>Settings</span>
+            <Settings size={16} />
+            <span className="text-[10px]">Settings</span>
           </div>
         </div>
       </div>

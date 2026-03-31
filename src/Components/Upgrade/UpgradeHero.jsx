@@ -54,13 +54,13 @@ const UpgradeHero = () => {
 
         <div className="rounded-xl p-3 
           
-          border border-white/10 shadow-2xl backdrop-blur-2xl">
+          border border-white/10 shadow-xl bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
 
           <h2 className="text-white text-lg font-semibold mb-3">Investment Plans</h2>
 
           {/* 2x2 Grid Cards */}
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <TiltCard>
+            <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
               <p className="text-gray-400 text-sm ">Total Investment</p>
               {/* <p className="text-white text-md font-medium mt-1">Free Miner</p> */}
               <p className="text-emerald-400 text-md font-semibold mt-1">10</p>
@@ -76,7 +76,7 @@ const UpgradeHero = () => {
               {/* <p className="text-white text-md font-medium mt-1">Free Miner</p> */}
               <p className="text-emerald-400 text-md font-semibold mt-1">10</p>
             </TiltCard>
-  <TiltCard>
+  <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
               <p className="text-gray-400 text-sm ">Total Burned</p>
               {/* <p className="text-white text-md font-medium mt-1">Free Miner</p> */}
               <p className="text-emerald-400 text-md font-semibold mt-1">10</p>
@@ -92,7 +92,7 @@ const UpgradeHero = () => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="Enter amount to deposit"
-                className="w-full bg-[#13233f] border border-white/10 focus:border-cyan-400 
+                className="w-full bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] border border-white/10 focus:border-cyan-400 
                          rounded-md px-6 py-2 text-white text-md placeholder-gray-500 
                          focus:outline-none shadow-inner transition-all"
               />
@@ -101,9 +101,9 @@ const UpgradeHero = () => {
           </div>
 
           {/* Auto-Desc Upgrade Box */}
-          <div className="bg-gradient-to-br from-[#1a4a8c] to-[#0b6cff] rounded-xl border  mb-6 shadow-1xl">
-            <div className="bg-[#0b1220] rounded-[10px] p-3">
-              <div className="bg-[#13233f] rounded-xl p-5 border border-blue-400/20">
+          <div className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] rounded-xl border  mb-6 shadow-1xl">
+            <div className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] rounded-[10px] p-3">
+              <div className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] rounded-xl p-5 border border-blue-400/20">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-white font-semibold text-xl">⚙️ Auto-Desc</p>

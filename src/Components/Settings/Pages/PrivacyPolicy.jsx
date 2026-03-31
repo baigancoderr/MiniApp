@@ -82,24 +82,39 @@ const PrivacyPolicy = ({ onBack }) => {
                 </div>
 
         {/* Main Card with 3D Premium Look */}
-        <div className="rounded-2xl p-3 backdrop-blur-2xl 
-          bg-white/5 border border-white/10 shadow-xl shadow-black/50
+        <div className="rounded-2xl p-3  
+          bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] border border-white/10 shadow-xl shadow-black/50
           relative overflow-hidden group">
 
           {/* Inner glow effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-50" />
 
           {/* Header inside card */}
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-2 rounded-md bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30 
-                          transition-transform duration-500 group-hover:rotate-12">
-              <ShieldCheck size={20} className="text-white" />
-            </div>
-            <div>
-              <p className="text-lg font-semibold tracking-tight">We Value Your Privacy</p>
-              <p className="text-gray-400 text-sm">Your trust is our top priority</p>
-            </div>
-          </div>
+          <div className="flex items-start gap-3 mb-4">
+
+  {/* Icon */}
+  <div className="p-2 rounded-md 
+    bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] 
+    shadow-lg shadow-blue-500/30 shrink-0
+    transition-transform duration-500 group-hover:rotate-12">
+    <ShieldCheck size={20} className="text-white" />
+  </div>
+
+  {/* Content */}
+  <div className="flex-1">
+    
+    {/* Title */}
+    <p className="text-lg font-semibold tracking-tight">
+      We Value Your Privacy
+    </p>
+
+    {/* Description FULL WIDTH */}
+    <p className="text-gray-400 text-sm mt-1 leading-relaxed">
+      CIPERA (CIP) is a next-generation digital asset built on the Ethereum blockchain. We are committed to protecting your privacy and ensuring transparency in how your information is collected, used, and stored while interacting with our ecosystem.
+    </p>
+
+  </div>
+</div>
 
           {/* Privacy Sections with 3D Hover Effect */}
           <div className="space-y-2">
@@ -108,7 +123,7 @@ const PrivacyPolicy = ({ onBack }) => {
                 key={section.id}
                 onMouseEnter={() => setHoveredSection(section.id)}
                 onMouseLeave={() => setHoveredSection(null)}
-                className={`group/section rounded-xl p-3 border border-white/10 bg-white/5 
+                className={`group/section rounded-xl p-3 border border-white/10 bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]
                   backdrop-blur-xl transition-all duration-500 cursor-pointer
                   hover:border-white/30 hover:shadow-2xl hover:shadow-black/40
                   ${hoveredSection === section.id 
@@ -121,7 +136,7 @@ const PrivacyPolicy = ({ onBack }) => {
                     : '0 10px 15px -3px rgb(0 0 0 / 0.3)'
                 }}
               >
-                <div className="flex items-start gap-5">
+                <div className="flex items-start gap-4">
                  
 
                   <div className="flex-1">

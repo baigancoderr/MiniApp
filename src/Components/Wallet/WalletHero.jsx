@@ -80,7 +80,7 @@ const WalletHero = () => {
         {/* ===== WALLET OVERVIEW ===== */}
         <div className="rounded-2xl p-3
           
-          border border-blue-500/20 shadow-2xl backdrop-blur-2xl">
+          border border-blue-500/20 shadow-2xl ">
 
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -98,7 +98,7 @@ const WalletHero = () => {
           <div className="grid grid-cols-2 gap-4">
 
             {/* Utility Balance - with tilt */}
-            <TiltCard>
+            <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]" >
               <p className="text-gray-400 text-xs ">UTILITY BALANCE</p>
               <div className="flex items-center gap-3 mt-1">
                
@@ -130,7 +130,7 @@ const WalletHero = () => {
             </TiltCard>
 
             {/* LMX Referral */}
-            <TiltCard>
+            <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
               <p className="text-gray-400 text-xs ">UTILITY BALANCE</p>
               <div className="flex items-center gap-3 mt-1">
                
@@ -143,7 +143,7 @@ const WalletHero = () => {
             </TiltCard>
 
             {/* USDT Referral */}
-             <TiltCard>
+             <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
               <p className="text-gray-400 text-xs ">UTILITY BALANCE</p>
               <div className="flex items-center gap-3 mt-1">
                
@@ -169,7 +169,7 @@ const WalletHero = () => {
             </TiltCard>
 
             {/* Staking Earnings */}
-         <TiltCard>
+         <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
               <p className="text-gray-400 text-xs ">UTILITY BALANCE</p>
               <div className="flex items-center gap-3 mt-1">
                
@@ -182,7 +182,7 @@ const WalletHero = () => {
             </TiltCard>
 
             {/* USDT Earning */}
-            <TiltCard>
+            <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
               <p className="text-gray-400 text-xs ">UTILITY BALANCE</p>
               <div className="flex items-center gap-3 mt-1">
                
@@ -212,8 +212,8 @@ const WalletHero = () => {
 
         {/* ===== MINING HISTORY ===== */}
         <div className="rounded-2xl p-3
-          bg-gradient-to-br from-[#0a1428] via-[#0f1a2e] to-[#0a1428]
-          border border-blue-500/20 shadow-2xl backdrop-blur-2xl">
+          bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]
+          border border-blue-500/50 shadow-2xl backdrop-blur-2xl">
 
           <div className="flex justify-between items-center mb-5">
             <h3 className="text-white font-semibold text-lg">Mining History</h3>
@@ -223,7 +223,7 @@ const WalletHero = () => {
           </div>
 
           {/* Active Mining */}
-          <TiltCard className="mb-4 bg-[#111c33]/80 border-white/10">
+          <TiltCard className="mb-4 bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] border-white/10">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-500/10 rounded-2xl">
@@ -252,7 +252,7 @@ const WalletHero = () => {
           </TiltCard>
 
           {/* Completed Mining */}
-          <TiltCard className="bg-[#111c33]/80 border-white/10">
+          <TiltCard className="bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] border-white/10">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-500/10 rounded-2xl">

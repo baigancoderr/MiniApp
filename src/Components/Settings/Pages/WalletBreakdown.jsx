@@ -294,7 +294,7 @@ const WalletBreakdown = () => {
         <p className="text-xs uppercase  text-gray-400">TOTAL PORTFOLIO VALUE</p>
         <div className="flex items-baseline gap-2 mt-1">
           <span 
-            className="text-2xl font-semibold"
+            className="text-xl font-semibold"
            
           >
             0.0000
@@ -304,7 +304,7 @@ const WalletBreakdown = () => {
       </div>
 
       <div className="text-right">
-        <p className="text-lg font-semibold">$0.00 USD</p>
+        <p className="text-md font-semibold">$0.00 USD</p>
         <p className="text-xs text-emerald-400">+0.00% (24H)</p>
       </div>
     </div>

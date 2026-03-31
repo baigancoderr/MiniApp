@@ -48,11 +48,11 @@ const FAQ = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-2 py-3 pb-20 text-white overflow-hidden bg-black relative">
+    <div className="min-h-screen flex items-center justify-center px-2 py-3 pb-20 text-white overflow-hidden  relative">
 
       {/* Deep 3D Background Glows */}
-      <div className="absolute inset-0 bg-[radial-gradient(at_50%_20%,rgba(59,130,246,0.18),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(at_30%_70%,rgba(34,211,238,0.12),transparent_60%)]" />
+      {/* <div className="absolute inset-0 bg-[radial-gradient(at_50%_20%,rgba(59,130,246,0.18),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(at_30%_70%,rgba(34,211,238,0.12),transparent_60%)]" /> */}
 
       <div className="w-full max-w-md mx-auto">
 
@@ -86,8 +86,8 @@ const FAQ = ({ onBack }) => {
                 </div>
 
         {/* Premium 3D Main Card */}
-        <div className="relative rounded-lg p-3 backdrop-blur-3xl 
-          bg-gradient-to-br from-white/[0.07] to-white/[0.02]
+        <div className="relative rounded-lg p-3 
+          bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]
           border border-white/10 shadow-lg shadow-black/80
           overflow-hidden">
 
