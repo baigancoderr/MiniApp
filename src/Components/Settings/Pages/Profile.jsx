@@ -2,9 +2,10 @@ import React from "react";
 import { ArrowLeft, Settings, Copy, Share2 } from "lucide-react";
 import userimg2 from "../../../assets/Setting/user-img.jpeg";
 import cipera from "../../../assets/Setting/cipera.png";
-import user from "../../../assets/logo.png"; 
+import { useNavigate } from "react-router-dom";
 
 const Profile = ({ onBack }) => {
+    const navigate = useNavigate();
     const stats = [
         { label: "Daily Earnings", value: "18", sub: "/day", usd: "$0.90" },
         { label: "Utility Wallet", value: "0.00", usd: "$0.00" },
@@ -17,26 +18,32 @@ const Profile = ({ onBack }) => {
     ];
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-2 py-3 pb-20 text-white  relative">
+        <div className="min-h-screen flex items-start justify-center px-2 py-3 pb-20 text-white relative overflow-x-hidden">
 
-         
+
             <div className="w-full max-w-md mx-auto">
 
-              
+
 
                 {/* HEADER */}
                 <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
                     <div className="flex items-center gap-3">
-                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
+                        {/* <button className="p-1.5 rounded-md text-[#FFFFFF]">
+                            <ArrowLeft size={20} />
+                        </button> */}
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="p-1.5 rounded-md text-[#FFFFFF]"
+                        >
                             <ArrowLeft size={20} />
                         </button>
-                        <h1 className="text-lg font-[Manrope] font-bold">Profile</h1>
+                        <h2 className="text-lg font-[Manrope] font-bold">Profile</h2>
                     </div>
                     <Settings size={20} className="text-white" />
                 </div>
 
                 {/* PROFILE CARD */}
-                <div className="px-4">
+                <div className="px-2 xs:px-4">
                     <div className="relative rounded-2xl border-2 border-[#81ECFF99] p-[1px] mb-5 
           bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
 
@@ -107,18 +114,18 @@ const Profile = ({ onBack }) => {
                                             shrink-0
                                         "
                                         >
-                                           <img src={cipera} alt="" />
+                                            <img src={cipera} alt="" />
                                         </div>
 
                                         {/* CONTENT (RIGHT) */}
                                         <div className="flex-1">
 
-                                            <p className="text-sm text-[#fff] font-[Manrope] font-[400]">
+                                            <p className="text-xs text-[#fff] font-[Manrope] font-[500]">
                                                 {item.label}
                                             </p>
 
                                             <div className="flex items-end gap-1 mt-1">
-                                                <p className="text-lg font-bold font-[Space Grotesk] text-white">
+                                                <p className="text-base font-bold font-[Space Grotesk] text-white">
                                                     {item.value}
                                                 </p>
                                                 {item.sub && (
@@ -143,29 +150,29 @@ const Profile = ({ onBack }) => {
 
                     {/* REFERRAL */}
                     {/* <div className="rounded-2xl p-[1px] bg-[#81ECFF]"> */}
-                        <div className="bg-[#1B2028] border border-[#81ECFF] rounded-xl p-4">
+                    <div className="bg-[#1B2028] border border-[#81ECFF] rounded-xl p-4">
 
-                            <p className="text-base font-[Manrope] text-white font-[700] mb-3">
-                                Your Referral ID
-                            </p>
+                        <p className="text-base font-[Manrope] text-white font-[700] mb-3">
+                            Your Referral ID
+                        </p>
 
-                            <div className="bg-[#000] border border-[#81ECFF] rounded-full py-3 text-center font-[Poppins] font-[400] text-[#fff] text-base tracking-widest mb-4">
-                                CIP579317981
-                            </div>
-
-                            <div className="flex gap-3">
-                                <button className="flex-1 bg-[linear-gradient(0deg,_#587FFF_0%,_#09239F_70%)] font-[Poppins] font-[400] text-[#fff] text-base py-3 rounded-full flex items-center justify-center gap-2">
-                                    <Copy size={18} />
-                                    Copy Link
-                                </button>
-
-                                <button className="flex-1 bg-[linear-gradient(0deg,_#587FFF_0%,_#09239F_70%)] font-[Poppins] font-[400] text-[#fff] text-base py-3 rounded-full flex items-center justify-center gap-2">
-                                    <Share2 size={18} />
-                                    Share
-                                </button>
-                            </div>
-
+                        <div className="bg-[#000] border border-[#81ECFF] rounded-full py-3 text-center font-[Poppins] font-[400] text-[#fff] text-base tracking-widest mb-4">
+                            CIP579317981
                         </div>
+
+                        <div className="flex gap-3">
+                            <button className="flex-1 bg-[linear-gradient(0deg,_#587FFF_0%,_#09239F_70%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
+                                <Copy size={16} />
+                                Copy Link
+                            </button>
+
+                            <button className="flex-1 bg-[linear-gradient(0deg,_#587FFF_0%,_#09239F_70%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
+                                <Share2 size={16} />
+                                Share
+                            </button>
+                        </div>
+
+                    </div>
                     {/* </div> */}
 
                 </div>

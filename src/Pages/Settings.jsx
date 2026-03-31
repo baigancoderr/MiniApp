@@ -9,7 +9,9 @@ import Referral from "../Components/Settings/Pages/Referral";
 import FAQ from "../Components/Settings/Pages/FAQ";
 import Profile from "../Components/Settings/Pages/Profile";
 import bgImg from "../assets/bgImg.png";
-
+import ReferralEarningsHistory from "../Components/Settings/Pages/ReferralEarningsHistory";
+import DepositHistory from "../Components/Settings/Pages/DepositHistory";
+import WithdrawUsdt from "../Components/Settings/Pages/WithdrawUsdt";
 const Settings = () => {
   const location = useLocation();
   const [page, setPage] = useState("settings");
@@ -18,20 +20,25 @@ const Settings = () => {
 useEffect(() => {
   if (location.pathname.includes("privacy")) {
     setPage("privacy");
-  } else if (location.pathname.includes("TermCondition")) {
+  } else if (location.pathname.includes("term-condition")) {
     setPage("TermCondition");
-  } else if (location.pathname.includes("FAQ")) {
+  } else if (location.pathname.includes("faqs")) {
     setPage("FAQ");
+    } else if (location.pathname.includes("deposit-history")) {
+    setPage("DepositHistory");
+  } else if (location.pathname.includes("withdraw-usdt")) {
+    setPage("WithdrawUsdt");
   } 
-   else if (location.pathname.includes("FAQ")) {
-    setPage("FAQ");
-  }else if (location.pathname.includes("WalletBreakdown")) {
+   else if (location.pathname.includes("AddFunds")) {
+    setPage("AddFunds");
+  }else if (location.pathname.includes("wallet-breakdown")) {
     setPage("WalletBreakdown");
-  }
-  else if (location.pathname.includes("Referral")) {
+
+  }else if (location.pathname.includes("referral-earning-history")) {
+  setPage("ReferralEarningsHistory");
+    }else if (location.pathname.includes("referral")) {
     setPage("Referral");
-  }
-   else if (location.pathname.includes("Profile")) {
+}else if (location.pathname.includes("profile")) {
     setPage("Profile");
   }
   else {
@@ -45,13 +52,15 @@ useEffect(() => {
       {page === "settings" && <SettingsComponent />}
 
       {page === "privacy" && <PrivacyPolicy />}
+      {page === "withdrawUsdt" && <WithdrawUsdt />}
        {page === "FAQ" && <FAQ />}
-
       {page === "TermCondition" && <TermCondition />}
-
       {page === "WalletBreakdown" && <WalletBreakdown />}
       {page === "Referral" && <Referral />}
       {page === "Profile" && <Profile />}
+      {page === "ReferralEarningsHistory" && <ReferralEarningsHistory />}
+      {page === "DepositHistory" && <DepositHistory />}
+      {page === "WithdrawUsdt" && <WithdrawUsdt />}
 
 
       <Footer />

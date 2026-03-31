@@ -34,12 +34,15 @@ function App() {
 
           {/* 🔥 SETTINGS ROUTES */}
           <Route path="/settings" element={<Settings />} />
+          <Route path="/settings/profile" element={<Settings />} />
+          <Route path="/settings/referral" element={<Settings />} />
+          <Route path="/settings/referral-earning-history" element={<Settings />} />
+          <Route path="/settings/wallet-breakdown" element={<Settings />} />
+          <Route path="/settings/deposit-history" element={<Settings />} />
+          <Route path="/settings/withdraw-usdt" element={<Settings />} />
+          <Route path="/settings/faqs" element={<Settings />} />
           <Route path="/settings/privacy" element={<Settings />} />
-          <Route path="/settings/TermCondition" element={<Settings />} />
-          <Route path="/settings/FAQ" element={<Settings />} />
-          <Route path="/settings/WalletBreakdown" element={<Settings />} />
-          <Route path="/settings/Referral" element={<Settings />} />
-          <Route path="/settings/Profile" element={<Settings />} />
+          <Route path="/settings/term-condition" element={<Settings />} />
         </Routes>
       </BrowserRouter>
     </div>

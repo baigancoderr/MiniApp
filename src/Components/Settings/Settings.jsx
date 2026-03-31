@@ -11,20 +11,20 @@ const SettingsComponent = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { icon: <User size={20} />, label: "Profile" , action: () => navigate("/settings/Profile"),},
-    { icon: <Users size={20} />, label: "My Referrals" , action: () => navigate("/settings/Referral"),},
-    { icon: <TrendingUp size={20} />, label: "Referral Earnings History" },
-    { icon: <Wallet size={20} />, label: "Wallet Breakdown" , action: () => navigate("/settings/WalletBreakdown"),},
-    { icon: <Plus size={20} />, label: "Add Funds" },
-    { icon: <Clock size={20} />, label: "Deposit History" },
-    { icon: <Download size={20} />, label: "Withdraw USDT" },
-    { icon: <Download size={20} />, label: "FAQ" ,action: () => navigate("/settings/FAQ"),},
+    { icon: <User size={20} />, label: "Profile" , action: () => navigate("/settings/profile"),},
+    { icon: <Users size={20} />, label: "My Referrals" , action: () => navigate("/settings/referral"),},
+    { icon: <TrendingUp size={20} />, label: "Referral Earnings History", action: () => navigate("/settings/referral-earning-history"), },
+    { icon: <Wallet size={20} />, label: "Wallet Breakdown" , action: () => navigate("/settings/wallet-breakdown"),},
+    { icon: <Plus size={20} />, label: "Add Funds", action: () => navigate("/addfund"), },
+    { icon: <Clock size={20} />, label: "Deposit History", action: () => navigate("/settings/deposit-history"), },
+    { icon: <Download size={20} />, label: "Withdraw USDT", action: () => navigate("/settings/withdraw-usdt"), },
+    { icon: <Download size={20} />, label: "FAQs" ,action: () => navigate("/settings/faqs"),},
 
     // 🔥 ROUTES
     {
       icon: <Download size={20} />,
       label: "Term Condition",
-      action: () => navigate("/settings/TermCondition"),
+      action: () => navigate("/settings/term-condition"),
     },
     {
       icon: <Download size={20} />,
