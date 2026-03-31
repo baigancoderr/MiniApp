@@ -1,5 +1,5 @@
-import { ArrowLeft } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { ArrowLeft, Settings, Copy, Share2 } from "lucide-react";
 
 const AddFundHero = () => {
   const coins = [
@@ -44,12 +44,22 @@ const AddFundHero = () => {
     <div className="w-full flex justify-center text-white font-poppins">
       <div className="w-full max-w-md px-4 py-4 relative">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
+        {/* <div className="flex items-center gap-3 mb-6">
           <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition">
             <ArrowLeft size={20} />
           </button>
           <h1 className="text-lg font-semibold">Add Funds</h1>
-        </div>
+        </div> */}
+
+         <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
+                    <div className="flex items-center gap-3">
+                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h1 className="text-lg font-[Manrope] font-bold">Add Fund</h1>
+                    </div>
+                    <Settings size={20} className="text-white" />
+                </div>
 
         {/* Amount Input */}
         <div className="mb-5">

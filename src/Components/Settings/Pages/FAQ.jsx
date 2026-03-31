@@ -1,4 +1,4 @@
-import { ArrowLeft, HelpCircle, ChevronDown } from "lucide-react";
+import { ArrowLeft, HelpCircle, ChevronDown, Settings } from "lucide-react";
 import { useState } from "react";
 
 const FAQ = ({ onBack }) => {
@@ -57,7 +57,7 @@ const FAQ = ({ onBack }) => {
       <div className="w-full max-w-md mx-auto">
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
+        {/* <div className="flex items-center gap-4 mb-6">
           <button
             onClick={onBack}
             className="p-1 rounded-md bg-white/5 hover:bg-white/10 active:bg-white/15 
@@ -74,7 +74,16 @@ const FAQ = ({ onBack }) => {
               Last updated: March 27, 2026
             </p>
           </div>
-        </div>
+        </div> */}
+        <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
+                    <div className="flex items-center gap-3">
+                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h1 className="text-lg font-[Manrope] font-bold">FAQ</h1>
+                    </div>
+                    <Settings size={20} className="text-white" />
+                </div>
 
         {/* Premium 3D Main Card */}
         <div className="relative rounded-lg p-3 backdrop-blur-3xl 

@@ -1,4 +1,4 @@
-import { ShieldCheck, ArrowLeft, Lock, Eye, Clock, Users } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Lock, Eye, Clock, Users ,Settings} from "lucide-react";
 import { useState } from "react";
 
 const PrivacyPolicy = ({ onBack }) => {
@@ -53,7 +53,7 @@ const PrivacyPolicy = ({ onBack }) => {
          <div className="w-full max-w-md mx-auto px-2 pt-1">
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-3">
+        {/* <div className="flex items-center gap-4 mb-3">
           <button
             onClick={onBack}
             className="p-2 rounded-md bg-white/5 hover:bg-white/10 active:bg-white/15 
@@ -70,7 +70,16 @@ const PrivacyPolicy = ({ onBack }) => {
               Last updated: March 27, 2026
             </p>
           </div>
-        </div>
+        </div> */}
+        <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
+                    <div className="flex items-center gap-3">
+                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h1 className="text-lg font-[Manrope] font-bold">Privacy Policy</h1>
+                    </div>
+                    <Settings size={20} className="text-white" />
+                </div>
 
         {/* Main Card with 3D Premium Look */}
         <div className="rounded-2xl p-3 backdrop-blur-2xl 

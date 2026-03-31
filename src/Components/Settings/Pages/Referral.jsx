@@ -1,6 +1,6 @@
 import React from 'react';
 import btmimg from "../../../assets/btmimg.png";
-import { ArrowLeft, ChevronLeft, ChevronRight ,ArrowRight } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight ,ArrowRight,Settings } from "lucide-react";
 import { useState } from "react";
 import { Users, Network } from "lucide-react";
 
@@ -11,19 +11,15 @@ const Referral = () => {
       <div className="w-full max-w-md mx-auto   relative">
         
         {/* Header */}
-       <div className="flex items-center gap-4 mb-6 pl-3 pt-2">
-          <button
-            className="p-2 rounded-md bg-white/5 hover:bg-white/10 active:bg-white/15 
-                     backdrop-blur-xl border border-white/10 transition-all duration-300 
-                     hover:scale-110 active:scale-95"
-          >
-            <ArrowLeft size={20} className="transition-transform duration-300" />
-          </button>
-
-          <div>
-            <h1 className="text-md font-semibold tracking-tight">Referral</h1>
-          </div>
-        </div>
+      <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
+                    <div className="flex items-center gap-3">
+                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h1 className="text-lg font-[Manrope] font-bold">Refferal</h1>
+                    </div>
+                    <Settings size={20} className="text-white" />
+                </div>
 
         {/* Referral Earning History */}
        <div className="px-5 pb-6">
