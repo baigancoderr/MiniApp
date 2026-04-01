@@ -93,7 +93,7 @@ const UpgradeHero = () => {
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="Enter amount to deposit"
                 className="w-full bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)] border border-white/10 focus:border-cyan-400 
-                         rounded-md px-6 py-2 text-white text-md placeholder-gray-500 
+                         rounded-md px-6 py-2 text-black text-md placeholder-gray-500 
                          focus:outline-none shadow-inner transition-all"
               />
             </div>

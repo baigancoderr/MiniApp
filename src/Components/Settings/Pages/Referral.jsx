@@ -3,10 +3,12 @@ import btmimg from "../../../assets/btmimg.png";
 import { ArrowLeft, ChevronLeft, ChevronRight ,ArrowRight,Settings } from "lucide-react";
 import { useState } from "react";
 import { Users, Network } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 
 
 const Referral = () => {
+   const navigate = useNavigate();
   return (
     <div className="  pb-20  text-white font-sans flex justify-center">
       <div className="w-full max-w-md mx-auto   relative">
@@ -14,9 +16,12 @@ const Referral = () => {
         {/* Header */}
       <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
                     <div className="flex items-center gap-3">
-                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
-                            <ArrowLeft size={20} />
-                        </button>
+                        <button 
+  onClick={() => navigate(-1)} 
+  className="p-1.5 rounded-md text-[#FFFFFF]"
+>
+  <ArrowLeft size={20} />
+</button>
                         <h1 className="text-lg font-[Manrope] font-bold">Refferal</h1>
                     </div>
                     <Settings size={20} className="text-white" />

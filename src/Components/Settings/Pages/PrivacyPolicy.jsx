@@ -1,8 +1,10 @@
 import { ShieldCheck, ArrowLeft, Lock, Eye, Clock, Users ,Settings} from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PrivacyPolicy = ({ onBack }) => {
   const [hoveredSection, setHoveredSection] = useState(null);
+  const navigate = useNavigate();
 
   const sections = [
     {
@@ -73,9 +75,12 @@ const PrivacyPolicy = ({ onBack }) => {
         </div> */}
         <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
                     <div className="flex items-center gap-3">
-                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
-                            <ArrowLeft size={20} />
-                        </button>
+                       <button 
+  onClick={() => navigate("/settings")} 
+  className="p-1.5 rounded-md text-[#FFFFFF]"
+>
+  <ArrowLeft size={20} />
+</button>
                         <h1 className="text-lg font-[Manrope] font-bold">Privacy Policy</h1>
                     </div>
                     <Settings size={20} className="text-white" />

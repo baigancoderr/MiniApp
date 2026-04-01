@@ -1,46 +1,40 @@
 import { ArrowLeft, HelpCircle, ChevronDown, Settings } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FAQ = ({ onBack }) => {
   const [openSection, setOpenSection] = useState(null);
   const [hoveredSection, setHoveredSection] = useState(null);
+  const navigate = useNavigate();
+
 
   const faqs = [
     {
       id: 1,
-      question: "How does Pipe work?",
-      answer: "Pipe is a modern capital platform that enables companies to advance their revenue for up-front capital. For businesses, that means growth on your terms with more cash flow for scaling a company without dilution.",
+      question: "What is CIPERA (CIP)?",
+      answer: "CIPERA is a next-generation digital asset built on the Ethereum blockchain using ERC-20 standards. It focuses on creating a transparent, scalable, and utility-driven DeFi ecosystem.",
     },
     {
       id: 2,
-      question: "Is Pipe right for my company?",
-      answer: "Pipe is ideal for growing SaaS, subscription, and recurring revenue businesses that want non-dilutive capital. If your company has predictable recurring revenue, Pipe can help you access capital quickly.",
+      question: "What is the total supply and launch price of CIPERA?",
+      answer: "CIPERA has a fixed total supply of 100,000,000 tokens. The initial launch price is set at $0.01 USDT.",
     },
     {
       id: 3,
-      question: "How much capital can I access?",
-      answer: "The amount of capital you can access depends on your monthly recurring revenue (MRR) and contract terms. Most businesses can access 1-3x their annual recurring revenue.",
+      question: "What utilities does CIPERA offer?",
+      answer: "CIPERA can be used for ecosystem payments, trading, liquidity provisioning, and governance. It also supports staking and vesting models for user participation.",
     },
     {
       id: 4,
-      question: "What are the costs and fees to use Pipe?",
-      answer: "Pipe charges a flat fee based on the advance amount and repayment terms. There are no hidden fees, no equity dilution, and no personal guarantees required.",
+      question: "How does CIPERA ensure security and transparency?",
+      answer: "CIPERA uses secure ERC-20 smart contracts on Ethereum for trustless and transparent transactions. All activities are recorded on the blockchain, ensuring reliability and immutability.",
     },
     {
       id: 5,
-      question: "How much does Pipe cost?",
-      answer: "Costs vary based on the advance size and chosen repayment period. You'll see a transparent breakdown of all fees before accepting any advance.",
+      question: " What is the future roadmap of CIPERA?",
+      answer: "CIPERA’s roadmap (2026–2027) focuses on token deployment, Uniswap V3 integration, exchange listings, and ecosystem expansion through partnerships and innovation.",
     },
-     {
-      id: 6,
-      question: "How much does Pipe cost?",
-      answer: "Costs vary based on the advance size and chosen repayment period. You'll see a transparent breakdown of all fees before accepting any advance.",
-    },
-     {
-      id: 7,
-      question: "How much does Pipe cost?",
-      answer: "Costs vary based on the advance size and chosen repayment period. You'll see a transparent breakdown of all fees before accepting any advance.",
-    },
+    
   ];
 
   const toggleSection = (id) => {
@@ -77,9 +71,12 @@ const FAQ = ({ onBack }) => {
         </div> */}
         <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
                     <div className="flex items-center gap-3">
-                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
-                            <ArrowLeft size={20} />
-                        </button>
+                         <button
+                                                    onClick={() => navigate(-1)}
+                                                    className="p-1.5 rounded-md text-[#FFFFFF]"
+                                                >
+                                                    <ArrowLeft size={20} />
+                                                </button>
                         <h1 className="text-lg font-[Manrope] font-bold">FAQ</h1>
                     </div>
                     <Settings size={20} className="text-white" />

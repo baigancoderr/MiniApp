@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Settings, Copy, Share2 } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 const AddFundHero = () => {
+  const navigate = useNavigate();
   const coins = [
     // { name: "BNB", icon: "https://cryptologos.cc/logos/bnb-bnb-logo.png" },
     { name: "USDT", icon: "https://cryptologos.cc/logos/tether-usdt-logo.png" },
@@ -53,9 +54,12 @@ const AddFundHero = () => {
 
          <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
                     <div className="flex items-center gap-3">
-                        <button className="p-1.5 rounded-md text-[#FFFFFF]">
-                            <ArrowLeft size={20} />
-                        </button>
+                        <button 
+  onClick={() => navigate("/settings")} 
+  className="p-1.5 rounded-md text-[#FFFFFF]"
+>
+  <ArrowLeft size={20} />
+</button>
                         <h1 className="text-lg font-[Manrope] font-bold">Add Fund</h1>
                     </div>
                     <Settings size={20} className="text-white" />
