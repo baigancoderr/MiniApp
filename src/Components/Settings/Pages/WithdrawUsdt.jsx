@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from "react";
 import { ArrowLeft, Settings, Wallet, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -8,104 +10,117 @@ const WithdrawUSDT = () => {
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
 
-  // Dummy balance
   const balance = 350;
 
   const withdrawHistory = [
-    {
-      id: "#W12345",
-      amount: "$100",
-      address: "0xA1B2...9F",
-      date: "12 Mar 2026",
-      status: "Success",
-    },
-    {
-      id: "#W12346",
-      amount: "$50",
-      address: "0xX9Y8...7K",
-      date: "10 Mar 2026",
-      status: "Pending",
-    },
+    { id: "#W12345", amount: "$100", address: "0xA1B2...9F", date: "12 Mar 2026", status: "Success" },
+    { id: "#W12346", amount: "$50", address: "0xX9Y8...7K", date: "10 Mar 2026", status: "Pending" },
   ];
-
-  const handleWithdraw = () => {
-    if (!amount || !address) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    alert("Withdraw request submitted 🚀");
-    setAmount("");
-    setAddress("");
-  };
 
   return (
     <div className="min-h-screen flex justify-center px-2 py-3 pb-20 text-white">
+
       <div className="w-full max-w-md mx-auto">
 
         {/* HEADER */}
-        <div className="flex bg-[#282936] items-center justify-between mb-4 px-3 py-2 rounded-lg">
+        <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-1.5 rounded-md hover:bg-white/10"
-            >
+            <button onClick={() => navigate(-1)}>
               <ArrowLeft size={20} />
             </button>
-            <h2 className="text-lg font-bold">Withdraw USDT</h2>
+            <h2 className="text-lg font-[Manrope] font-bold">
+              Withdraw USDT
+            </h2>
           </div>
           <Settings size={20} />
         </div>
 
-        {/* 🔥 BALANCE CARD */}
-        <div className="relative rounded-xl p-[1px] mb-4 bg-gradient-to-br from-green-500/40 to-transparent">
-          <div className="rounded-xl p-4 bg-black/40 backdrop-blur-xl border border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-500/20 text-green-400">
+        {/* 🔥 BALANCE CARD (MATCH PROFILE STATS CARD) */}
+        <div className="group rounded-2xl border-2 border-[#444385] overflow-hidden mb-5">
+          <div className="
+            bg-[#00000033] p-4 backdrop-blur-[20px]
+            group-hover:bg-[linear-gradient(180deg,_#020204_0%,_#2C6096_100%)]
+            group-hover:border-l-[5px] group-hover:border-l-[#587FFF]
+            transition-all duration-300
+          ">
+            <div className="flex gap-3 items-center">
+
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[#587FFF33]">
                 <Wallet size={18} />
               </div>
+
               <div>
-                <p className="text-xs text-gray-400">Available Balance</p>
-                <h3 className="text-xl font-semibold">${balance}</h3>
+                <p className="text-xs text-white font-[Manrope]">
+                  Available Balance
+                </p>
+                <p className="text-lg font-bold font-[Space Grotesk]">
+                  ${balance}
+                </p>
               </div>
+
             </div>
           </div>
         </div>
 
-        {/* 🔥 WITHDRAW FORM */}
-        <div className="relative rounded-xl p-[1px] mb-4 bg-gradient-to-br from-blue-500/40 to-transparent">
-          <div className="rounded-xl p-4 bg-black/40 backdrop-blur-xl border border-white/10">
+        {/* 🔥 FORM CARD (PROFILE STYLE GRADIENT BORDER) */}
+        <div className="rounded-2xl border border-[#81ECFF66] p-[1px] mb-5
+        bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
 
-            <div className="space-y-3">
+          <div className="rounded-2xl bg-[#0B0F1A] p-4 backdrop-blur-[20px]">
+
+            <div className="space-y-4">
 
               {/* Amount */}
               <div>
-                <label className="text-xs text-gray-400">Amount</label>
+                <label className="text-xs text-[#81ECFF] font-[Manrope]">
+                  Amount
+                </label>
                 <input
                   type="number"
                   placeholder="Enter amount"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 rounded-md bg-white/5 border border-white/10 outline-none focus:border-blue-400"
+                  className="
+                  w-full mt-1 px-3 py-2 rounded-lg
+                  bg-[#00000033]
+                  border border-[#444B55]
+                  text-white
+                  outline-none
+                  focus:border-[#587FFF]
+                  "
                 />
               </div>
 
               {/* Address */}
               <div>
-                <label className="text-xs text-gray-400">USDT Wallet Address</label>
+                <label className="text-xs text-[#81ECFF] font-[Manrope]">
+                  Wallet Address
+                </label>
                 <input
                   type="text"
                   placeholder="Enter wallet address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 rounded-md bg-white/5 border border-white/10 outline-none focus:border-blue-400"
+                  className="
+                  w-full mt-1 px-3 py-2 rounded-lg
+                  bg-[#00000033]
+                  border border-[#444B55]
+                  text-white
+                  outline-none
+                  focus:border-[#587FFF]
+                  "
                 />
               </div>
 
-              {/* Button */}
+              {/* BUTTON (PROFILE SAME) */}
               <button
-                onClick={handleWithdraw}
-                className="w-full mt-2 py-2 rounded-md bg-[linear-gradient(217deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))] font-semibold flex items-center justify-center gap-2 hover:opacity-90"
+                className="
+                w-full py-3 rounded-full
+                bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)]
+                text-white text-sm font-[Poppins]
+                flex items-center justify-center gap-2
+                hover:opacity-90 transition
+                "
               >
                 <Send size={16} />
                 Withdraw Now
@@ -116,51 +131,47 @@ const WithdrawUSDT = () => {
           </div>
         </div>
 
-        {/* 🔥 WITHDRAW HISTORY */}
-        <div className="relative rounded-2xl border border-[#81ECFF66] p-[1px] 
-        bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.4)_1.24%,_rgba(0,7,64,0.2)_20.92%)]">
+        {/* 🔥 HISTORY TABLE (SAME STYLE) */}
+        <div className="rounded-2xl border border-[#81ECFF66] p-[1px]
+        bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
 
-          <div className="rounded-2xl p-3 bg-[#00000033] backdrop-blur-[20px] overflow-x-auto">
+          <div className="rounded-2xl bg-[#0B0F1A] backdrop-blur-[20px] overflow-hidden">
 
-            <table className="w-full text-left min-w-[500px]">
+            {/* HEADER */}
+            <div className="grid grid-cols-5 px-3 py-3 text-xs font-[Manrope] text-[#81ECFF] border-b border-[#1f2430]">
+              <p>Txn ID</p>
+              <p>Amount</p>
+              <p>Address</p>
+              <p>Date</p>
+              <p className="text-right">Status</p>
+            </div>
 
-              <thead>
-                <tr className="text-xs text-[#81ECFF]">
-                  <th className="py-2">Txn ID</th>
-                  <th className="py-2">Amount</th>
-                  <th className="py-2">Address</th>
-                  <th className="py-2">Date</th>
-                  <th className="py-2 text-right">Status</th>
-                </tr>
-              </thead>
+            {/* DATA */}
+            {withdrawHistory.map((item, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-5 px-3 py-3 text-sm items-center
+                border-b border-[#1f2430]
+                hover:bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)]
+                transition"
+              >
+                <p>{item.id}</p>
+                <p>{item.amount}</p>
+                <p className="truncate">{item.address}</p>
+                <p>{item.date}</p>
 
-              <tbody>
-                {withdrawHistory.map((item, i) => (
-                  <tr key={i} className="border-t border-white/10 text-sm">
-                    <td className="py-3">{item.id}</td>
-                    <td className="py-3">{item.amount}</td>
-                    <td className="py-3">{item.address}</td>
-                    <td className="py-3">{item.date}</td>
+                <p className="text-right">
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold
+                    ${item.status === "Success"
+                      ? "bg-green-500/20 text-green-300"
+                      : "bg-yellow-500/20 text-yellow-300"
+                    }`}>
+                    {item.status}
+                  </span>
+                </p>
 
-                    <td className="py-3 text-right">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold
-                          ${
-                            item.status === "Success"
-                              ? "bg-green-500/20 text-green-400"
-                              : item.status === "Pending"
-                              ? "bg-yellow-500/20 text-yellow-400"
-                              : "bg-red-500/20 text-red-400"
-                          }`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-
-            </table>
+              </div>
+            ))}
 
           </div>
         </div>

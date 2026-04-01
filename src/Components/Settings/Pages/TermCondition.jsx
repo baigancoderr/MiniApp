@@ -2,9 +2,10 @@ import { ShieldCheck, ArrowLeft, Settings, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const TermCondition = ({ onBack }) => {
-  const [hoveredSection, setHoveredSection] = useState(null);
+const TermCondition = () => {
+  
    const navigate = useNavigate();
+  const [hoveredSection, setHoveredSection] = useState(null);
 
   const sections = [
     {
@@ -48,12 +49,9 @@ const TermCondition = ({ onBack }) => {
         {/* Header */}
         <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2 rounded-xl">
           <div className="flex items-center gap-3">
-                            <button 
-             onClick={() => navigate(-1)} 
-              className="p-1.5 rounded-md text-[#FFFFFF]"
-            >
-              <ArrowLeft size={20} />
-            </button>
+                           <button onClick={() => navigate("/settings")}>
+  <ArrowLeft size={20} />
+</button>
             <h1 className="text-lg font-[Manrope] font-bold">Terms & Conditions</h1>
           </div>
           <Settings size={20} className="text-white" />

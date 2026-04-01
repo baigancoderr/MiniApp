@@ -161,12 +161,12 @@ const Profile = ({ onBack }) => {
                         </div>
 
                         <div className="flex gap-3">
-                            <button className="flex-1 bg-[linear-gradient(0deg,_#587FFF_0%,_#09239F_70%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
+                            <button className="flex-1 bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
                                 <Copy size={16} />
                                 Copy Link
                             </button>
 
-                            <button className="flex-1 bg-[linear-gradient(0deg,_#587FFF_0%,_#09239F_70%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
+                            <button className="flex-1 bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
                                 <Share2 size={16} />
                                 Share
                             </button>

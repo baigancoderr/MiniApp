@@ -1,249 +1,232 @@
-import { Coins, Users, Copy, Share2 } from "lucide-react";
-import { useState } from "react";
-import coinImg from "../assets/logo.png";
-import miningGif from "../assets/rndr.gif";
-import userImg from "../assets/logo.png"; // apni image ka path dal
+import React, { useState } from "react";
+import {
+  DollarSign,
+  Wallet,
+  TrendingUp,
+  Users,
+  Coins,
+  BarChart3,
+  Copy,
+  Share2,
+  User,
+} from "lucide-react";
 
-const Hero = () => {
-  const [isMining, setIsMining] = useState(false);
-  const [copied, setCopied] = useState(false);
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Filler,
+} from "chart.js";
 
-  const referralLink = "https://t.me/your_bot?start=LMX1696812885";
+ChartJS.register(
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Filler
+);
 
-  const handleStart = () => {
-    setIsMining(true);
+const HomeDashboard = () => {
+  const [activeFilter, setActiveFilter] = useState("1D");
+
+  // 🔷 STATS
+  const stats = [
+    { title: "LIVE PRICE", value: "$0.12", icon: <TrendingUp size={18} /> },
+    { title: "TOTAL DEPOSIT", value: "$1200", icon: <DollarSign size={18} /> },
+    { title: "WALLET BALANCE", value: "$850", icon: <Wallet size={18} /> },
+    { title: "TOTAL CLAIMED", value: "500 CIP", icon: <Coins size={18} /> },
+    { title: "MATURED TOKEN", value: "300 CIP", icon: <BarChart3 size={18} /> },
+    { title: "TEAM", value: "25 Users", icon: <Users size={18} /> },
+  ];
+
+  const chartDataset = {
+    "1H": [2, 5, 3, 6, 4, 7, 5, 6],
+    "1D": [20, 40, 30, 60, 50, 70, 55],
+    "1W": [100, 200, 150, 300, 250, 400, 350],
+    "1M": [500, 700, 600, 900, 800, 1100, 1000],
+    "1Y": [2000, 3000, 2500, 4000, 3500, 5000, 4500],
   };
-    const handleCopy = () => {
-    navigator.clipboard.writeText(referralLink);
-    setCopied(true);
 
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+  const labelsMap = {
+    "1H": ["1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM"],   // hourly
+    "1D": ["6AM", "9AM", "12PM", "3PM", "6PM", "9PM", "12AM"],      // full day
+    "1W": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],        // weekly
+    "1M": ["W1", "W2", "W3", "W4"],                                 // monthly (week-wise)
+    "1Y": ["Jan", "Mar", "May", "Jul", "Sep", "Nov"],               // yearly
   };
-   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Join using my referral",
-          text: "Earn rewards using my link 🚀",
-          url: referralLink,
-        });
-      } catch (err) {
-        console.log("Share cancelled");
-      }
-    } else {
-      // fallback (telegram/web)
-      window.open(`https://t.me/share/url?url=${referralLink}`, "_blank");
-    }
+
+  const chartOptions = {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: "#888" }, grid: { display: false } },
+      y: { ticks: { color: "#888" }, grid: { color: "#1f1f2e" } },
+    },
+  };
+
+  const transactions = [
+    { id: "#TXN001", amount: "$100", date: "12 Mar", status: "Success" },
+    { id: "#TXN002", amount: "$250", date: "13 Mar", status: "Success" },
+  ];
+
+  const chartData = {
+    labels: labelsMap[activeFilter],
+    datasets: [
+      {
+        data: chartDataset[activeFilter],
+        borderColor: "#587FFF",
+        tension: 0.4,
+        fill: true,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointBackgroundColor: "#fff",
+        backgroundColor: (context) => {
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+          gradient.addColorStop(0, "rgba(88,127,255,0.5)");
+          gradient.addColorStop(1, "rgba(88,127,255,0)");
+          return gradient;
+        },
+      },
+    ],
   };
 
   return (
-    <div className="w-full flex justify-center  px-3">
-      <div className="w-full max-w-md space-y-4">
+    <div className="min-h-screen text-white px-3 py-3">
+      <div className="max-w-md mx-auto space-y-5">
 
-        {/* ===== EXISTING CARD (same as before) ===== */}
-        <div
-          className="rounded-2xl p-4
-          
-          border border-blue-500/20 shadow-lg backdrop-blur-xl"
-        >
-          {/* Top Header */}
-        <div className="flex justify-between items-center mb-4">
-  <div className="flex items-center gap-2">
-    
-    {/* Image instead of gradient div */}
-    <img
-      src={userImg}
-      alt="user"
-      className="w-8 h-8 rounded-full object-cover"
-    />
-
-    <p className="text-white text-sm font-semibold">
-      CIPERA123456
-    </p>
-  </div>
-
-  <span className="bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full">
-    FREE
-  </span>
-</div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            <div className="bg-[#0f1a2e] border border-white/10 rounded-xl p-2 text-center">
-              <p className="text-gray-400 text-xs">Duration</p>
-              <p className="text-white font-semibold">8h</p>
-            </div>
-
-            <div className="bg-[#0f1a2e] border border-white/10 rounded-xl p-2 text-center">
-              <p className="text-gray-400 text-xs">Rewards</p>
-              <p className="text-purple-400 font-semibold">6</p>
-            </div>
-
-            <div className="bg-[#0f1a2e] border border-white/10 rounded-xl p-2 text-center">
-              <p className="text-gray-400 text-xs">Daily Rewards</p>
-              <p className="text-purple-400 font-semibold">18</p>
-            </div>
+        {/* 🔷 HEADER */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Dashboard</h2>
+          <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-r from-[#587FFF] to-[#09239F]">
+            <User size={18} />
           </div>
+        </div>
 
-          {/* Tokens */}
-          <div className="bg-gradient-to-r from-[#0f1a2e] to-[#13233f] rounded-xl p-3 border border-blue-500/20">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-400 text-xs">Tokens Earned</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Coins className="text-purple-400" size={18} />
-                  <p className="text-xl font-bold text-blue-400">
-                    8.1760
-                  </p>
+        {/* 🔥 CARDS */}
+        <div className="grid grid-cols-2 gap-3">
+          {stats.map((item, i) => (
+            <div
+              key={i}
+              className="group rounded-2xl border-2 border-[#444385] overflow-hidden"
+            >
+              <div className="bg-[#00000033] p-3 backdrop-blur-[20px]
+              transition-all duration-300
+              group-hover:bg-[linear-gradient(180deg,#020204,#2C6096)]
+              group-hover:border-l-[5px] group-hover:border-l-[#587FFF]">
+
+                <div className="flex justify-between">
+                  <p className="text-gray-400 text-xs">{item.title}</p>
+                  <div className="text-blue-400">{item.icon}</div>
                 </div>
-              </div>
 
-              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center shadow-md">
-                <Coins className="text-white" size={20} />
+                <p className="text-white text-md font-semibold mt-1">
+                  {item.value}
+                </p>
               </div>
             </div>
+          ))}
+        </div>
 
-            <div className="flex justify-between mt-3 text-xs text-gray-400">
-              <p>
-                Total Pool Limit <br />
-                <span className="text-white font-semibold">
-                  7,759,960 / 150,000,000
-                </span>
-              </p>
+        {/* 📊 CHART */}
+        <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
+          <div className="bg-[#00000033] p-4 backdrop-blur-[20px]
+          group-hover:bg-[linear-gradient(180deg,#020204,#2C6096)]">
 
-              <p className="text-right">
-                Tokens/min <br />
-                <span className="text-blue-400 font-semibold">
-                  0.0125
-                </span>
-              </p>
+            <p className="text-gray-300 text-sm mb-3">Investment Overview</p>
+
+            <Line data={chartData} options={chartOptions} />
+
+            <div className="flex justify-between mt-4">
+              {["1H", "1D", "1W", "1M", "1Y"].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => setActiveFilter(item)}
+                  className={`text-xs px-3 py-1 rounded-full ${activeFilter === item
+                      ? "bg-blue-500/20 text-blue-400"
+                      : "text-gray-400"
+                    }`}
+                >
+                  {item}
+                </button>
+              ))}
             </div>
+
           </div>
         </div>
 
+        {/* 🔗 REFERRAL */}
+        <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
+          <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
 
-        {/* ===== NEW: Ready To Mine Card ===== */}
-<div className="rounded-2xl p-4 
+            <p className="text-sm text-gray-300 mb-2">Referral Link</p>
 
-border border-blue-500/20 shadow-lg text-center">
+            <div className="bg-black border border-[#81ECFF] rounded-lg p-2 text-xs mb-3">
+              https://cipera.io/ref/12345
+            </div>
 
-  {/* Circle */}
-  <div className="flex justify-center mb-4">
-    <div className="w-48 h-48 rounded-full 
-    overflow-hidden   // ⭐ IMPORTANT
-    border border-blue-500/20 shadow-inner">
+            <div className="flex gap-2">
+              <button className="flex-1 
+  bg-[linear-gradient(45deg,#587FFF,#09239F)] 
+  hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
+  font-[Poppins] text-white text-sm py-3 rounded-full 
+  flex items-center justify-center gap-2
+  transition-all duration-300">
+                Copy
+              </button>
 
-      {/* Image / GIF */}
-      <img
-        src={isMining ? miningGif : coinImg}
-        alt="mining"
-        className="w-full h-full object-cover"  // ⭐ CHANGE
-      />
-    </div>
-  </div>
+              <button className="flex-1 
+  bg-[linear-gradient(45deg,#587FFF,#09239F)] 
+  hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
+  font-[Poppins] text-white text-sm py-3 rounded-full 
+  flex items-center justify-center gap-2
+  transition-all duration-300">
+                Share
+              </button>
+            </div>
 
-  {/* Title */}
-  <p className="text-cyan-400 font-semibold text-lg mb-1">
-    {isMining ? "MINING STARTED 🚀" : "READY TO MINE"}
-  </p>
-
-  {/* Subtitle */}
-  <p className="text-gray-400 text-xs mb-4">
-    {isMining
-      ? "⛏️ Mining in progress..."
-      : "● Tap START to begin mining"}
-  </p>
-
-  {/* Button */}
-  <button
-    onClick={handleStart}
-    disabled={isMining}
-    className={`w-full py-3 rounded-xl text-white font-semibold text-sm transition
-    ${
-      isMining
-        ? "bg-gray-600 cursor-not-allowed"
-        : "bg-gradient-to-r from-blue-500 to-cyan-400 hover:scale-105"
-    }`}
-  >
-    {isMining ? "Mining Started" : "Tap to Start Mining"}
-  </button>
-</div>
-
-        {/* ===== NEW: Mining Progress ===== */}
-        <div className="rounded-2xl p-4 bg-[#0b1220] border border-blue-500/20">
-          
-          <div className="flex justify-between items-center mb-3">
-            <p className="text-blue-400 text-sm font-semibold">
-              Mining Progress
-            </p>
-            <p className="text-yellow-400 text-sm font-bold">37.7%</p>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="w-full h-2 rounded-full bg-[#1a2a44] overflow-hidden mb-3">
-            <div className="h-full w-[37%] bg-gradient-to-r from-cyan-400 via-purple-500 to-blue-500"></div>
-          </div>
-
-          {/* Time Labels */}
-          <div className="flex justify-between text-xs text-gray-400">
-            <span>0h</span>
-            <span>2h</span>
-            <span>4h</span>
-            <span>6h</span>
-            <span>8h</span>
           </div>
         </div>
 
-        {/* ===== NEW: Invite & Earn ===== */}
-     <div className="rounded-2xl p-4 bg-[#0b1220] border border-blue-500/20">
-      
-      <div className="flex items-center gap-2 mb-3">
-        <Users size={18} className="text-blue-400" />
-        <p className="text-white font-semibold">Invite & Earn</p>
-      </div>
+        {/* 📄 TABLE */}
+        <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
+          <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
 
-      {/* Referral Box */}
-      <div className="bg-[#111c33] rounded-xl p-3 text-center mb-3 border border-white/10">
-        <p className="text-white font-semibold tracking-wide">
-         CPR1696812885
-        </p>
-      </div>
+            <p className="text-sm text-gray-300 mb-3">Recent Buy</p>
 
-      {/* Buttons */}
-      <div className="flex gap-2">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-gray-400 border-b text-left border-[#333]">
+                  <th className="py-2 text-left">ID</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
 
-        {/* COPY BUTTON */}
-        <button
-          onClick={handleCopy}
-          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl
-          bg-gradient-to-r from-blue-500 to-cyan-400 text-white text-sm font-semibold
-          hover:scale-105 transition"
-        >
-          <Copy size={16} />
-          {copied ? "Copied!" : "Copy Link"}
-        </button>
+              <tbody>
+                {transactions.map((tx, i) => (
+                  <tr key={i} className="border-b border-[#222]">
+                    <td className="py-2">{tx.id}</td>
+                    <td>{tx.amount}</td>
+                    <td>{tx.date}</td>
+                    <td className="text-green-400">{tx.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-        {/* SHARE BUTTON */}
-        <button
-          onClick={handleShare}
-          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl
-          bg-gradient-to-r from-blue-400 to-blue-600 text-white text-sm font-semibold
-          hover:scale-105 transition"
-        >
-          <Share2 size={16} />
-          Share
-        </button>
-
-      </div>
-
-    </div>
-  
+          </div>
+        </div>
 
       </div>
     </div>
   );
 };
 
-export default Hero;
+export default HomeDashboard;
