@@ -5,6 +5,7 @@ import Upgrade from "./Pages/Upgrade";
 import Settings from "./Pages/Settings";
 import MagicRings from "./Layout/MagicRings";
 import AddFund from "./Pages/AddFund";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <div className="fixed inset-0 bg-black/90 -z-10"></div>
 
       <BrowserRouter>
+        <Toaster position="top-center" reverseOrder={false} />
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/wallet" element={<Wallet />} />

@@ -10,6 +10,7 @@ import {
   Share2,
   User,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { Line } from "react-chartjs-2";
 import {
@@ -33,7 +34,46 @@ ChartJS.register(
 
 const HomeDashboard = () => {
   const [activeFilter, setActiveFilter] = useState("1D");
+  const referralLink = "https://yourapp.com/ref/CPR1234567";
 
+  const handleShare = () => {
+  if (navigator.share) {
+    // Mobile native share (Telegram, WhatsApp etc.)
+    navigator.share({
+      title: "Join Now 🚀",
+      text: "Join using my referral link and earn rewards!",
+      url: referralLink,
+    });
+  } else {
+    // Fallback: direct Telegram share link
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent("Join and earn 🚀")}`;
+    window.open(telegramUrl, "_blank");
+  }
+};
+
+const handleCopy = async () => {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      // ✅ Modern browsers
+      await navigator.clipboard.writeText(referralLink);
+    } else {
+      // ✅ Fallback for mobile / insecure
+      const textArea = document.createElement("textarea");
+      textArea.value = referralLink;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }
+
+    toast.success("Copied to clipboard 🚀");
+  } catch (err) {
+    toast.error("Copy failed ❌");
+  }
+};
   // 🔷 STATS
   const stats = [
     { title: "LIVE PRICE", value: "$0.12", icon: <TrendingUp size={18} /> },
@@ -167,29 +207,34 @@ const HomeDashboard = () => {
             <p className="text-sm text-gray-300 mb-2">Referral Link</p>
 
             <div className="bg-black border border-[#81ECFF] rounded-lg p-2 text-xs mb-3">
-              https://cipera.io/ref/12345
+              CPR1234567
             </div>
 
             <div className="flex gap-2">
-              <button className="flex-1 
-  bg-[linear-gradient(45deg,#587FFF,#09239F)] 
-  hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
-  font-[Poppins] text-white text-sm py-3 rounded-full 
-  flex items-center justify-center gap-2
-  transition-all duration-300">
-                Copy
-              </button>
+  <button
+    onClick={handleCopy}
+    className="flex-1 
+    bg-[linear-gradient(45deg,#587FFF,#09239F)] 
+    hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
+    text-white text-sm py-3 rounded-full 
+    flex items-center justify-center gap-2 transition-all"
+  >
+    <Copy size={16} />
+    Copy
+  </button>
 
-              <button className="flex-1 
-  bg-[linear-gradient(45deg,#587FFF,#09239F)] 
-  hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
-  font-[Poppins] text-white text-sm py-3 rounded-full 
-  flex items-center justify-center gap-2
-  transition-all duration-300">
-                Share
-              </button>
-            </div>
-
+  <button
+    onClick={handleShare}
+    className="flex-1 
+    bg-[linear-gradient(45deg,#587FFF,#09239F)] 
+    hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
+    text-white text-sm py-3 rounded-full 
+    flex items-center justify-center gap-2 transition-all"
+  >
+    <Share2 size={16} />
+    Share
+  </button>
+</div>
           </div>
         </div>
 

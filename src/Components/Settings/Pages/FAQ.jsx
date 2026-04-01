@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const FAQ = ({ onBack }) => {
-  const [openSection, setOpenSection] = useState(null);
+  const [openSection, setOpenSection] = useState(1);
   const [hoveredSection, setHoveredSection] = useState(null);
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ const FAQ = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-2 py-3 pb-20 text-white overflow-hidden  relative">
+    <div className="min-h-screen flex items-start justify-center px-2 py-3 pb-20 text-white overflow-hidden  relative">
 
       {/* Deep 3D Background Glows */}
       {/* <div className="absolute inset-0 bg-[radial-gradient(at_50%_20%,rgba(59,130,246,0.18),transparent_50%)]" />
@@ -98,7 +98,7 @@ const FAQ = ({ onBack }) => {
 
           {/* Header inside card */}
           <div className="flex items-center gap-4 mb-4">
-            <div className="p-1 rounded-md bg-gradient-to-br from-blue-600 via-cyan-500 to-cyan-400 
+            <div className="p-1 rounded-md bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)]
                             shadow-2xl shadow-cyan-500/50 transition-all duration-500 hover:rotate-6 hover:scale-110">
               <HelpCircle size={32} className="text-white drop-shadow-lg" />
             </div>
@@ -117,7 +117,7 @@ const FAQ = ({ onBack }) => {
                 onMouseLeave={() => setHoveredSection(null)}
                 className={`group rounded-md border backdrop-blur-xl transition-all duration-500 overflow-hidden
                   ${openSection === faq.id 
-                    ? 'border-cyan-400/30 bg-white/10 shadow-2xl shadow-cyan-500/20' 
+                    ? 'border-cyan-400/30 bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)] shadow-2xl shadow-cyan-500/20' 
                     : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8'}`}
                 style={{
                   transitionDelay: `${index * 50}ms`,
@@ -130,9 +130,12 @@ const FAQ = ({ onBack }) => {
                   onClick={() => toggleSection(faq.id)}
                   className="w-full px-3 py-1 flex items-center justify-between text-left transition-all duration-300"
                 >
-                  <h3 className="font-semibold text-[14px] tracking-tight pr-6 leading-snug">
-                    {faq.question}
-                  </h3>
+                 <h3
+  className={`font-semibold text-[14px] tracking-tight pr-6 leading-snug transition-colors duration-300
+    ${openSection === faq.id ? 'text-[#FFF]' : 'text-[#587FFF] group-hover:text-white'}`}
+>
+  {faq.question}
+</h3>
                   
                   <div className={`p-1 rounded-md transition-all duration-300 flex-shrink-0
                     ${openSection === faq.id 

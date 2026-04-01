@@ -3,9 +3,50 @@ import { ArrowLeft, Settings, Copy, Share2 } from "lucide-react";
 import userimg2 from "../../../assets/Setting/user-img.jpeg";
 import cipera from "../../../assets/Setting/cipera.png";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Profile = ({ onBack }) => {
     const navigate = useNavigate();
+     const referralLink = "https://yourapp.com/ref/CPR1234567";
+
+  const handleShare = () => {
+  if (navigator.share) {
+    // Mobile native share (Telegram, WhatsApp etc.)
+    navigator.share({
+      title: "Join Now 🚀",
+      text: "Join using my referral link and earn rewards!",
+      url: referralLink,
+    });
+  } else {
+    // Fallback: direct Telegram share link
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent("Join and earn 🚀")}`;
+    window.open(telegramUrl, "_blank");
+  }
+};
+
+const handleCopy = async () => {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      // ✅ Modern browsers
+      await navigator.clipboard.writeText(referralLink);
+    } else {
+      // ✅ Fallback for mobile / insecure
+      const textArea = document.createElement("textarea");
+      textArea.value = referralLink;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }
+
+    toast.success("Copied to clipboard 🚀");
+  } catch (err) {
+    toast.error("Copy failed ❌");
+  }
+};
     const stats = [
         { label: "Daily Earnings", value: "18", sub: "/day", usd: "$0.90" },
         { label: "Utility Wallet", value: "0.00", usd: "$0.00" },
@@ -150,29 +191,42 @@ const Profile = ({ onBack }) => {
 
                     {/* REFERRAL */}
                     {/* <div className="rounded-2xl p-[1px] bg-[#81ECFF]"> */}
-                    <div className="bg-[#1B2028] border border-[#81ECFF] rounded-xl p-4">
-
-                        <p className="text-base font-[Manrope] text-white font-[700] mb-3">
-                            Your Referral ID
-                        </p>
-
-                        <div className="bg-[#000] border border-[#81ECFF] rounded-full py-3 text-center font-[Poppins] font-[400] text-[#fff] text-base tracking-widest mb-4">
-                            CIP579317981
-                        </div>
-
-                        <div className="flex gap-3">
-                            <button className="flex-1 bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
-                                <Copy size={16} />
-                                Copy Link
-                            </button>
-
-                            <button className="flex-1 bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)] font-[Poppins] font-[400] text-[#fff] text-sm py-3 rounded-full flex items-center justify-center gap-2">
-                                <Share2 size={16} />
-                                Share
-                            </button>
-                        </div>
-
-                    </div>
+                    <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
+                             <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
+                   
+                               <p className="text-sm text-gray-300 mb-2">Referral Link</p>
+                   
+                               <div className="bg-black border border-[#81ECFF] rounded-lg p-2 text-xs mb-3">
+                                 CPR1234567
+                               </div>
+                   
+                               <div className="flex gap-2">
+                     <button
+                       onClick={handleCopy}
+                       className="flex-1 
+                       bg-[linear-gradient(45deg,#587FFF,#09239F)] 
+                       hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
+                       text-white text-sm py-3 rounded-full 
+                       flex items-center justify-center gap-2 transition-all"
+                     >
+                       <Copy size={16} />
+                       Copy
+                     </button>
+                   
+                     <button
+                       onClick={handleShare}
+                       className="flex-1 
+                       bg-[linear-gradient(45deg,#587FFF,#09239F)] 
+                       hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
+                       text-white text-sm py-3 rounded-full 
+                       flex items-center justify-center gap-2 transition-all"
+                     >
+                       <Share2 size={16} />
+                       Share
+                     </button>
+                   </div>
+                             </div>
+                           </div>
                     {/* </div> */}
 
                 </div>
