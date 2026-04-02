@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ArrowLeft, User, Copy, Share2 } from "lucide-react";
 import userimg2 from "../../../assets/setting/user-img.jpeg";
 import cipera from "../../../assets/setting/cipera.png";
+
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
