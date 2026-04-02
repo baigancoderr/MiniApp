@@ -43,8 +43,8 @@ const TermCondition = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-2 py-1 pb-20 text-white overflow-hidden">
       {/* Subtle background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(at_50%_30%,rgba(59,130,246,0.15),transparent)]" />
-
+<div className="absolute inset-0 pointer-events-none bg-[radial-gradient(at_50%_30%,rgba(59,130,246,0.15),transparent)]" />
+      
       <div className="w-full max-w-md mx-auto px-1 pt-1">
         {/* Header */}
          <div className="flex justify-between items-center mb-5">
@@ -83,7 +83,7 @@ const TermCondition = () => {
               <ShieldCheck size={24} className="text-white" />
             </div>
             <div>
-              <p className="text-lg font-semibold tracking-tight">We Value Your Trust</p>
+              <p className="text-md font-semibold tracking-tight">We Value Your Trust</p>
               <p className="text-gray-400 text-xs">Please read carefully before proceeding</p>
             </div>
           </div>
@@ -110,7 +110,7 @@ const TermCondition = () => {
 <div className="flex items-center gap-3 mb-3">
   <CheckCircle size={20} className="text-emerald-400 flex-shrink-0" />
   
-  <h3 className="font-semibold text-lg tracking-tight text-white">
+  <h3 className="font-semibold text-sm tracking-tight text-white">
     {section.title}
   </h3>
 </div>
@@ -118,7 +118,7 @@ const TermCondition = () => {
 {/* Full Width Content */}
 <div>
   {section.isList ? (
-    <ul className="space-y-3 text-[14px] text-gray-300">
+    <ul className="space-y-3 text-xs text-gray-300">
       {section.content.map((item, i) => (
         <li key={i} className="flex gap-3">
           <span className="text-emerald-400 mt-1.5">•</span>
@@ -127,7 +127,7 @@ const TermCondition = () => {
       ))}
     </ul>
   ) : (
-    <p className="text-gray-300 text-[14px] leading-relaxed">
+    <p className="text-gray-300 text-xs leading-relaxed">
       {section.content}
     </p>
   )}

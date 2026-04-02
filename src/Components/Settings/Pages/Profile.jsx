@@ -4,9 +4,22 @@ import userimg2 from "../../../assets/Setting/user-img.jpeg";
 import cipera from "../../../assets/Setting/cipera.png";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const [tgUser, setTgUser] = useState(null);
+
+  useEffect(() => {
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.ready();
+
+    const user = window.Telegram.WebApp.initDataUnsafe.user;
+    console.log("TG USER:", user);
+
+    setTgUser(user);
+  }
+}, []);
 
   // ✅ Referral
   const referralLink = "https://yourapp.com/ref/CPR1234567";
@@ -84,15 +97,19 @@ const Profile = () => {
 
             <div className="flex items-center gap-4 mb-4">
               <img
-                src={userimg2}
+                src={tgUser?.photo_url || userimg2}
                 className="w-20 h-20 rounded-full border border-white/20 object-cover"
               />
 
               <div>
-                <h2 className="text-xl font-bold">XYZ</h2>
-                <span className="text-xs px-3 py-1 rounded-full bg-blue-500/20">
-                  Investor
-                </span>
+                <h2 className="text-xl font-bold">
+  {tgUser
+    ? `${tgUser.first_name} ${tgUser.last_name || ""}`
+    : "Guest User"}
+</h2>
+                <p className="text-xs text-gray-400">
+  {tgUser?.username ? `@${tgUser.username}` : ""}
+</p>
               </div>
             </div>
 

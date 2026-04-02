@@ -10,8 +10,23 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import settingImg from "../../assets/setting/user-img.jpeg";
 import { FaGavel } from "react-icons/fa";
+import { useEffect, useState } from "react";
+
 const SettingsComponent = () => {
   const navigate = useNavigate();
+ const [tgUser, setTgUser] = useState(null);
+
+ useEffect(() => {
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+
+    const user = window.Telegram.WebApp.initDataUnsafe.user;
+    console.log("USER:", user);
+
+    setTgUser(user);
+  }
+}, []);
 
   const menuItems = [
     {
@@ -97,16 +112,18 @@ const SettingsComponent = () => {
         {/* Profile */}
         <div className="flex flex-col items-center">
           <img
-            src={settingImg}
-            alt="profile"
-            className="w-20 h-20 rounded-full border-2 border-white shadow-lg"
-          />
-          <h2 className="mt-2 font-semibold text-lg">
-            Mark Steven
-          </h2>
-          <p className="text-xs text-gray-300">
-            markst@co.in
-          </p>
+  src={tgUser?.photo_url || settingImg}
+  alt="profile"
+  className="w-20 h-20 rounded-full border-2 border-white shadow-lg"
+/>
+         <h2 className="mt-2 font-semibold text-lg">
+  {tgUser
+    ? `${tgUser.first_name} ${tgUser.last_name || ""}`
+    : "Loading..."}
+</h2>
+         <p className="text-xs text-gray-300">
+  {tgUser?.username ? `@${tgUser.username}` : ""}
+</p>
         </div>
       </div>
 

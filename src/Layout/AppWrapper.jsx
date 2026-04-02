@@ -10,6 +10,7 @@ import AddFund from "../Pages/AddFund";
 import Loader from "../Context/Loader";
 
 function AppWrapper() {
+    const ALLOW_BROWSER = true;
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 
@@ -23,14 +24,28 @@ function AppWrapper() {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+
+
+
+if (!window.Telegram || !window.Telegram.WebApp) {
+  return null;
+}
+
+
+if (!ALLOW_BROWSER) {
+  if (!window.Telegram?.WebApp?.initData) {
+    return null;
+  }
+}
+
   return (
     <>
       {/* 🔥 ROUTE LOADER */}
-      {loading && (
+      {/* {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-[9999] backdrop-blur-sm">
           <Loader />
         </div>
-      )}
+      )} */}
 
       {/* 🔥 ROUTES */}
       <Routes>
