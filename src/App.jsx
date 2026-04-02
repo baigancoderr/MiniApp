@@ -12,7 +12,7 @@ function App() {
 
   const [isTelegram, setIsTelegram] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
-  const ALLOW_BROWSER = true;
+  const ALLOW_BROWSER = false;
 
 useEffect(() => {
   const tg = window.Telegram?.WebApp;
