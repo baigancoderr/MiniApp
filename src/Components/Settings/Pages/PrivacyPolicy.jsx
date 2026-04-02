@@ -82,10 +82,10 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-6 pb-20 text-white overflow-hidden ">
+    <div className="min-h-screen flex items-center justify-center px-4 py-6 pb-24 text-white overflow-hidden ">
 
       {/* Subtle background glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(at_50%_30%,rgba(59,130,246,0.15),transparent)]" />
+       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(at_50%_30%,rgba(59,130,246,0.15),transparent)]" />
 
       <div className="w-full max-w-md mx-auto">
 

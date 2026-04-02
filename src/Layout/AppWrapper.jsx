@@ -59,7 +59,7 @@ if (!ALLOW_BROWSER) {
         <Route path="/settings/profile" element={<Settings />} />
         <Route path="/settings/referral" element={<Settings />} />
         <Route path="/settings/referral-earning-history" element={<Settings />} />
-        <Route path="/settings/wallet-breakdown" element={<Settings />} />
+        <Route path="/settings/investment-history" element={<Settings />} />
         <Route path="/settings/deposit-history" element={<Settings />} />
         <Route path="/settings/withdraw-usdt" element={<Settings />} />
         <Route path="/settings/faqs" element={<Settings />} />

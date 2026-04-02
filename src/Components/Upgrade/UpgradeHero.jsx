@@ -72,7 +72,7 @@ const startDate = new Date().toLocaleDateString();
  
 
   return (
-    <div className="w-full flex justify-center px-2 py-3">
+    <div className="w-full flex justify-center   px-2 py-3">
       <div className="w-full max-w-md space-y-6">
            <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-3">

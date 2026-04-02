@@ -40,7 +40,7 @@ const AddFundPage = () => {
   };
 
   return (
-    <div className="min-h-screen  text-white px-3 py-3">
+    <div className="min-h-screen pb-24  text-white px-3 py-3">
       <div className="max-w-md mx-auto">
 
         {/* 🔷 HEADER */}

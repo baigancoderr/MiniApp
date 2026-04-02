@@ -49,9 +49,9 @@ const SettingsComponent = () => {
     },
     {
       icon: <Wallet size={18} />,
-      title: "Wallet Breakdown",
-      subtitle: "Balance & details",
-      action: () => navigate("/settings/wallet-breakdown"),
+      title: "Investment History",
+      subtitle: "history of your investments",
+      action: () => navigate("/settings/investment-history"),
     },
     {
       icon: <Plus size={18} />,

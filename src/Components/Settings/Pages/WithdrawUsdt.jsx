@@ -12,17 +12,29 @@ const WithdrawUSDT = () => {
 
   const balance = 350;
 
-  const withdrawHistory = [
-    { id: "#W12345", amount: "$100", address: "0xA1B2...9F", date: "12 Mar 2026", status: "Success" },
-    { id: "#W12346", amount: "$50", address: "0xX9Y8...7K", date: "10 Mar 2026", status: "Pending" },
-  ];
+  // 🔥 Dummy Data
+  const withdrawHistory = Array.from({ length: 25 }, (_, i) => ({
+    id: "#W" + (12345 + i),
+    amount: "$" + (50 + i * 10),
+    address: "0xA1B2C3D4...XYZ" + i,
+    date: "12 Mar 2026",
+    status: i % 2 === 0 ? "Success" : "Pending",
+  }));
+
+  // 🔥 Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(withdrawHistory.length / itemsPerPage);
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentData = withdrawHistory.slice(indexOfFirst, indexOfLast);
 
   return (
-    <div className="min-h-screen flex justify-center px-2 py-3 pb-20 text-white">
-
+    <div className="min-h-screen flex justify-center px-2 py-3 pb-24 text-white bg-[#0B0F19]">
       <div className="w-full max-w-md mx-auto">
 
-        {/* HEADER */}
+        {/* 🔷 HEADER */}
         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-3">
             <button
@@ -35,155 +47,174 @@ const WithdrawUSDT = () => {
           </div>
 
           <div
-            onClick={() => navigate("/settings")}
+            onClick={() => navigate("/settings/profile")}
             className="w-10 h-10 flex items-center justify-center rounded-xl 
-              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
-              shadow-lg shadow-blue-500/20
-              cursor-pointer active:scale-95 transition"
+            bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+            shadow-lg shadow-blue-500/20 cursor-pointer"
           >
             <User size={18} />
           </div>
         </div>
 
-        {/* 🔥 BALANCE CARD (MATCH PROFILE STATS CARD) */}
-        <div className="group rounded-2xl border-2 border-[#444385] overflow-hidden mb-5">
-          <div className="
-            bg-[#00000033] p-4 backdrop-blur-[20px]
-            group-hover:bg-[linear-gradient(180deg,_#020204_0%,_#2C6096_100%)]
-            group-hover:border-l-[5px] group-hover:border-l-[#587FFF]
-            transition-all duration-300
-          ">
-            <div className="flex gap-3 items-center">
-
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[#587FFF33]">
-                <Wallet size={18} />
-              </div>
-
-              <div>
-                <p className="text-xs text-white font-[Manrope]">
-                  Available Balance
-                </p>
-                <p className="text-lg font-bold font-[Space Grotesk]">
-                  ${balance}
-                </p>
-              </div>
-
+        {/* 🔥 BALANCE */}
+        <div className="rounded-2xl border border-[#444385] p-4 mb-5 bg-[#00000033]">
+          <div className="flex gap-3 items-center">
+            <Wallet size={18} />
+            <div>
+              <p className="text-xs text-gray-400">Available Balance</p>
+              <p className="text-lg font-bold">${balance}</p>
             </div>
           </div>
         </div>
 
-        {/* 🔥 FORM CARD (PROFILE STYLE GRADIENT BORDER) */}
+        {/* 🔥 FORM */}
         <div className="rounded-2xl border border-[#81ECFF66] p-[1px] mb-5
-        bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
+        bg-[linear-gradient(217deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
 
-          <div className="rounded-2xl bg-[#0B0F1A] p-4 backdrop-blur-[20px]">
+          <div className="rounded-2xl bg-[#0B0F1A] p-4 space-y-4">
 
-            <div className="space-y-4">
-
-              {/* Amount */}
-              <div>
-                <label className="text-xs text-[#81ECFF] font-[Manrope]">
-                  Amount
-                </label>
-                <input
-                  type="number"
-                  placeholder="Enter amount"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="
-                  w-full mt-1 px-3 py-2 rounded-lg
-                  bg-[#00000033]
-                  border border-[#444B55]
-                  text-white
-                  outline-none
-                  focus:border-[#587FFF]
-                  "
-                />
-              </div>
-
-              {/* Address */}
-              <div>
-                <label className="text-xs text-[#81ECFF] font-[Manrope]">
-                  Wallet Address
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter wallet address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="
-                  w-full mt-1 px-3 py-2 rounded-lg
-                  bg-[#00000033]
-                  border border-[#444B55]
-                  text-white
-                  outline-none
-                  focus:border-[#587FFF]
-                  "
-                />
-              </div>
-
-              {/* BUTTON (PROFILE SAME) */}
-              <button
-                className="
-                w-full py-3 rounded-full
-                bg-[linear-gradient(45deg,_#587FFF_0%,_#09239F_100%)]
-                text-white text-sm font-[Poppins]
-                flex items-center justify-center gap-2
-                hover:opacity-90 transition
-                "
-              >
-                <Send size={16} />
-                Withdraw Now
-              </button>
-
+            <div>
+              <label className="text-xs text-[#81ECFF]">Amount</label>
+              <input
+                type="number"
+                placeholder="Enter amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full mt-1 px-3 py-2 rounded-lg bg-[#00000033] border border-[#444B55]"
+              />
             </div>
+
+            <div>
+              <label className="text-xs text-[#81ECFF]">Wallet Address</label>
+              <input
+                type="text"
+                placeholder="Enter wallet address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full mt-1 px-3 py-2 rounded-lg bg-[#00000033] border border-[#444B55]"
+              />
+            </div>
+
+            <button className="w-full py-3 rounded-full
+            bg-gradient-to-r from-[#587FFF] to-[#09239F]
+            flex items-center justify-center gap-2">
+              <Send size={16} />
+              Withdraw Now
+            </button>
 
           </div>
         </div>
 
-        {/* 🔥 HISTORY TABLE (SAME STYLE) */}
-        <div className="rounded-2xl border border-[#81ECFF66] p-[1px]
-        bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
+        {/* 🔥 HISTORY */}
+        <div className="space-y-3">
 
-          <div className="rounded-2xl bg-[#0B0F1A] backdrop-blur-[20px] overflow-hidden">
+          {/* HEADING */}
+          <h2 className="text-lg font-semibold 
+          bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+          bg-clip-text text-transparent">
+            Withdraw History
+          </h2>
 
-            {/* HEADER */}
-            <div className="grid grid-cols-5 px-3 py-3 text-xs font-[Manrope] text-[#81ECFF] border-b border-[#1f2430]">
-              <p>Txn ID</p>
-              <p>Amount</p>
-              <p>Address</p>
-              <p>Date</p>
-              <p className="text-right">Status</p>
-            </div>
+          {/* TABLE */}
+          <div className="rounded-2xl border border-[#81ECFF66] p-[1px]
+          bg-[linear-gradient(217deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
 
-            {/* DATA */}
-            {withdrawHistory.map((item, i) => (
-              <div
-                key={i}
-                className="grid grid-cols-5 px-3 py-3 text-sm items-center
-                border-b border-[#1f2430]
-                hover:bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)]
-                transition"
-              >
-                <p>{item.id}</p>
-                <p>{item.amount}</p>
-                <p className="truncate">{item.address}</p>
-                <p>{item.date}</p>
+            <div className="rounded-2xl bg-[#0B0F1A]">
 
-                <p className="text-right">
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold
-                    ${item.status === "Success"
-                      ? "bg-green-500/20 text-green-300"
-                      : "bg-yellow-500/20 text-yellow-300"
-                    }`}>
-                    {item.status}
-                  </span>
-                </p>
+              <div className="overflow-x-auto">
+
+                <table className="min-w-[700px] w-full text-sm">
+
+                  <thead className="bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)] uppercase rounded-lg">
+                    <tr className="text-gray-400 border-b border-[#1f2430]">
+                      <th className="px-3 py-3 text-left">S.No</th>
+                      <th className="px-3 py-3 text-left">Txn ID</th>
+                      <th className="px-3 py-3 text-left">Amount</th>
+                      <th className="px-3 py-3 text-left">Address</th>
+                      <th className="px-3 py-3 text-left">Date</th>
+                      <th className="px-3 py-3 text-right">Status</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {currentData.map((item, i) => (
+                      <tr key={i}
+                        className="border-b border-[#1f2430]
+                        hover:bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)]">
+
+                        {/* S.NO */}
+                        <td className="px-3 py-3 text-blue-400 font-medium">
+                          {indexOfFirst + i + 1}
+                        </td>
+
+                        <td className="px-3 py-3">{item.id}</td>
+                        <td className="px-3 py-3">{item.amount}</td>
+                        <td className="px-3 py-3 truncate max-w-[120px]">{item.address}</td>
+                        <td className="px-3 py-3">{item.date}</td>
+
+                        <td className="px-3 py-3 text-right">
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            item.status === "Success"
+                              ? "bg-green-500/20 text-green-300"
+                              : "bg-yellow-500/20 text-yellow-300"
+                          }`}>
+                            {item.status}
+                          </span>
+                        </td>
+
+                      </tr>
+                    ))}
+
+                    {currentData.length === 0 && (
+                      <tr>
+                        <td colSpan="6" className="text-center py-5 text-gray-400">
+                          No Records Found
+                        </td>
+                      </tr>
+                    )}
+
+                  </tbody>
+
+                </table>
 
               </div>
-            ))}
-
+            </div>
           </div>
+
+          {/* 🔥 PAGINATION */}
+          {totalPages > 1 && (
+            <div className="flex justify-between items-center">
+
+              <p className="text-xs text-gray-400">
+                Page <span className="text-white">{currentPage}</span> of {totalPages}
+              </p>
+
+              <div className="flex gap-2">
+
+                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}
+                  className="px-2 py-1 text-xs border border-[#444385] rounded disabled:opacity-40">
+                  ⏮
+                </button>
+
+                <button onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1}
+                  className="px-2 py-1 text-xs border border-[#444385] rounded disabled:opacity-40">
+                  ←
+                </button>
+
+                <button onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage === totalPages}
+                  className="px-2 py-1 text-xs border border-[#444385] rounded disabled:opacity-40">
+                  →
+                </button>
+
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}
+                  className="px-2 py-1 text-xs border border-[#444385] rounded disabled:opacity-40">
+                  ⏭
+                </button>
+
+              </div>
+            </div>
+          )}
+
         </div>
 
       </div>

@@ -142,7 +142,7 @@ const HomeDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen text-white px-3 py-3">
+    <div className="min-h-screen text-white   px-3 py-3">
       <div className="max-w-md mx-auto space-y-5">
 
         {/* 🔷 HEADER */}
@@ -181,7 +181,7 @@ rounded-2xl px-4 py-3">
               key={i}
               className="group rounded-2xl border-2 border-[#444385] overflow-hidden"
             >
-              <div className="bg-[#00000033] p-3 backdrop-blur-[20px]
+              <div className="bg-[#00000033] p-3 backdrop-blur-[20px] 
               transition-all duration-300
               group-hover:bg-[linear-gradient(180deg,#020204,#2C6096)]
               group-hover:border-l-[5px] group-hover:border-l-[#587FFF]">
@@ -270,28 +270,60 @@ rounded-2xl px-4 py-3">
 
             <p className="text-sm text-gray-300 mb-3">Recent Buy</p>
 
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="text-gray-400 border-b text-left border-[#333]">
-                  <th className="py-2 text-left">ID</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+            {/* 🔥 RESPONSIVE WRAPPER */}
+            <div className="overflow-x-auto">
 
-              <tbody>
-                {transactions.map((tx, i) => (
-                  <tr key={i} className="border-b border-[#222]">
-                    <td className="py-2">{tx.id}</td>
-                    <td>{tx.amount}</td>
-                    <td>{tx.date}</td>
-                    <td className="text-green-400">{tx.status}</td>
+              <table className="min-w-[500px] w-full text-xs">
+
+                {/* HEADER */}
+                <thead>
+                  <tr className="text-gray-400 border-b border-[#333] text-left">
+                    <th className="px-3 py-3 w-[60px]">S.No</th>
+                    <th className="py-2">ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th className="text-right">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
 
+                {/* BODY */}
+                <tbody>
+                  {transactions.map((tx, i) => (
+                    <tr
+                      key={i}
+                      className="border-b border-[#222] hover:bg-[#ffffff05] transition"
+                    >
+                      {/* ✅ S.NO (FIXED) */}
+                      <td className="px-3 py-3 text-blue-400 font-medium">
+                        {i + 1}
+                      </td>
+
+                      <td className="py-2">{tx.id}</td>
+                      <td>{tx.amount}</td>
+                      <td>{tx.date}</td>
+
+                      <td className="text-right">
+                        <span className="text-green-400 text-xs">
+                          {tx.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+
+                  {/* EMPTY STATE */}
+                  {transactions.length === 0 && (
+                    <tr>
+                      <td colSpan="5" className="text-center py-4 text-gray-400">
+                        No Records Found
+                      </td>
+                    </tr>
+                  )}
+
+                </tbody>
+
+              </table>
+
+            </div>
           </div>
         </div>
 

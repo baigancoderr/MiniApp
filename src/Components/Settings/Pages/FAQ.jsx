@@ -42,7 +42,7 @@ const FAQ = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center px-2 py-3 pb-20 text-white overflow-hidden  relative">
+    <div className="min-h-screen flex items-start justify-center px-2 py-3 pb-24 text-white overflow-hidden  relative">
 
       {/* Deep 3D Background Glows */}
       {/* <div className="absolute inset-0 bg-[radial-gradient(at_50%_20%,rgba(59,130,246,0.18),transparent_50%)]" />

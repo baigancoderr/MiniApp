@@ -39,7 +39,7 @@ const Referral = () => {
       const indexOfFirst = indexOfLast - itemsPerPage;
       const currentData = filteredData.slice(indexOfFirst, indexOfLast);
   return (
-    <div className="  pb-20 py-3 px-2  text-white font-sans flex justify-center">
+    <div className="  pb-20 py-3 px-3  text-white font-sans flex justify-center">
       <div className="w-full max-w-md mx-auto   relative">
 
         {/* Header */}

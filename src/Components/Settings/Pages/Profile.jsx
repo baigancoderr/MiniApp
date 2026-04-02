@@ -65,7 +65,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center px-2 py-3 text-white bg-[#0B0F19]">
+    <div className="min-h-screen flex justify-center pb-24  px-2 py-3 text-white bg-[#0B0F19]">
       <div className="w-full max-w-md">
 
         {/* HEADER */}

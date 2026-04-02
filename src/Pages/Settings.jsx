@@ -4,7 +4,7 @@ import Footer from "../Components/Footer";
 import SettingsComponent from "../Components/Settings/Settings";
 import PrivacyPolicy from "../Components/Settings/Pages/PrivacyPolicy";
 import TermCondition from "../Components/Settings/Pages/TermCondition";
-import WalletBreakdown from "../Components/Settings/Pages/WalletBreakdown";
+import InvestmentHistory from "../Components/Settings/Pages/InvestmentHistory";
 import Referral from "../Components/Settings/Pages/Referral";
 import FAQ from "../Components/Settings/Pages/FAQ";
 import Profile from "../Components/Settings/Pages/Profile";
@@ -32,8 +32,8 @@ useEffect(() => {
    else if (location.pathname.includes("AddFunds")) {
     setPage("AddFunds");
   }
-  else if (location.pathname.includes("wallet-breakdown")) {
-    setPage("WalletBreakdown");
+  else if (location.pathname.includes("investment-history")) {
+    setPage("InvestmentHistory");
   }
   else if (location.pathname.includes("referral-earning-history")) {
   setPage("ReferralEarningsHistory");
@@ -56,7 +56,7 @@ useEffect(() => {
       {page === "withdrawUsdt" && <WithdrawUsdt />}
        {page === "FAQ" && <FAQ />}
       {page === "TermCondition" && <TermCondition />}
-      {page === "WalletBreakdown" && <WalletBreakdown />}
+      {page === "InvestmentHistory" && <InvestmentHistory />}
       {page === "Referral" && <Referral />}
       {page === "Profile" && <Profile />}
       {page === "ReferralEarningsHistory" && <ReferralEarningsHistory />}
