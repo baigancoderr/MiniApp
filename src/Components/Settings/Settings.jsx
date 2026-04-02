@@ -4,10 +4,12 @@ import {
   User, Users, TrendingUp, Wallet,
   Plus, Clock, Download, ChevronRight
 } from "lucide-react";
+import { FaQuestion } from "react-icons/fa";
+import { MdOutlinePolicy } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import settingImg from "../../assets/setting/user-img.jpeg";
-
+import { FaGavel } from "react-icons/fa";
 const SettingsComponent = () => {
   const navigate = useNavigate();
 
@@ -49,25 +51,25 @@ const SettingsComponent = () => {
       action: () => navigate("/settings/deposit-history"),
     },
     {
-      icon: <Download size={18} />,
+      icon: <Wallet size={18} />,
       title: "Withdraw USDT",
       subtitle: "Transfer funds",
       action: () => navigate("/settings/withdraw-usdt"),
     },
     {
-      icon: <Download size={18} />,
+      icon: <FaQuestion size={18} />,
       title: "FAQs",
       subtitle: "Common questions",
       action: () => navigate("/settings/faqs"),
     },
     {
-      icon: <Download size={18} />,
+      icon: <FaGavel size={18} />,
       title: "Terms & Conditions",
       subtitle: "Legal info",
       action: () => navigate("/settings/term-condition"),
     },
     {
-      icon: <Download size={18} />,
+      icon: <MdOutlinePolicy size={18} />,
       title: "Privacy Policy",
       subtitle: "Your data safety",
       action: () => navigate("/settings/privacy"),

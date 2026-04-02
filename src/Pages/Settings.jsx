@@ -31,10 +31,11 @@ useEffect(() => {
   } 
    else if (location.pathname.includes("AddFunds")) {
     setPage("AddFunds");
-  }else if (location.pathname.includes("wallet-breakdown")) {
+  }
+  else if (location.pathname.includes("wallet-breakdown")) {
     setPage("WalletBreakdown");
-
-  }else if (location.pathname.includes("referral-earning-history")) {
+  }
+  else if (location.pathname.includes("referral-earning-history")) {
   setPage("ReferralEarningsHistory");
     }else if (location.pathname.includes("referral")) {
     setPage("Referral");

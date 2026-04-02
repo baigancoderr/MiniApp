@@ -1,7 +1,6 @@
-import { Coins, CheckCircle, Loader, User } from "lucide-react";
+import { Coins, CheckCircle, ArrowLeft, Loader, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
 
 const WalletHero = () => {
   const navigate = useNavigate();
@@ -42,18 +41,35 @@ const WalletHero = () => {
 
 
   const visibleData = showAll ? investments : investments.slice(0, 5);
+  
 
   return (
     <div className="w-full flex justify-center  px-3 py-3">
       
 
       <div className="w-full max-w-md space-y-6">
-      <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Wallet Balance</h2>
-          <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-r from-[#587FFF] to-[#09239F]">
+          <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/")}
+              className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <h2 className="text-lg font-semibold">Wallet </h2>
+          </div>
+
+          <div
+            onClick={() => navigate("/settings")}
+            className="w-10 h-10 flex items-center justify-center rounded-xl 
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+              shadow-lg shadow-blue-500/20
+              cursor-pointer active:scale-95 transition"
+          >
             <User size={18} />
           </div>
         </div>
+        
 
         {/* ===== WALLET OVERVIEW ===== */}
         <div className="rounded-2xl p-3 border border-blue-500/20 shadow-2xl">
@@ -62,9 +78,6 @@ const WalletHero = () => {
             <h2 className="text-white font-semibold text-lg">
               Wallet Overview
             </h2>
-            {/* <button className="px-5 py-2 text-xs rounded-lg bg-gradient-to-r from-[#587FFF] to-[#09239F]">
-              All Reports
-            </button> */}
           </div>
 
           <div className="grid grid-cols-2 gap-3">

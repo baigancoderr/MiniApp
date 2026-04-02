@@ -1,4 +1,4 @@
-import { ArrowLeft, HelpCircle, ChevronDown, Settings } from "lucide-react";
+import { ArrowLeft, HelpCircle, ChevronDown, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -69,18 +69,27 @@ const FAQ = ({ onBack }) => {
             </p>
           </div>
         </div> */}
-        <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
-                    <div className="flex items-center gap-3">
-                         <button
-                                                    onClick={() => navigate(-1)}
-                                                    className="p-1.5 rounded-md text-[#FFFFFF]"
-                                                >
-                                                    <ArrowLeft size={20} />
-                                                </button>
-                        <h1 className="text-lg font-[Manrope] font-bold">FAQ</h1>
-                    </div>
-                    <Settings size={20} className="text-white" />
-                </div>
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/settings")}
+              className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <h2 className="text-lg font-semibold">FAQs</h2>
+          </div>
+
+          <div
+            onClick={() => navigate("/settings")}
+            className="w-10 h-10 flex items-center justify-center rounded-xl 
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+              shadow-lg shadow-blue-500/20
+              cursor-pointer active:scale-95 transition"
+          >
+            <User size={18} />
+          </div>
+        </div>
 
         {/* Premium 3D Main Card */}
         <div className="relative rounded-lg p-3 

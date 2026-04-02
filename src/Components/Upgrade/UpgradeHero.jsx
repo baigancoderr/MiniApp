@@ -1,4 +1,4 @@
-import { CheckCircle, ArrowRight } from "lucide-react";
+import { CheckCircle, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import {
   DollarSign,
@@ -11,6 +11,7 @@ import {
   Share2,
   User,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -32,6 +33,8 @@ ChartJS.register(
 );
 
 const UpgradeHero = () => {
+  
+    const navigate = useNavigate();
 
 const [amount, setAmount] = useState("25");
 
@@ -43,6 +46,7 @@ const dailyClaim = totalTokens / 700;
 const startDate = new Date().toLocaleDateString();
 
  
+  const userId = "CIP579317981";
    const [activeFilter, setActiveFilter] = useState("1D");
 
   // 🔷 STATS
@@ -68,8 +72,29 @@ const startDate = new Date().toLocaleDateString();
  
 
   return (
-    <div className="w-full flex justify-center px-2">
+    <div className="w-full flex justify-center px-2 py-3">
       <div className="w-full max-w-md space-y-6">
+           <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/")}
+              className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
+            >
+              <ArrowLeft size={18} />
+            </button> 
+            <h2 className="text-lg font-semibold">Investment </h2>
+          </div>
+
+          <div
+            onClick={() => navigate("/settings")}
+            className="w-10 h-10 flex items-center justify-center rounded-xl 
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+              shadow-lg shadow-blue-500/20
+              cursor-pointer active:scale-95 transition"
+          >
+            <User size={18} />
+          </div>
+        </div>
 
         <div className="rounded-xl p-3 
           

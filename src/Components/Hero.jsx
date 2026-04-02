@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+import { useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -35,45 +36,49 @@ ChartJS.register(
 const HomeDashboard = () => {
   const [activeFilter, setActiveFilter] = useState("1D");
   const referralLink = "https://yourapp.com/ref/CPR1234567";
+  const userId = "CIP579317981";
 
+  const navigate = useNavigate();
   const handleShare = () => {
-  if (navigator.share) {
-    // Mobile native share (Telegram, WhatsApp etc.)
-    navigator.share({
-      title: "Join Now 🚀",
-      text: "Join using my referral link and earn rewards!",
-      url: referralLink,
-    });
-  } else {
-    // Fallback: direct Telegram share link
-    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent("Join and earn 🚀")}`;
-    window.open(telegramUrl, "_blank");
-  }
-};
-
-const handleCopy = async () => {
-  try {
-    if (navigator.clipboard && window.isSecureContext) {
-      // ✅ Modern browsers
-      await navigator.clipboard.writeText(referralLink);
+    if (navigator.share) {
+      // Mobile native share (Telegram, WhatsApp etc.)
+      navigator.share({
+        title: "Join Now 🚀",
+        text: "Join using my referral link and earn rewards!",
+        url: referralLink,
+      });
     } else {
-      // ✅ Fallback for mobile / insecure
-      const textArea = document.createElement("textarea");
-      textArea.value = referralLink;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-9999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
+      // Fallback: direct Telegram share link
+      const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent("Join and earn 🚀")}`;
+      window.open(telegramUrl, "_blank");
     }
+  };
 
-    toast.success("Copied to clipboard 🚀");
-  } catch (err) {
-    toast.error("Copy failed ❌");
-  }
-};
+  const handleCopy = async () => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        // ✅ Modern browsers
+        await navigator.clipboard.writeText(referralLink);
+      } else {
+        // ✅ Fallback for mobile / insecure
+        const textArea = document.createElement("textarea");
+        textArea.value = referralLink;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+
+      toast.success("Copied to clipboard 🚀");
+    } catch (err) {
+      toast.error("Copy failed ❌");
+    }
+  };
+
+
   // 🔷 STATS
   const stats = [
     { title: "LIVE PRICE", value: "$0.12", icon: <TrendingUp size={18} /> },
@@ -141,11 +146,32 @@ const handleCopy = async () => {
       <div className="max-w-md mx-auto space-y-5">
 
         {/* 🔷 HEADER */}
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Dashboard</h2>
-          <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gradient-to-r from-[#587FFF] to-[#09239F]">
+        <div className="flex items-center justify-between 
+bg-[#00000033] backdrop-blur-[20px] 
+border border-[#444385] 
+rounded-2xl px-4 py-3">
+
+          {/* LEFT SIDE */}
+          <div>
+            <p className="text-xs text-gray-400">User ID</p>
+            <h2 className="text-lg font-semibold 
+    bg-gradient-to-r from-[#FFF] to-[#587FFF] 
+    bg-clip-text text-transparent">
+              {userId}
+            </h2>
+          </div>
+
+          {/* RIGHT SIDE */}
+          <div
+            onClick={() => navigate("/settings")}
+            className="w-10 h-10 flex items-center justify-center rounded-xl 
+    bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+    shadow-lg shadow-blue-500/20
+    cursor-pointer active:scale-95 transition"
+          >
             <User size={18} />
           </div>
+
         </div>
 
         {/* 🔥 CARDS */}
@@ -188,8 +214,8 @@ const handleCopy = async () => {
                   key={item}
                   onClick={() => setActiveFilter(item)}
                   className={`text-xs px-3 py-1 rounded-full ${activeFilter === item
-                      ? "bg-blue-500/20 text-blue-400"
-                      : "text-gray-400"
+                    ? "bg-blue-500/20 text-blue-400"
+                    : "text-gray-400"
                     }`}
                 >
                   {item}
@@ -211,30 +237,30 @@ const handleCopy = async () => {
             </div>
 
             <div className="flex gap-2">
-  <button
-    onClick={handleCopy}
-    className="flex-1 
+              <button
+                onClick={handleCopy}
+                className="flex-1 
     bg-[linear-gradient(45deg,#587FFF,#09239F)] 
     hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
     text-white text-sm py-3 rounded-full 
     flex items-center justify-center gap-2 transition-all"
-  >
-    <Copy size={16} />
-    Copy
-  </button>
+              >
+                <Copy size={16} />
+                Copy
+              </button>
 
-  <button
-    onClick={handleShare}
-    className="flex-1 
+              <button
+                onClick={handleShare}
+                className="flex-1 
     bg-[linear-gradient(45deg,#587FFF,#09239F)] 
     hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
     text-white text-sm py-3 rounded-full 
     flex items-center justify-center gap-2 transition-all"
-  >
-    <Share2 size={16} />
-    Share
-  </button>
-</div>
+              >
+                <Share2 size={16} />
+                Share
+              </button>
+            </div>
           </div>
         </div>
 

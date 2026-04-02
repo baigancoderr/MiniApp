@@ -1,4 +1,4 @@
-import { Home, Wallet, TrendingUp, Settings, Plus } from "lucide-react";
+import { Home, Wallet, TrendingUp, User, Plus } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 
@@ -53,7 +53,7 @@ const Footer = () => {
           {renderIcon(Plus, "/addfund", "Add")}
           {renderIcon(Home, "/", "Home")}
           {renderIcon(TrendingUp, "/invest", "Invest")}
-          {renderIcon(Settings, "/settings", "Profile")}
+          {renderIcon(User, "/settings", "Profile")}
 
         </div>
       </div>

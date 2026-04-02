@@ -1,239 +1,201 @@
-import React from "react";
-import { ArrowLeft, Settings, Copy, Share2 } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, User, Copy, Share2 } from "lucide-react";
 import userimg2 from "../../../assets/Setting/user-img.jpeg";
 import cipera from "../../../assets/Setting/cipera.png";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const Profile = ({ onBack }) => {
-    const navigate = useNavigate();
-     const referralLink = "https://yourapp.com/ref/CPR1234567";
+const Profile = () => {
+  const navigate = useNavigate();
 
+  // ✅ Referral
+  const referralLink = "https://yourapp.com/ref/CPR1234567";
+
+  // ✅ Wallet State
+  const [walletAddress, setWalletAddress] = useState("0xA1b2C3d4E5F6...");
+  const [isEditing, setIsEditing] = useState(false);
+
+  // ✅ Share
   const handleShare = () => {
-  if (navigator.share) {
-    // Mobile native share (Telegram, WhatsApp etc.)
-    navigator.share({
-      title: "Join Now 🚀",
-      text: "Join using my referral link and earn rewards!",
-      url: referralLink,
-    });
-  } else {
-    // Fallback: direct Telegram share link
-    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent("Join and earn 🚀")}`;
-    window.open(telegramUrl, "_blank");
-  }
-};
-
-const handleCopy = async () => {
-  try {
-    if (navigator.clipboard && window.isSecureContext) {
-      // ✅ Modern browsers
-      await navigator.clipboard.writeText(referralLink);
+    if (navigator.share) {
+      navigator.share({
+        title: "Join Now 🚀",
+        text: "Join using my referral link and earn rewards!",
+        url: referralLink,
+      });
     } else {
-      // ✅ Fallback for mobile / insecure
-      const textArea = document.createElement("textarea");
-      textArea.value = referralLink;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-9999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
+      const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
+        referralLink
+      )}&text=${encodeURIComponent("Join and earn 🚀")}`;
+      window.open(telegramUrl, "_blank");
     }
+  };
 
-    toast.success("Copied to clipboard 🚀");
-  } catch (err) {
-    toast.error("Copy failed ❌");
-  }
-};
-    const stats = [
-        { label: "Daily Earnings", value: "18", sub: "/day", usd: "$0.90" },
-        { label: "Utility Wallet", value: "0.00", usd: "$0.00" },
-        { label: "Earning Wallet", value: "0.00", usd: "$0.00" },
-        { label: "Lifetime Mining", value: "0.00", usd: "$0.00" },
-        { label: "CIP Referral", value: "0.00", usd: "$0.00" },
-        { label: "USDT Referral", value: "0.00", usd: "$0.00" },
-        { label: "Staking Earning", value: "0.00", usd: "$0.00" },
-        { label: "USDT Earning", value: "0.00", usd: "$0.00" },
-    ];
+  // ✅ Copy
+  const handleCopy = async () => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(referralLink);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = referralLink;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
 
-    return (
-        <div className="min-h-screen flex items-start justify-center px-2 py-3 pb-20 text-white relative overflow-x-hidden">
+      toast.success("Copied 🚀");
+    } catch {
+      toast.error("Copy failed ❌");
+    }
+  };
 
+  return (
+    <div className="min-h-screen flex justify-center px-2 py-3 text-white bg-[#0B0F19]">
+      <div className="w-full max-w-md">
 
-            <div className="w-full max-w-md mx-auto">
+        {/* HEADER */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/settings")}
+              className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <h2 className="text-lg font-semibold">User Account</h2>
+          </div>
 
-
-
-                {/* HEADER */}
-                <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2">
-                    <div className="flex items-center gap-3">
-                        {/* <button className="p-1.5 rounded-md text-[#FFFFFF]">
-                            <ArrowLeft size={20} />
-                        </button> */}
-                        <button
-                            onClick={() => navigate(-1)}
-                            className="p-1.5 rounded-md text-[#FFFFFF]"
-                        >
-                            <ArrowLeft size={20} />
-                        </button>
-                        <h2 className="text-lg font-[Manrope] font-bold">Profile</h2>
+          <div
+                      onClick={() => navigate("/settings")}
+                      className="w-10 h-10 flex items-center justify-center rounded-xl 
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+              shadow-lg shadow-blue-500/20
+              cursor-pointer active:scale-95 transition"
+                    >
+                      <User size={18} />
                     </div>
-                    <Settings size={20} className="text-white" />
-                </div>
+        </div>
 
-                {/* PROFILE CARD */}
-                <div className="px-2 xs:px-4">
-                    <div className="relative rounded-2xl border-2 border-[#81ECFF99] p-[1px] mb-5 
-          bg-[linear-gradient(217.49deg,_rgba(88,127,255,0.5)_1.24%,_rgba(0,7,64,0.245)_20.92%)]">
+        {/* PROFILE CARD */}
+        <div className="relative rounded-2xl border border-[#81ECFF99] p-[1px] mb-5 bg-gradient-to-br from-blue-500/20 to-black/30">
+          <div className="rounded-2xl p-4 bg-[#0B0F19]">
 
-                        <div className="relative rounded-2xl  p-4 overflow-hidden">
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src={userimg2}
+                className="w-20 h-20 rounded-full border border-white/20 object-cover"
+              />
 
-                            {/* inner glow */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-500/10" />
+              <div>
+                <h2 className="text-xl font-bold">XYZ</h2>
+                <span className="text-xs px-3 py-1 rounded-full bg-blue-500/20">
+                  Investor
+                </span>
+              </div>
+            </div>
 
-                            <div className="relative flex justify-center items-center gap-4 mb-4">
-                                <img
-                                    src={userimg2}
-                                    className="w-20 h-20 rounded-full object-cover border border-white/20"
-                                />
+            {/* IDs */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
+                <p className="text-xs text-gray-400">USER ID</p>
+                <p className="text-white">CIP579317981</p>
+              </div>
 
-                                <div>
-                                    <h2 className="text-xl font-bold text-[#fff] font-[Poppins] mb-3">XYZ</h2>
-                                    <span className="text-xs px-3 font-[Manrope] font-bold py-[4px] rounded-full text-[#fff] border border-[#A68CFF4D] bg-[#866AC033]">
-                                        FREE MINER
-                                    </span>
-                                </div>
-                            </div>
+              <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
+                <p className="text-xs text-gray-400">PARENT ID</p>
+                <p className="text-white">CIP1656587816</p>
+              </div>
+            </div>
 
-                            {/* IDS */}
-                            <div className="relative grid grid-cols-2 gap-3">
-                                <div className="bg-[#0000001A] hover:bg-[linear-gradient(185.32deg,_rgba(10,61,248,0.3)_4.26%,_rgba(28,41,88,0.3)_244.76%)] backdrop-blur-[50px] shadow-[0px_4px_4px_0px_#00000040] rounded-xl p-3 border border-[#444B55]">
-                                    <p className="text-xs font-[Manrope] text-white font-[600] mb-1">USER ID</p>
-                                    <p className="text-base font-[400] text-white font-[Poppins]">CIP579317981</p>
-                                </div>
+          </div>
+        </div>
 
-                                <div className="bg-[#0000001A] hover:bg-[linear-gradient(185.32deg,_rgba(10,61,248,0.3)_4.26%,_rgba(28,41,88,0.3)_244.76%)] backdrop-blur-[50px] shadow-[0px_4px_4px_0px_#00000040] rounded-xl p-3 border border-[#444B55]">
-                                    <p className="text-xs font-[Manrope] text-white font-[600] mb-1">PARENT ID</p>
-                                    <p className="text-base font-[400] text-white font-[Poppins] ">CIP1656587816</p>
-                                </div>
-                            </div>
+        {/* 🔥 WALLET ADDRESS SECTION */}
+        <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020] mb-5">
 
-                        </div>
-                    </div>
+          <p className="text-sm text-gray-300 mb-2">Wallet Address</p>
 
-                    {/* STATS */}
-                    <div className="grid grid-cols-2 gap-3 mb-5">
-                        {stats.map((item, i) => (
-                            <div
-                                key={i}
-                                className="group rounded-2xl border-2 border-[#444385] hover:border-transparent overflow-hidden"
-                            >
-                                <div
-                                    className="
-                                    bg-[#00000033]
-                                    p-3 h-full
-                                    backdrop-blur-[20px]
+          <div className="flex flex-col gap-3">
 
-                                    transition-all duration-300
+            <input
+              type="text"
+              value={walletAddress}
+              disabled={!isEditing}
+              onChange={(e) => setWalletAddress(e.target.value)}
+              className={`w-full px-3 py-2 rounded-lg text-sm bg-black border 
+              ${isEditing ? "border-[#81ECFF]" : "border-[#444B55]"} 
+              text-white outline-none`}
+            />
 
-                                    group-hover:bg-[linear-gradient(180deg,_#020204_0%,_#2C6096_100%)]
-                                    group-hover:border-l-[5px] group-hover:border-l-[#587FFF]
-                                "
-                                >
+            <div className="flex gap-2">
 
-                                    {/* ROW LAYOUT */}
-                                    <div className="flex items-start gap-3">
+              {!isEditing ? (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="flex-1 bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg text-sm"
+                >
+                  Edit Address
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setIsEditing(false);
+                      toast.success("Wallet Updated ✅");
+                    }}
+                    className="flex-1 bg-green-500 py-2 rounded-lg text-sm"
+                  >
+                    Update
+                  </button>
 
-                                        {/* ICON (LEFT) */}
-                                        <div
-                                            className="
-                                            w-8 h-8 rounded-full flex items-center justify-center text-xs
-                                            
-                                            transition-all duration-300
-                                            shrink-0
-                                        "
-                                        >
-                                            <img src={cipera} alt="" />
-                                        </div>
-
-                                        {/* CONTENT (RIGHT) */}
-                                        <div className="flex-1">
-
-                                            <p className="text-xs text-[#fff] font-[Manrope] font-[500]">
-                                                {item.label}
-                                            </p>
-
-                                            <div className="flex items-end gap-1 mt-1">
-                                                <p className="text-base font-bold font-[Space Grotesk] text-white">
-                                                    {item.value}
-                                                </p>
-                                                {item.sub && (
-                                                    <span className="text-xs text-[#fff] font-[Space Grotesk] font-[500]">
-                                                        {item.sub}
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <p className="text-xs text-[#fff] font-[Space Grotesk] font-[500]">
-                                                {item.usd}
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* REFERRAL */}
-                    {/* <div className="rounded-2xl p-[1px] bg-[#81ECFF]"> */}
-                    <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
-                             <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
-                   
-                               <p className="text-sm text-gray-300 mb-2">Referral Link</p>
-                   
-                               <div className="bg-black border border-[#81ECFF] rounded-lg p-2 text-xs mb-3">
-                                 CPR1234567
-                               </div>
-                   
-                               <div className="flex gap-2">
-                     <button
-                       onClick={handleCopy}
-                       className="flex-1 
-                       bg-[linear-gradient(45deg,#587FFF,#09239F)] 
-                       hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
-                       text-white text-sm py-3 rounded-full 
-                       flex items-center justify-center gap-2 transition-all"
-                     >
-                       <Copy size={16} />
-                       Copy
-                     </button>
-                   
-                     <button
-                       onClick={handleShare}
-                       className="flex-1 
-                       bg-[linear-gradient(45deg,#587FFF,#09239F)] 
-                       hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]
-                       text-white text-sm py-3 rounded-full 
-                       flex items-center justify-center gap-2 transition-all"
-                     >
-                       <Share2 size={16} />
-                       Share
-                     </button>
-                   </div>
-                             </div>
-                           </div>
-                    {/* </div> */}
-
-                </div>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="flex-1 bg-gray-600 py-2 rounded-lg text-sm"
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
 
             </div>
+          </div>
         </div>
-    );
+
+        {/* REFERRAL */}
+        <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020]">
+
+          <p className="text-sm text-gray-300 mb-2">Referral Link</p>
+
+          <div className="bg-black border border-[#81ECFF] rounded-lg p-2 text-xs mb-3 break-all">
+            {referralLink}
+          </div>
+
+          <div className="flex gap-2">
+
+            <button
+              onClick={handleCopy}
+              className="flex-1 bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg flex items-center justify-center gap-2"
+            >
+              <Copy size={16} />
+              Copy
+            </button>
+
+            <button
+              onClick={handleShare}
+              className="flex-1 bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg flex items-center justify-center gap-2"
+            >
+              <Share2 size={16} />
+              Share
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 };
 
 export default Profile;

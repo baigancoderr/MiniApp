@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { ArrowLeft, Settings, Wallet, TrendingUp } from "lucide-react";
+import { ArrowLeft, User, Wallet, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const DepositHistory = () => {
@@ -25,16 +25,26 @@ const DepositHistory = () => {
       <div className="w-full max-w-md mx-auto">
 
         {/* HEADER */}
-        <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2 rounded-lg">
+         <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)}>
-              <ArrowLeft size={20} />
+            <button
+              onClick={() => navigate("/settings")}
+              className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
+            >
+              <ArrowLeft size={18} />
             </button>
-            <h2 className="text-lg font-bold font-[Manrope]">
-              Deposit History
-            </h2>
+            <h1 className="text-lg font-semibold">Deposit History</h1>
           </div>
-          <Settings size={20} />
+
+          <div
+                      onClick={() => navigate("/settings")}
+                      className="w-10 h-10 flex items-center justify-center rounded-xl 
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+              shadow-lg shadow-blue-500/20
+              cursor-pointer active:scale-95 transition"
+                    >
+                      <User size={18} />
+                    </div>
         </div>
 
         {/* 🔥 SUMMARY CARDS (MATCH PROFILE STYLE) */}

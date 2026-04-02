@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from "react";
-import { ArrowLeft, Users, TrendingUp, Settings } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const ReferralEarningsHistory = () => {
@@ -20,17 +20,27 @@ const ReferralEarningsHistory = () => {
             <div className="w-full max-w-md mx-auto">
 
                 {/* HEADER */}
-                <div className="flex bg-[#282936] items-center justify-between mb-5 px-3 py-2 rounded-lg">
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => navigate(-1)}>
-                            <ArrowLeft size={20} />
-                        </button>
-                        <h2 className="text-lg font-bold font-[Manrope]">
-                            Referral Earnings
-                        </h2>
-                    </div>
-                    <Settings size={20} />
-                </div>
+                 <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/settings")}
+              className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <h2 className="text-lg font-semibold">Referral Earnings</h2>
+          </div>
+
+          <div
+            onClick={() => navigate("/settings")}
+            className="w-10 h-10 flex items-center justify-center rounded-xl 
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+              shadow-lg shadow-blue-500/20
+              cursor-pointer active:scale-95 transition"
+          >
+            <User size={18} />
+          </div>
+        </div>
 
                 {/* TOP STATS */}
                 <div className="grid grid-cols-2 gap-3 mb-5">

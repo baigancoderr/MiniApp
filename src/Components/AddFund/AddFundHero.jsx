@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Settings, Clock, Package, ShieldCheck } from "lucide-react";
+import { ArrowLeft, User, Clock, Package, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import usdt from "../../assets/usdt.png"
 import { Link } from "react-router-dom";
@@ -55,10 +55,15 @@ const AddFundPage = () => {
             <h1 className="text-lg font-semibold">Add Fund</h1>
           </div>
 
-          <div className="w-9 h-9 flex items-center justify-center rounded-full 
-          bg-gradient-to-r from-[#587FFF] to-[#09239F]">
-            <Settings size={16} />
-          </div>
+          <div
+                      onClick={() => navigate("/settings")}
+                      className="w-10 h-10 flex items-center justify-center rounded-xl 
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
+              shadow-lg shadow-blue-500/20
+              cursor-pointer active:scale-95 transition"
+                    >
+                      <User size={18} />
+                    </div>
         </div>
 
         {/* 💰 AMOUNT CARD */}
