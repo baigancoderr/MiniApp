@@ -1,0 +1,58 @@
+.loader-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  display: flex;
+  gap: 6px;
+}
+
+.loader .ball {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  animation: bounce 1.2s infinite ease-in-out !important;
+}
+
+.ball {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 8px 5px, #42fcff 5%, #111);
+  position: relative;
+  box-shadow: 0 0 15px rgba(66, 252, 255, 0.6);
+}
+
+/* STAGGER ANIMATION */
+.ball:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.ball:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ball:nth-child(3) {
+  animation-delay: 0.30s;
+}
+
+.ball:nth-child(4) {
+  animation-delay: 0.45s;
+}
+
+.ball:nth-child(5) {
+  animation-delay: 0.60s;
+}
+
+/* BOUNCE ANIMATION */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 0.7;
+  }
+}

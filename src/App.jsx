@@ -1,52 +1,54 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Homepage from "./Pages/Homepage";
-import Wallet from "./Pages/Wallet";
-import Upgrade from "./Pages/Upgrade";
-import Settings from "./Pages/Settings";
+import { BrowserRouter } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import AppWrapper from "./Layout/AppWrapper"
+import Loader from "./Context/Loader";
 import MagicRings from "./Layout/MagicRings";
-import AddFund from "./Pages/AddFund";
 import { Toaster } from "react-hot-toast";
 
 function App() {
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 4000); // ✅ 7 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="relative min-h-screen text-white overflow-hidden">
 
-      {/* Background */}
-      <div className="fixed inset-0 bg-black/90 -z-[5]">
-        <MagicRings
-          color="#fc42ff"
-          colorTwo="#42fcff"
-          ringCount={6}
-          speed={0.8}
-          opacity={0.8}
-          followMouse={true}
-          clickBurst={true}
-        />
-      </div>
+      {/* ✅ FIRST LOAD SCREEN */}
+      {initialLoading ? (
+        <div className="fixed inset-0 flex items-center justify-center bg-black z-[99999]">
+          <Loader />
+        </div>
+      ) : (
+        <>
+          {/* BACKGROUND */}
+          <div className="fixed inset-0 bg-black/90 -z-[5]">
+            <MagicRings
+              color="#fc42ff"
+              colorTwo="#42fcff"
+              ringCount={6}
+              speed={0.8}
+              opacity={0.8}
+              followMouse={true}
+              clickBurst={true}
+            />
+          </div>
 
-      <div className="fixed inset-0 bg-black/90 -z-10"></div>
+          <div className="fixed inset-0 bg-black/90 -z-10"></div>
 
-      <BrowserRouter>
-        <Toaster position="top-center" reverseOrder={false} />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/wallet" element={<Wallet />} />
-          <Route path="/invest" element={<Upgrade />} />
-          <Route path="/addfund" element={<AddFund />} />
-
-          {/* 🔥 SETTINGS ROUTES */}
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/settings/profile" element={<Settings />} />
-          <Route path="/settings/referral" element={<Settings />} />
-          <Route path="/settings/referral-earning-history" element={<Settings />} />
-          <Route path="/settings/wallet-breakdown" element={<Settings />} />
-          <Route path="/settings/deposit-history" element={<Settings />} />
-          <Route path="/settings/withdraw-usdt" element={<Settings />} />
-          <Route path="/settings/faqs" element={<Settings />} />
-          <Route path="/settings/privacy" element={<Settings />} />
-          <Route path="/settings/term-condition" element={<Settings />} />
-        </Routes>
-      </BrowserRouter>
+          {/* ROUTER */}
+          <BrowserRouter>
+            <Toaster position="top-center" reverseOrder={false} />
+            <AppWrapper />
+          </BrowserRouter>
+        </>
+      )}
     </div>
   );
 }

@@ -34,7 +34,7 @@ const Footer = () => {
 
         {/* Label */}
         <span
-          className={`text-[10px] mt-1 transition-all duration-300 ${
+          className={`text-[10px] m-1 transition-all duration-300 ${
             active ? "opacity-100 text-white" : "opacity-0"
           }`}
         >
