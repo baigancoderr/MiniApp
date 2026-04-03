@@ -6,8 +6,41 @@ import { useNavigate } from "react-router-dom";
 import usdt from "../../assets/usdt.png"
 import { Link } from "react-router-dom";
 
+ const useToast = () => {
+  const [toast, setToast] = useState(null);
+
+  const showToast = (msg, type = "error") => {
+    setToast({ msg, type });
+
+    setTimeout(() => {
+      setToast(null);
+    }, 2000);
+  };
+
+  const Toast = () =>
+    toast && (
+      <div
+        className={`fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl text-sm z-50 backdrop-blur-md
+        ${
+          toast.type === "error"
+            ? "bg-red-500/20 text-red-400 border border-red-500/40"
+            : "bg-green-500/20 text-green-400 border border-green-500/40"
+        }`}
+      >
+        {toast.msg}
+      </div>
+    );
+
+  return { showToast, Toast };
+};
+
 const AddFundPage = () => {
+  
   const navigate = useNavigate();
+  const { showToast, Toast } = useToast();
+ 
+
+
 
   const coins = [
     { name: "USDT", icon: usdt },
@@ -20,6 +53,7 @@ const AddFundPage = () => {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
 
+  
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -38,6 +72,22 @@ const AddFundPage = () => {
   const handleQuickAmount = (value) => {
     setAmount(value.replace("$", ""));
   };
+
+  const handleDeposit = () => {
+  if (!amount || Number(amount) <= 0) {
+    showToast("Please Enter Your Amount ❌");
+    return;
+  }
+
+  if (!isChecked) {
+    showToast("Please Accept Terms & Conditions ❌");
+    return;
+  }
+
+  navigate("/payment", {
+    state: { amount, coin: selected },
+  });
+};
 
   return (
     <div className="min-h-screen pb-24  text-white px-3 py-3">
@@ -206,20 +256,17 @@ const AddFundPage = () => {
 </p>
         </div>
 
-        {/* 🚀 BUTTON */}
-        <button
-  disabled={!isChecked}
-  className={`w-full py-3 rounded-full font-semibold transition-all
-  ${
-    isChecked
-      ? "bg-[linear-gradient(45deg,#587FFF,#09239F)] hover:bg-[linear-gradient(45deg,#6C8CFF,#0B2ED1)]"
-      : "bg-[linear-gradient(45deg,#587FFF,#09239F)]  cursor-not-allowed opacity-60"
-  }`}
+<button
+  onClick={handleDeposit}
+  className="w-full py-3 rounded-full font-semibold
+  bg-gradient-to-r from-[#587FFF] to-[#09239F]
+  hover:scale-[1.02] transition"
 >
   Deposit
 </button>
 
       </div>
+      <Toast />
     </div>
   );
 };

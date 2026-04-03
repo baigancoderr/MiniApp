@@ -6,6 +6,7 @@ import Wallet from "../Pages/Wallet";
 import Upgrade from "../Pages/Upgrade";
 import Settings from "../Pages/Settings";
 import AddFund from "../Pages/AddFund";
+import PaymentScreen from "../Components/AddFund/PaymentScreen";
 
 import Loader from "../Context/Loader";
 
@@ -53,6 +54,7 @@ if (!ALLOW_BROWSER) {
         <Route path="/wallet" element={<Wallet />} />
         <Route path="/invest" element={<Upgrade />} />
         <Route path="/addfund" element={<AddFund />} />
+        <Route path="/payment" element={<PaymentScreen />} />
 
         {/* SETTINGS ROUTES */}
         <Route path="/settings" element={<Settings />} />
