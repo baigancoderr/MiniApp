@@ -203,11 +203,3 @@ const WalletHero = () => {
 };
 
 export default WalletHero;
-
-
-
-
-
-
-
-

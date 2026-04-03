@@ -5,6 +5,7 @@ import AppWrapper from "./Layout/AppWrapper"
 import Loader from "./Context/Loader";
 import MagicRings from "./Layout/MagicRings";
 import { Toaster } from "react-hot-toast";
+import ScrollToTop from "./Components/utils/ScrollToTop";
 
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
 
   const [isTelegram, setIsTelegram] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
-  const ALLOW_BROWSER = false;
+  const ALLOW_BROWSER = true;
 
 useEffect(() => {
   const tg = window.Telegram?.WebApp;
@@ -82,6 +83,7 @@ useEffect(() => {
 
           {/* ROUTER */}
           <BrowserRouter>
+               <ScrollToTop />
             <Toaster position="top-center" reverseOrder={false} />
             <AppWrapper />
           </BrowserRouter>

@@ -77,7 +77,7 @@ const startDate = new Date().toLocaleDateString();
            <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(-1)}
               className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
             >
               <ArrowLeft size={18} />

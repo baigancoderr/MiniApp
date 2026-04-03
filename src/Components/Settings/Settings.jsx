@@ -2,7 +2,7 @@
 
 import {
   User, Users, TrendingUp, Wallet,
-  Plus, Clock, Download, ChevronRight
+  Plus, Clock, Download, ChevronRight , ArrowLeft
 } from "lucide-react";
 import { FaQuestion } from "react-icons/fa";
 import { MdOutlinePolicy } from "react-icons/md";
@@ -98,34 +98,33 @@ const SettingsComponent = () => {
       {/* 🔥 HEADER */}
       <div className="relative h-48 bg-gradient-to-b from-[#587FFF] to-black rounded-b-[50px] flex flex-col items-center justify-end pb-6">
 
-        {/* <button
-          onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 text-white text-lg"
-        >
-          ←
-        </button>
+  {/* 🔙 Back Button (Top Left) */}
+  <button
+    onClick={() => navigate("/")}
+    className="absolute top-4 left-4 p-2 rounded-lg bg-[#000] border border-[#444385]"
+  >
+    <ArrowLeft size={18} />
+  </button>
 
-        <p className="absolute top-4 text-sm text-gray-200">
-          Settings
-        </p> */}
+  {/* 👤 Profile */}
+  <div className="flex flex-col items-center">
+    <img
+      src={tgUser?.photo_url || settingImg}
+      alt="profile"
+      className="w-20 h-20 rounded-full border-2 border-white shadow-lg"
+    />
 
-        {/* Profile */}
-        <div className="flex flex-col items-center">
-          <img
-  src={tgUser?.photo_url || settingImg}
-  alt="profile"
-  className="w-20 h-20 rounded-full border-2 border-white shadow-lg"
-/>
-         <h2 className="mt-2 font-semibold text-lg">
-  {tgUser
-    ? `${tgUser.first_name} ${tgUser.last_name || ""}`
-    : "Loading..."}
-</h2>
-         <p className="text-xs text-gray-300">
-  {tgUser?.username ? `@${tgUser.username}` : ""}
-</p>
-        </div>
-      </div>
+    <h2 className="mt-2 font-semibold text-lg">
+      {tgUser
+        ? `${tgUser.first_name} ${tgUser.last_name || ""}`
+        : "Loading..."}
+    </h2>
+
+    <p className="text-xs text-gray-300">
+      {tgUser?.username ? `@${tgUser.username}` : ""}
+    </p>
+  </div>
+</div>
 
       {/* 🔥 MENU LIST */}
       <div className="mt-4 space-y-1 px-3">

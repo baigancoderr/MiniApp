@@ -114,16 +114,39 @@ const InvestmentHistory = () => {
                       </div>
                     </div>
 
-                    <div className="text-right text-[10px]">
-                      <p className="text-gray-400 mb-2">{item.time}</p>
-                      <span className={`px-2 py-1  rounded-full text-[10px] ${
-                        isActive
-                          ? "bg-blue-500/20 text-blue-400"
-                          : "bg-green-500/20 text-green-400"
-                      }`}>
-                        {item.status}
-                      </span>
-                    </div>
+         <div className="text-right text-[10px] flex flex-col items-end gap-1">
+
+  {/* 🔥 Top Row: Time + Status (side by side for Active) */}
+  <div className={`flex items-center gap-2 ${isActive ? "" : "flex-col items-end gap-1"}`}>
+    
+    <p className="text-gray-400">{item.time}</p>
+
+    <span
+      className={`px-2 py-1 rounded-full text-[10px] ${
+        isActive
+          ? "bg-blue-500/20 text-blue-400"
+          : "bg-green-500/20 text-green-400"
+      }`}
+    >
+      {item.status}
+    </span>
+
+  </div>
+
+  {/* ✅ Claim Button (only if Active) */}
+  {isActive && (
+    <button
+      onClick={() => console.log("Claim clicked", item.id)}
+      className="text-[10px] px-2 py-1 rounded-md  mt-1
+      bg-gradient-to-r from-green-400 to-green-600 
+      text-white font-[600] shadow-md hover:opacity-90 transition"
+    >
+      Claim
+    </button>
+  )}
+
+</div>
+
                   </div>
 
                   {/* BODY */}
