@@ -24,7 +24,7 @@
 // };
 
 export const appConfig = {
-  baseURL: "http://localhost:5000",
+  baseURL: "https://ciperabackend.onrender.com/",
   frontendURL: "http://localhost:5173",
   chainID: 97n,
   // chainID: 56n,
