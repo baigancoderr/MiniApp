@@ -185,8 +185,9 @@ const PaymentScreen = () => {
             </div>
           </div>
 
-          {/* AMOUNT DETAILS */}
-          <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
+          
+
+          {/* <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
             <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
               <p className="text-xs text-gray-400 mb-1">Amount to Pay</p>
               <h2 className="text-2xl font-bold text-white">
@@ -201,7 +202,7 @@ const PaymentScreen = () => {
             </div>
           </div>
 
-          {/* ACTION BUTTONS */}
+          
           <div className="flex gap-3 pt-4">
             <button
               onClick={handleCancel}
@@ -218,9 +219,9 @@ const PaymentScreen = () => {
             >
               I Have Completed Payment
             </button>
-          </div>
+          </div> */}
 
-          {/* Warning */}
+        
           <p className="text-center text-[10px] text-gray-500 pt-2">
             Funds will be credited automatically after network confirmation
           </p>
