@@ -5,13 +5,14 @@ import { ArrowLeft, User, Clock, Package, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import usdt from "../../assets/usdt.png";
 import { Link } from "react-router-dom";
-import api from "../../api/axios"
-import toast from "react-hot-toast";   // Recommended (you already use it in Profile)
+import api from "../../api/axios";
+import toast from "react-hot-toast";
 
 const AddFundPage = () => {
   const navigate = useNavigate();
 
   const coins = [{ name: "USDT", icon: usdt }];
+  
   const [isChecked, setIsChecked] = useState(false);
   const [selected, setSelected] = useState(coins[0]);
   const [amount, setAmount] = useState("");
@@ -20,6 +21,20 @@ const AddFundPage = () => {
 
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
+
+  // Get userId from localStorage (same as your Profile component)
+  const getUserId = () => {
+    try {
+      const userStr = localStorage.getItem("user"); // or wherever you store full user
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        return user.userId || user._id;
+      }
+      return localStorage.getItem("userId"); // fallback
+    } catch (e) {
+      return null;
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -41,6 +56,14 @@ const AddFundPage = () => {
   };
 
   const handleDeposit = async () => {
+    const userId = getUserId();
+
+    if (!userId) {
+      toast.error("Please login again ❌");
+      navigate("/settings"); // or login page
+      return;
+    }
+
     if (!amount || Number(amount) <= 0) {
       toast.error("Please Enter Your Amount ❌");
       return;
@@ -59,11 +82,11 @@ const AddFundPage = () => {
     setLoading(true);
 
     try {
-      const res = await api.post("/user/deposit/create", {   // ← Change route if different
-        userId: "", // Optional: send logged-in userId if needed
+      const res = await api.post("/user/deposit/create", {
+        userId: userId,           // ← Now sending real userId
         amount: Number(amount),
-        coin: selected.name,   // "USDT"
-        network: "TRC20"       // or BEP20 if you support multiple
+        coin: selected.name,
+        network: "TRC20"
       });
 
       const data = res.data;
@@ -75,10 +98,9 @@ const AddFundPage = () => {
           state: {
             amount: amount,
             coin: selected,
-            walletAddress: data.data.address_in,   // dynamic from backend
-            qrData: data.data.address_in,          // for QR code
-            // You can pass more fields from CryptAPI response if needed
-            callbackInfo: data.data,               // full response
+            walletAddress: data.data.address_in,
+            qrData: data.data.address_in,
+            callbackInfo: data.data,
           },
         });
       } else {
@@ -86,7 +108,9 @@ const AddFundPage = () => {
       }
     } catch (error) {
       console.error("Deposit API Error:", error);
-      const msg = error.response?.data?.message || error.message || "Something went wrong";
+      const msg = error.response?.data?.message || 
+                  error.response?.data?.error || 
+                  "Something went wrong";
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -222,11 +246,17 @@ const AddFundPage = () => {
           />
           <p className="text-xs text-gray-400 leading-relaxed">
             I agree to the{" "}
-            <Link to="/settings/term-condition" className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition">
+            <Link 
+              to="/settings/term-condition" 
+              className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition"
+            >
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link to="/settings/privacy" className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition">
+            <Link 
+              to="/settings/privacy" 
+              className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition"
+            >
               Privacy Policy
             </Link>
           </p>
@@ -235,7 +265,7 @@ const AddFundPage = () => {
         <button
           onClick={handleDeposit}
           disabled={loading}
-          className="w-full py-3 rounded-full font-semibold bg-gradient-to-r from-[#587FFF] to-[#09239F] hover:scale-[1.02] transition disabled:opacity-70"
+          className="w-full py-3 rounded-full font-semibold bg-gradient-to-r from-[#587FFF] to-[#09239F] hover:scale-[1.02] transition disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {loading ? "Generating Address..." : "Deposit"}
         </button>
