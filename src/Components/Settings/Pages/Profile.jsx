@@ -193,7 +193,7 @@ const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode |
               <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
                 <p className="text-xs text-gray-400">PARENT ID</p>
                 <p className="text-white">
-                  {loading ? "Loading..." : apiUser?.referralCode || "N/A"}
+                  {loading ? "Loading..." : apiUser?.referredBy || "N/A"}
                 </p>
               </div>
             </div>
