@@ -15,18 +15,17 @@ const Referral = () => {
   // API States
   const [directReferrals, setDirectReferrals] = useState(0);
   const [teamSize, setTeamSize] = useState(0);
-  const [tableData, setTableData] = useState([]);   // Real flattened data for table
+  const [tableData, setTableData] = useState([]);
 
   // Fetch Team Tree
   useEffect(() => {
     const fetchReferralData = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/user/team-tree-view");   // Your endpoint
+        const res = await api.get("/user/team-tree-view");
 
         if (res.data.status === "success") {
-          const apiData = res.data.data;
-          const tree = apiData.tree || [];
+          const tree = res.data.data.tree || [];
 
           // Calculate stats
           const stats = calculateTeamStats(tree);
@@ -53,7 +52,7 @@ const Referral = () => {
     fetchReferralData();
   }, []);
 
-  // Calculate Direct & Total Team Size
+  // Calculate Direct Referrals & Total Team Size
   const calculateTeamStats = (treeArray) => {
     if (!treeArray || treeArray.length === 0) return { directCount: 0, totalTeamSize: 0 };
 
@@ -62,8 +61,10 @@ const Referral = () => {
 
     const traverse = (nodes) => {
       nodes.forEach((node) => {
-        totalTeamSize += 1;
-        if (node.level === 1) directCount += 1;
+        if (node.level > 0) {
+          totalTeamSize += 1;
+          if (node.level === 1) directCount += 1;
+        }
         if (node.children?.length) traverse(node.children);
       });
     };
@@ -72,20 +73,19 @@ const Referral = () => {
     return { directCount, totalTeamSize };
   };
 
-  // 🔥 Flatten Tree into Table-friendly format
+  // Flatten Tree for Table - Updated according to your requirement
   const flattenTreeForTable = (treeArray) => {
     const result = [];
 
-    const traverse = (nodes, parentName = "") => {
+    const traverse = (nodes) => {
       nodes.forEach((node) => {
-        if (node.level > 0) {   // Skip self (level 0)
+        if (node.level > 0) {  // Skip self (level 0)
           result.push({
             id: node.userId || node.referralCode || "N/A",
             name: node.name?.trim() || node.username || "Unknown User",
-            type: node.level === 1 ? "Direct" : "Level",
             level: node.level,
-            amount: node.teamInvestment || node.selfInvestment || "0",   // Change field if you have actual earnings
-            date: "12 Mar 2026",   // Replace with real date if available in API
+            selfInvestment: node.selfInvestment || 0,
+            date: "12 Mar 2026", // Replace with actual join date if available in API
           });
         }
         if (node.children?.length) {
@@ -98,12 +98,17 @@ const Referral = () => {
     return result;
   };
 
-  // Filter based on active tab
-  const filteredData = activeTab === "all"
-    ? tableData
-    : activeTab === "direct"
-      ? tableData.filter(item => item.type === "Direct")
-      : tableData.filter(item => item.type === "Level");
+  // Filter data based on active tab
+  const filteredData = React.useMemo(() => {
+    if (activeTab === "all") {
+      return tableData;
+    } else if (activeTab === "direct") {
+      return tableData.filter(item => item.level === 1);
+    } else {
+      // "level" tab → Level 2 and above
+      return tableData.filter(item => item.level >= 2);
+    }
+  }, [tableData, activeTab]);
 
   // Pagination
   const itemsPerPage = 5;
@@ -164,11 +169,11 @@ const Referral = () => {
           </div>
         </div>
 
-        {/* Referral Earnings History Section */}
+        {/* Referral Section */}
         <div className="mt-6 border border-[#444385] rounded-lg px-4 py-5 bg-[#00000033]">
 
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-md font-semibold">Referral Earnings History</h2>
+            <h2 className="text-md font-semibold">Referral Network</h2>
             <button
               onClick={() => navigate("/settings/referral-earning-history")}
               className="text-xs text-[#81ECFF] flex items-center gap-1"
@@ -204,8 +209,8 @@ const Referral = () => {
                       <th className="px-4 py-3 text-left">S.No</th>
                       <th className="px-4 py-3 text-left">ID</th>
                       <th className="px-4 py-3 text-left">Name</th>
-                      <th className="px-4 py-3 text-left">Type</th>
-                      <th className="px-4 py-3 text-center">Amount</th>
+                      <th className="px-4 py-3 text-left">Level</th>
+                      <th className="px-4 py-3 text-center">Self Investment</th>
                       <th className="px-4 py-3 text-right">Date</th>
                     </tr>
                   </thead>
@@ -227,15 +232,15 @@ const Referral = () => {
                           <td className="px-4 py-3 font-medium">{item.name}</td>
                           <td className="px-4 py-3">
                             <span className={`text-xs px-3 py-1 rounded-full ${
-                              item.type === "Direct"
-                                ? "bg-blue-500/20 text-blue-300"
+                              item.level === 1 
+                                ? "bg-blue-500/20 text-blue-300" 
                                 : "bg-green-500/20 text-green-300"
                             }`}>
-                              {item.type}
+                              Level {item.level}
                             </span>
                           </td>
                           <td className="px-4 py-3 text-center font-bold text-[#81ECFF]">
-                            +{item.amount}
+                            {item.selfInvestment}
                           </td>
                           <td className="px-4 py-3 text-right text-xs text-gray-400">
                             {item.date}
