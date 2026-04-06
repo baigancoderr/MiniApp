@@ -92,9 +92,9 @@ const Profile = () => {
   // const referralLink = `https://yourapp.com/ref/${apiUser?.referralCode || "loading"
   //   }`;
 
-  // const referralLink = `https://t.me/cipera_bot?start=${apiUser?.referralCode || "loading" }`;
+  const referralLink = `https://t.me/cipera_bot?start=${apiUser?.referralCode || "loading" }`;
 
-  const referralLink = `https://t.me/cipera_bot/main?startapp=${apiUser?.referralCode || "loading" }`;
+  // const referralLink = `https://t.me/cipera_bot/main?startapp=${apiUser?.referralCode || "loading" }`;
 
   // ✅ Share
   const handleShare = () => {
