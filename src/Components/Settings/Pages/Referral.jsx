@@ -3,8 +3,7 @@ import btmimg from "../../../assets/btmimg.png";
 import { ArrowLeft, ChevronLeft, ChevronRight, ArrowRight, Settings, Gift, Users, User, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../../../api/axios";   // ✅ Make sure this axios instance is configured with your baseURL and token
-
+import api from "../../../api/axios";
 const Referral = () => {
   const navigate = useNavigate();
 
@@ -27,7 +26,7 @@ const Referral = () => {
         setError(null);
 
         // ✅ Fetch Team Tree (as per your JSON response)
-        const res = await api.get("/team/tree");   // Adjust endpoint if different (e.g. /user/team-tree)
+        const res = await api.get("/user/team-tree-view");   // Adjust endpoint if different (e.g. /user/team-tree)
 
         if (res.data.status === "success") {
           const apiData = res.data.data;
