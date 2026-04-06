@@ -16,49 +16,77 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   // ✅ Telegram + API Integration
-  useEffect(() => {
-    const initTelegram = async () => {
-      if (window.Telegram?.WebApp) {
-        window.Telegram.WebApp.ready();
+ useEffect(() => {
+  const initTelegram = async () => {
+    try {
+      const tg = window.Telegram?.WebApp;
 
-       const tg = window.Telegram.WebApp;
-const user = tg.initDataUnsafe.user;
-const startParam = tg.initDataUnsafe.start_param; // 🔥 THIS IS REFERRAL
-        console.log("TG USER:", user);
-
-        setTgUser(user);
-
-        if (user) {
-          try {
-         const res = await api.post("/user/telegram-login", {
-  telegramId: user.id,
-  name: `${user.first_name} ${user.last_name || ""}`,
-  username: user.username || "",
-  referralCode: startParam || null, // 🔥 FIX
-});
-
-            const data = res.data;
-
-            console.log("API RESPONSE:", data);
-
-            if (data.success) {
-              setApiUser(data.user);
-              localStorage.setItem("token", data.token);
-            } else {
-              toast.error(data.message);
-            }
-          } catch (error) {
-            console.log(error);
-            toast.error("API Error ❌");
-          }
-        }
+      // ❌ Not inside Telegram
+      if (!tg) {
+        console.log("Not inside Telegram");
+        setLoading(false);
+        return;
       }
 
-      setLoading(false);
-    };
+      tg.ready();
 
-    initTelegram();
-  }, []);
+      // ❌ No Telegram user
+      const user = tg.initDataUnsafe?.user;
+      if (!user) {
+        console.log("No Telegram user found");
+        setLoading(false);
+        return;
+      }
+
+      setTgUser(user);
+
+      // 🔥 Referral sources
+      const urlParams = new URLSearchParams(window.location.search);
+      const refFromUrl = urlParams.get("ref");
+      const refFromTG = tg.initDataUnsafe?.start_param;
+      const refFromStorage = localStorage.getItem("referral");
+
+      const referralCode = refFromTG || refFromUrl || refFromStorage;
+
+      // 💾 Save referral
+      if (referralCode) {
+        localStorage.setItem("referral", referralCode);
+      }
+
+      // 🧠 Debug logs (important)
+      console.log("refFromTG:", refFromTG);
+      console.log("refFromUrl:", refFromUrl);
+      console.log("refFromStorage:", refFromStorage);
+      console.log("FINAL REF:", referralCode);
+
+      // 🔥 API CALL
+      const res = await api.post("/user/telegram-login", {
+        telegramId: user.id,
+        name: `${user.first_name} ${user.last_name || ""}`,
+        username: user.username || "",
+        referralCode: referralCode || null,
+      });
+
+      const data = res.data;
+      console.log("API RESPONSE:", data);
+
+      if (data.success) {
+        setApiUser(data.user);
+        localStorage.setItem("token", data.token);
+      } else {
+        toast.error(data.message);
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error("API Error ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  initTelegram();
+}, []);
 
   // ✅ Referral Dynamic
   // const referralLink = `https://yourapp.com/ref/${apiUser?.referralCode || "loading"
