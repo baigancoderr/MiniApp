@@ -7,6 +7,7 @@ import Upgrade from "../Pages/Upgrade";
 import Settings from "../Pages/Settings";
 import AddFund from "../Pages/AddFund";
 import PaymentScreen from "../Components/AddFund/PaymentScreen";
+import ReferralTeamTree from "../Components/Settings/Pages/ReferralTeamTree";
 
 import Loader from "../Context/Loader";
 
@@ -55,6 +56,7 @@ if (!ALLOW_BROWSER) {
         <Route path="/invest" element={<Upgrade />} />
         <Route path="/addfund" element={<AddFund />} />
         <Route path="/payment" element={<PaymentScreen />} />
+        <Route path="/referral-team-tree" element={<ReferralTeamTree />} />
 
         {/* SETTINGS ROUTES */}
         <Route path="/settings" element={<Settings />} />
@@ -67,6 +69,7 @@ if (!ALLOW_BROWSER) {
         <Route path="/settings/faqs" element={<Settings />} />
         <Route path="/settings/privacy" element={<Settings />} />
         <Route path="/settings/term-condition" element={<Settings />} />
+        
       </Routes>
     </>
   );

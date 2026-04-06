@@ -146,14 +146,28 @@ const Referral = () => {
             <p className="text-emerald-400 text-sm mt-1">Active Users</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-4">
+          {/* <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-4">
             <div className="flex items-center gap-2 mb-3">
               <Network size={20} className="text-blue-400" />
               <p className="text-xs text-gray-400">Team Size</p>
             </div>
             <p className="text-3xl font-bold">{loading ? "..." : teamSize}</p>
             <p className="text-blue-400 text-sm mt-1">Total Network</p>
+          </div> */}
+
+
+<div 
+            onClick={() => navigate("/referral-team-tree")}
+            className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-4 cursor-pointer active:scale-95 transition hover:border-blue-400"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Network size={20} className="text-blue-400" />
+              <p className="text-xs text-gray-400">Team Size</p>
+            </div>
+            <p className="text-3xl font-bold">{loading ? "..." : teamSize}</p>
+            <p className="text-blue-400 text-sm mt-1">View Full Tree →</p>
           </div>
+
         </div>
 
         {/* Referral Network Section */}
