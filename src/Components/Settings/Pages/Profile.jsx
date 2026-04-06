@@ -21,18 +21,21 @@ const Profile = () => {
       if (window.Telegram?.WebApp) {
         window.Telegram.WebApp.ready();
 
-        const user = window.Telegram.WebApp.initDataUnsafe.user;
+       const tg = window.Telegram.WebApp;
+const user = tg.initDataUnsafe.user;
+const startParam = tg.initDataUnsafe.start_param; // 🔥 THIS IS REFERRAL
         console.log("TG USER:", user);
 
         setTgUser(user);
 
         if (user) {
           try {
-            const res = await api.post("/user/telegram-login", {
-              telegramId: user.id,
-              name: `${user.first_name} ${user.last_name || ""}`,
-              username: user.username || "",
-            });
+         const res = await api.post("/user/telegram-login", {
+  telegramId: user.id,
+  name: `${user.first_name} ${user.last_name || ""}`,
+  username: user.username || "",
+  referralCode: startParam || null, // 🔥 FIX
+});
 
             const data = res.data;
 
