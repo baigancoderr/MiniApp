@@ -11,10 +11,11 @@ import toast from "react-hot-toast";
 const AddFundPage = () => {
   const navigate = useNavigate();
 
-  const coins = [{ name: "USDT", icon: usdt }];
+  // const coins = [{ name: "USDT", icon: usdt }];
+  const coin = "USDT";
   
   const [isChecked, setIsChecked] = useState(false);
-  const [selected, setSelected] = useState(coins[0]);
+  // const [selected, setSelected] = useState(coins[0]);
   const [amount, setAmount] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ const AddFundPage = () => {
   { label: "USDT (Polygon)", value: "POLYGON_USDT" }
 ];
 
-const [network, setNetwork] = useState("BEP20");
+const [network, setNetwork] = useState("TRC20");
 
   // Improved getUserId Function
   const getUserId = () => {
@@ -98,33 +99,28 @@ const [network, setNetwork] = useState("BEP20");
     setLoading(true);
 
     try {
-      // const res = await api.post("/user/deposit/create", {
-      //   userId: userId,
-      //   amount: Number(amount),
-      //   coin: selected.name,
-      //   network: "TRC20"
-      // });
-
-      await api.post("/user/deposit/create", {
+    const res = await api.post("/user/deposit/create", {
   userId,
-  amount,
+  amount: Number(amount),
+ coin: network === "ERC20_USDC" ? "USDC" : "USDT",
   network
 });
 
-      const data = res.data;
+const data = res.data;
 
       if (data.success && data.data?.address_in) {
         toast.success("Payment address generated ✅");
 
-        navigate("/payment", {
-          state: {
-            amount: amount,
-            coin: selected,
-            walletAddress: data.data.address_in,
-            qrData: data.data.address_in,
-            callbackInfo: data.data,
-          },
-        });
+       navigate("/payment", {
+  state: {
+    amount,
+    coin: "USDT",
+    network, // ✅ ADD THIS
+    walletAddress: data.data.address_in,
+    qrData: data.data.address_in,
+    callbackInfo: data.data,
+  },
+});
       } else {
         toast.error(data.message || "Failed to generate address");
       }
@@ -179,35 +175,41 @@ const [network, setNetwork] = useState("BEP20");
                 className="bg-transparent outline-none text-white flex-1 min-w-0"
               />
 
-              <div
-                ref={buttonRef}
-                onClick={() => setOpen(!open)}
-                className="flex items-center gap-2 cursor-pointer ml-2 shrink-0"
-              >
-                <img src={selected.icon} className="w-4 h-4" alt={selected.name} />
-                <span className="text-sm whitespace-nowrap">{selected.name}</span>
-                <span className="text-xs text-gray-400">▼</span>
-              </div>
+             <div
+  ref={buttonRef}
+  onClick={() => setOpen(!open)}
+  className="flex items-center gap-2 cursor-pointer ml-2 shrink-0"
+>
+  <span className="text-sm whitespace-nowrap">
+    {/* {networks.find(n => n.value === network)?.label} */}
+    {networks.find(n => n.value === network)?.label || "Select Network"}
+  </span>
+  <span className="text-xs text-gray-400">▼</span>
+</div>
 
-              {open && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute right-0 top-full mt-1 w-28 bg-black border border-[#444385] rounded-md z-50"
-                >
-                  {coins.map((coin) => (
-                    <div
-                      key={coin.name}
-                      onClick={() => {
-                        setSelected(coin);
-                        setOpen(false);
-                      }}
-                      className="px-3 py-1.5 cursor-pointer text-sm hover:bg-[#444385]/50"
-                    >
-                      {coin.name}
-                    </div>
-                  ))}
-                </div>
-              )}
+{open && (
+  <div
+    ref={dropdownRef}
+    className="absolute right-0 top-full mt-1 w-44 bg-black border border-[#444385] rounded-md z-50"
+  >
+    {networks.map((net) => (
+      <div
+        key={net.value}
+        onClick={() => {
+          setNetwork(net.value);
+          setOpen(false);
+        }}
+        className="px-3 py-2 cursor-pointer text-sm hover:bg-[#444385]/50"
+      >
+        {net.label}
+      </div>
+    ))}
+  </div>
+)}
+
+            
+
+
             </div>
 
             <p className="text-xs text-blue-400 mt-2">Minimum: $0.2 USDT</p>
