@@ -15,7 +15,8 @@ const Referral = () => {
   const [teamSize, setTeamSize] = useState(0);
   const [tableData, setTableData] = useState([]);
 
-  // Pagination State
+  // Filter & Pagination States
+  const [selectedLevel, setSelectedLevel] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -100,16 +101,26 @@ const Referral = () => {
     return result;
   };
 
+  // Filter data based on selected level
+  const filteredData = selectedLevel === "All"
+    ? tableData
+    : tableData.filter(item => item.level === parseInt(selectedLevel));
+
   // Pagination Logic
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentData = tableData.slice(indexOfFirst, indexOfLast);
+  const currentData = filteredData.slice(indexOfFirst, indexOfLast);
 
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
+
+  // Reset to first page when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedLevel]);
 
   return (
     <div className="pb-20 py-3 px-3 text-white font-sans flex justify-center">
@@ -146,17 +157,7 @@ const Referral = () => {
             <p className="text-emerald-400 text-sm mt-1">Active Users</p>
           </div>
 
-          {/* <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Network size={20} className="text-blue-400" />
-              <p className="text-xs text-gray-400">Team Size</p>
-            </div>
-            <p className="text-3xl font-bold">{loading ? "..." : teamSize}</p>
-            <p className="text-blue-400 text-sm mt-1">Total Network</p>
-          </div> */}
-
-
-<div 
+          <div 
             onClick={() => navigate("/referral-team-tree")}
             className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-4 cursor-pointer active:scale-95 transition hover:border-blue-400"
           >
@@ -167,19 +168,34 @@ const Referral = () => {
             <p className="text-3xl font-bold">{loading ? "..." : teamSize}</p>
             <p className="text-blue-400 text-sm mt-1">View Full Tree →</p>
           </div>
-
         </div>
 
         {/* Referral Network Section */}
         <div className="mt-6 border border-[#444385] rounded-lg px-4 py-5 bg-[#00000033]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-md font-semibold">Referral Network</h2>
-            <button
-              onClick={() => navigate("/settings/referral-earning-history")}
-              className="text-xs text-[#81ECFF] flex items-center gap-1"
-            >
-              See More →
-            </button>
+
+            {/* Level Filter Select Box */}
+            <div className="relative">
+              <select
+                value={selectedLevel}
+                onChange={(e) => setSelectedLevel(e.target.value)}
+                className="bg-[#0B0F1A] border border-[#444385] text-white text-sm rounded-lg px-4 py-2 
+                           focus:outline-none focus:border-[#81ECFF] cursor-pointer appearance-none pr-8"
+                disabled={loading}
+              >
+                <option value="All">All Levels</option>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+                <option value="4">Level 4</option>
+                <option value="5">Level 5</option>
+                {/* Add more levels if your app supports deeper levels */}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                ▼
+              </div>
+            </div>
           </div>
 
           {/* Table */}
@@ -207,7 +223,7 @@ const Referral = () => {
                     ) : currentData.length === 0 ? (
                       <tr>
                         <td colSpan="6" className="text-center py-10 text-gray-400">
-                          No referrals found
+                          No referrals found for selected level
                         </td>
                       </tr>
                     ) : (
@@ -220,13 +236,12 @@ const Referral = () => {
                             {indexOfFirst + i + 1}
                           </td>
                           <td className="px-4 py-3">{item.id}</td>
-                          {/* <td className="px-4 py-3 font-medium">{item.name}</td> */}
-                         <td
-  className="px-4 py-3 font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
-  title={item.name}
->
-  {item.name}
-</td>
+                          <td
+                            className="px-4 py-3 font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
+                            title={item.name}
+                          >
+                            {item.name}
+                          </td>
                           <td className="px-4 py-3">
                             <span
                               className={`text-xs px-3 py-1 rounded-full ${
@@ -253,7 +268,7 @@ const Referral = () => {
             </div>
           </div>
 
-          {/* Pagination - Same style as ReferralEarningsHistory */}
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-between items-center mt-4 px-1">
               <p className="text-xs text-gray-400">
