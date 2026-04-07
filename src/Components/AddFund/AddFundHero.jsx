@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, User, Clock, Package, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import usdt from "../../assets/usdt.png";
+import usdc from "../../assets/usdc.png";
 import { Link } from "react-router-dom";
 import api from "../../api/axios";
 import toast from "react-hot-toast";
@@ -24,12 +25,12 @@ const AddFundPage = () => {
   const buttonRef = useRef(null);
 
 
-  const networks = [
-  { label: "USDT (TRC20)", value: "TRC20" },
-  { label: "USDT (BEP20)", value: "BEP20" },
-  { label: "USDT (ERC20)", value: "ERC20_USDT" },
-  { label: "USDC (ERC20)", value: "ERC20_USDC" },
-  { label: "USDT (Polygon)", value: "POLYGON_USDT" }
+const networks = [
+  { label: "TRC20", value: "TRC20", icon: usdt },
+  { label: "BEP20", value: "BEP20", icon: usdt },
+  { label: "ERC20", value: "ERC20_USDT", icon: usdt },
+  { label: "ERC20", value: "ERC20_USDC", icon: usdc },
+  { label: "Polygon", value: "POLYGON_USDT", icon: usdt }
 ];
 
 const [network, setNetwork] = useState("TRC20");
@@ -53,20 +54,22 @@ const [network, setNetwork] = useState("TRC20");
     return null;
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(e.target)
-      ) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+ useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(e.target)
+    ) {
+      setOpen(false);
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside); // ✅ click (NOT mousedown)
+
+  return () => document.removeEventListener("click", handleClickOutside);
+}, []);
 
   const handleQuickAmount = (value) => {
     setAmount(value.replace("$", ""));
@@ -162,59 +165,72 @@ const data = res.data;
         </div>
 
         {/* AMOUNT CARD */}
-        <div className="rounded-2xl border-2 border-[#444385] overflow-hidden mb-5">
-          <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
-            <p className="text-gray-400 text-xs mb-2">Enter Amount</p>
+    <div className="rounded-2xl border-2 border-[#444385] overflow-visible mb-5">
+  <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
+    <p className="text-gray-400 text-xs mb-2">Enter Amount</p>
 
-            <div className="flex items-center bg-black border border-[#444385] rounded-lg px-3 py-2 relative">
-              <input
-                type="number"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="bg-transparent outline-none text-white flex-1 min-w-0"
-              />
+    <div className="flex items-center bg-black border border-[#444385] rounded-lg px-3 py-2 relative">
+      
+      {/* INPUT */}
+      <input
+        type="number"
+        placeholder="0.00"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        className="bg-transparent outline-none text-white flex-1 min-w-0"
+      />
 
-             <div
-  ref={buttonRef}
-  onClick={() => setOpen(!open)}
-  className="flex items-center gap-2 cursor-pointer ml-2 shrink-0"
->
-  <span className="text-sm whitespace-nowrap">
-    {/* {networks.find(n => n.value === network)?.label} */}
-    {networks.find(n => n.value === network)?.label || "Select Network"}
-  </span>
-  <span className="text-xs text-gray-400">▼</span>
-</div>
-
-{open && (
-  <div
-    ref={dropdownRef}
-    className="absolute right-0 top-full mt-1 w-44 bg-black border border-[#444385] rounded-md z-50"
-  >
-    {networks.map((net) => (
+      {/* NETWORK DROPDOWN BUTTON */}
       <div
-        key={net.value}
-        onClick={() => {
-          setNetwork(net.value);
-          setOpen(false);
+        ref={buttonRef}
+        onClick={(e) => {
+          e.stopPropagation(); // 🔥 IMPORTANT
+          setOpen(!open);
         }}
-        className="px-3 py-2 cursor-pointer text-sm hover:bg-[#444385]/50"
+        className="flex items-center gap-2 cursor-pointer ml-2 shrink-0"
       >
-        {net.label}
+       <div className="flex items-center gap-2">
+  <img
+    src={networks.find(n => n.value === network)?.icon}
+    alt="coin"
+    className="w-4 h-4"
+  />
+  <span className="text-sm whitespace-nowrap">
+    {networks.find(n => n.value === network)?.label}
+  </span>
+</div>
+        <span className="text-xs text-gray-400">▼</span>
       </div>
-    ))}
-  </div>
-)}
 
-            
-
-
+      {/* DROPDOWN */}
+      {open && (
+        <div
+          ref={dropdownRef}
+          className="absolute right-0 top-full mt-2 w-56 bg-black border border-[#444385] rounded-md z-[999] shadow-lg"
+        >
+          {networks.map((net) => (
+            <div
+              key={net.value}
+              onClick={(e) => {
+                e.stopPropagation(); // 🔥 IMPORTANT
+                setNetwork(net.value);
+                setOpen(false);
+              }}
+              className="px-3 py-2 cursor-pointer text-sm hover:bg-[#444385]/50 transition"
+            >
+             <div className="flex items-center gap-2">
+  <img src={net.icon} alt="coin" className="w-4 h-4" />
+  <span>{net.label}</span>
+</div>
             </div>
-
-            <p className="text-xs text-blue-400 mt-2">Minimum: $0.2 USDT</p>
-          </div>
+          ))}
         </div>
+      )}
+    </div>
+
+    <p className="text-xs text-blue-400 mt-2">Minimum: $0.2 USDT</p>
+  </div>
+</div>
 
         {/* QUICK AMOUNTS */}
         <div className="grid grid-cols-4 gap-3 mb-5">
