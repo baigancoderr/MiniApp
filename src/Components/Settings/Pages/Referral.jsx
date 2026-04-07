@@ -250,7 +250,7 @@ const Referral = () => {
                                   : "bg-green-500/20 text-green-300"
                               }`}
                             >
-                              Level {item.level}
+                              {item.level}
                             </span>
                           </td>
                           <td className="px-4 py-3 text-center font-bold text-[#81ECFF]">
