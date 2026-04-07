@@ -22,6 +22,17 @@ const AddFundPage = () => {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
 
+
+  const networks = [
+  { label: "USDT (TRC20)", value: "TRC20" },
+  { label: "USDT (BEP20)", value: "BEP20" },
+  { label: "USDT (ERC20)", value: "ERC20_USDT" },
+  { label: "USDC (ERC20)", value: "ERC20_USDC" },
+  { label: "USDT (Polygon)", value: "POLYGON_USDT" }
+];
+
+const [network, setNetwork] = useState("BEP20");
+
   // Improved getUserId Function
   const getUserId = () => {
     // Priority 1: Direct userId
@@ -87,12 +98,18 @@ const AddFundPage = () => {
     setLoading(true);
 
     try {
-      const res = await api.post("/user/deposit/create", {
-        userId: userId,
-        amount: Number(amount),
-        coin: selected.name,
-        network: "TRC20"
-      });
+      // const res = await api.post("/user/deposit/create", {
+      //   userId: userId,
+      //   amount: Number(amount),
+      //   coin: selected.name,
+      //   network: "TRC20"
+      // });
+
+      await api.post("/user/deposit/create", {
+  userId,
+  amount,
+  network
+});
 
       const data = res.data;
 
