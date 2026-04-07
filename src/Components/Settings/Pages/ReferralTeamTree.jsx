@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import Tree from "react-d3-tree";
 import { ArrowLeft, User } from "lucide-react";
-import api from "../../../api/axios"; // Adjust path as per your project structure
+import api from "../../../api/axios";
 import toast from "react-hot-toast";
 
 const ReferralTeamTree = () => {
@@ -21,8 +21,6 @@ const ReferralTeamTree = () => {
 
         if (res.data.status === "success") {
           const apiTree = res.data.data.tree || [];
-          
-          // Transform API data to react-d3-tree format
           const transformedTree = transformTreeForD3(apiTree);
           setTreeData(transformedTree);
         } else {
@@ -40,23 +38,20 @@ const ReferralTeamTree = () => {
     fetchTeamTree();
   }, []);
 
-  // Transform API tree structure to react-d3-tree format
+  // Transform API data to react-d3-tree format
   const transformTreeForD3 = (apiNodes) => {
     if (!apiNodes || apiNodes.length === 0) return [];
 
-    const transformNode = (node) => {
-      return {
-        name: node.name || node.username || "Unknown",
-        attributes: {
-          Name: node.name?.trim() || node.username || "Unknown User",
-          UserId: node.userId || node.referralCode || "N/A",
-          SelfInvestment: node.selfInvestment || 0,
-        },
-        children: node.children ? node.children.map(transformNode) : [],
-      };
-    };
+    const transformNode = (node) => ({
+      name: node.name || node.username || "Unknown",
+      attributes: {
+        Name: (node.name || node.username || "Unknown User").trim(),
+        UserId: node.userId || node.referralCode || "N/A",
+        SelfInvestment: node.selfInvestment || 0,
+      },
+      children: node.children ? node.children.map(transformNode) : [],
+    });
 
-    // Usually the root is the first element (you)
     return apiNodes.map(transformNode);
   };
 
@@ -72,7 +67,6 @@ const ReferralTeamTree = () => {
 
     const filterNode = (node) => {
       const filteredChildren = node.children?.map(filterNode).filter(Boolean) || [];
-      
       if (matchesSearch(node) || filteredChildren.length > 0) {
         return { ...node, children: filteredChildren };
       }
@@ -98,7 +92,7 @@ const ReferralTeamTree = () => {
     }
   }, [loading, treeData]);
 
-  // Custom Node Renderer
+  // Custom Node Renderer - Self Investment always shown below ID
   const renderCustomNode = useCallback(({ nodeDatum, toggleNode }) => {
     const attrs = nodeDatum.attributes || {};
     const hasChildren = nodeDatum.children && nodeDatum.children.length > 0;
@@ -106,7 +100,7 @@ const ReferralTeamTree = () => {
 
     return (
       <g>
-        <foreignObject x="-110" y="-70" width="220" height="140" style={{ overflow: "visible" }}>
+        <foreignObject x="-110" y="-75" width="220" height="155" style={{ overflow: "visible" }}>
           <div
             style={{
               backgroundColor: "#0F1625",
@@ -132,29 +126,28 @@ const ReferralTeamTree = () => {
                 <p style={{ color: "#94a3b8", fontSize: "12.5px", margin: "3px 0 0" }}>
                   ID: {attrs.UserId}
                 </p>
+
+                {/* Self Investment - Always shown below ID */}
+                <p
+                  style={{
+                    color: "#81ECFF",
+                    fontWeight: 700,
+                    fontSize: "14.5px",
+                    marginTop: "6px",
+                  }}
+                >
+                  Self Investment: ₹{Number(attrs.SelfInvestment).toLocaleString("en-IN")}
+                </p>
               </div>
             </div>
-
-            {Number(attrs.SelfInvestment) > 0 && (
-              <p
-                style={{
-                  color: "#81ECFF",
-                  fontWeight: 700,
-                  textAlign: "center",
-                  marginTop: "12px",
-                  fontSize: "16px",
-                }}
-              >
-                ₹{Number(attrs.SelfInvestment).toLocaleString("en-IN")}
-              </p>
-            )}
           </div>
         </foreignObject>
 
+        {/* Expand/Collapse Arrow */}
         {hasChildren && (
           <text
             x="0"
-            y="55"
+            y="58"
             textAnchor="middle"
             fontSize="26"
             fill="#60a5fa"
@@ -208,7 +201,7 @@ const ReferralTeamTree = () => {
         <div
           ref={treeContainer}
           className="border border-[#444385] rounded-3xl overflow-hidden bg-[#0B0F19] shadow-2xl"
-          style={{ height: "72vh", position: "relative" }}
+          style={{ height: "74vh", position: "relative" }}
         >
           <style jsx>{`
             .rd3t-link {
