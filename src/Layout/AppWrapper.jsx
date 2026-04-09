@@ -1,8 +1,7 @@
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import ReferralLogin from "./ReferralLogin";
-import HomeDashboard from "../Pages/Homepage";        // ← Your HomeDashboard component
+import Homepage from "../Pages/Homepage";
 import Wallet from "../Pages/Wallet";
 import Upgrade from "../Pages/Upgrade";
 import Settings from "../Pages/Settings";
@@ -10,49 +9,69 @@ import AddFund from "../Pages/AddFund";
 import PaymentScreen from "../Components/AddFund/PaymentScreen";
 import ReferralTeamTree from "../Components/Settings/Pages/ReferralTeamTree";
 
+import Loader from "../Context/Loader";
+
 function AppWrapper() {
+    const ALLOW_BROWSER = true;
   const location = useLocation();
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("token");
-
-  // Check authentication once on app load
   useEffect(() => {
-    setIsCheckingAuth(false);
-  }, []);
+    setLoading(true);
 
-  // Protect routes
-  if (isCheckingAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        <div className="text-xl">Loading...</div>
-      </div>
-    );
-  }
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500); // ✅ smooth route transition
 
-  // If not logged in and not on login page → redirect to login
-  if (!token && location.pathname !== "/login") {
-    return <Navigate to="/login" replace />;
-  }
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
-  // If logged in and trying to access login page → redirect to home
-  if (token && location.pathname === "/login") {
-    return <Navigate to="/" replace />;
+
+
+
+if (!window.Telegram || !window.Telegram.WebApp) {
+  return null;
+}
+
+
+if (!ALLOW_BROWSER) {
+  if (!window.Telegram?.WebApp?.initData) {
+    return null;
   }
+}
 
   return (
-    <Routes>
-      <Route path="/login" element={<ReferralLogin />} />
-      <Route path="/" element={<HomeDashboard />} />
-      <Route path="/wallet" element={<Wallet />} />
-      <Route path="/invest" element={<Upgrade />} />
-      <Route path="/addfund" element={<AddFund />} />
-      <Route path="/payment" element={<PaymentScreen />} />
-      <Route path="/referral-team-tree" element={<ReferralTeamTree />} />
+    <>
+      {/* 🔥 ROUTE LOADER */}
+      {/* {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-[9999] backdrop-blur-sm">
+          <Loader />
+        </div>
+      )} */}
 
-      {/* Settings Routes */}
-      <Route path="/settings/*" element={<Settings />} />
-    </Routes>
+      {/* 🔥 ROUTES */}
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/wallet" element={<Wallet />} />
+        <Route path="/invest" element={<Upgrade />} />
+        <Route path="/addfund" element={<AddFund />} />
+        <Route path="/payment" element={<PaymentScreen />} />
+        <Route path="/referral-team-tree" element={<ReferralTeamTree />} />
+
+        {/* SETTINGS ROUTES */}
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/profile" element={<Settings />} />
+        <Route path="/settings/referral" element={<Settings />} />
+        <Route path="/settings/referral-earning-history" element={<Settings />} />
+        <Route path="/settings/investment-history" element={<Settings />} />
+        <Route path="/settings/deposit-history" element={<Settings />} />
+        <Route path="/settings/withdraw-usdt" element={<Settings />} />
+        <Route path="/settings/faqs" element={<Settings />} />
+        <Route path="/settings/privacy" element={<Settings />} />
+        <Route path="/settings/term-condition" element={<Settings />} />
+        
+      </Routes>
+    </>
   );
 }
 
