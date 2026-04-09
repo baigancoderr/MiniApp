@@ -8,6 +8,7 @@ import Settings from "../Pages/Settings";
 import AddFund from "../Pages/AddFund";
 import PaymentScreen from "../Components/AddFund/PaymentScreen";
 import ReferralTeamTree from "../Components/Settings/Pages/ReferralTeamTree";
+import ReferralLogin from "./ReferralLogin";
 
 import Loader from "../Context/Loader";
 
@@ -26,7 +27,19 @@ function AppWrapper() {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+useEffect(() => {
+  const token = localStorage.getItem("token");
 
+  // ❌ Not logged in → login page
+  if (!token && location.pathname !== "/login") {
+    window.location.replace("/login");
+  }
+
+  // ✅ Already logged → home
+  if (token && location.pathname === "/login") {
+    window.location.replace("/");
+  }
+}, [location.pathname]);
 
 
 if (!window.Telegram || !window.Telegram.WebApp) {
@@ -51,6 +64,7 @@ if (!ALLOW_BROWSER) {
 
       {/* 🔥 ROUTES */}
       <Routes>
+        <Route path="/login" element={<ReferralLogin />} />
         <Route path="/" element={<Homepage />} />
         <Route path="/wallet" element={<Wallet />} />
         <Route path="/invest" element={<Upgrade />} />

@@ -54,65 +54,65 @@ const HomeDashboard = () => {
   ]);
 
   // Telegram + API Integration (Same as Profile)
-  useEffect(() => {
-    const initTelegram = async () => {
-      try {
-        const tg = window.Telegram?.WebApp;
-        if (!tg) {
-          console.log("Not inside Telegram WebApp");
-          setLoading(false);
-          return;
-        }
+  // useEffect(() => {
+  //   const initTelegram = async () => {
+  //     try {
+  //       const tg = window.Telegram?.WebApp;
+  //       if (!tg) {
+  //         console.log("Not inside Telegram WebApp");
+  //         setLoading(false);
+  //         return;
+  //       }
 
-        tg.ready();
-        const user = tg.initDataUnsafe?.user;
+  //       tg.ready();
+  //       const user = tg.initDataUnsafe?.user;
 
-        if (!user) {
-          setLoading(false);
-          return;
-        }
+  //       if (!user) {
+  //         setLoading(false);
+  //         return;
+  //       }
 
-        setTgUser(user);
+  //       setTgUser(user);
 
-        // Handle referral
-        const urlParams = new URLSearchParams(window.location.search);
-        const refFromUrl = urlParams.get("ref");
-        const refFromTG = tg.initDataUnsafe?.start_param;
-        const refFromStorage = localStorage.getItem("referral");
-        const referralCode = refFromTG || refFromUrl || refFromStorage;
+  //       // Handle referral
+  //       const urlParams = new URLSearchParams(window.location.search);
+  //       const refFromUrl = urlParams.get("ref");
+  //       const refFromTG = tg.initDataUnsafe?.start_param;
+  //       const refFromStorage = localStorage.getItem("referral");
+  //       const referralCode = refFromTG || refFromUrl || refFromStorage;
 
-        if (referralCode) {
-          localStorage.setItem("referral", referralCode);
-        }
+  //       if (referralCode) {
+  //         localStorage.setItem("referral", referralCode);
+  //       }
 
-        // API Login
-        const res = await api.post("/user/telegram-login", {
-          telegramId: user.id,
-          name: `${user.first_name} ${user.last_name || ""}`,
-          username: user.username || "",
-          referralCode: referralCode || null,
-        });
+  //       // API Login
+  //       const res = await api.post("/user/telegram-login", {
+  //         telegramId: user.id,
+  //         name: `${user.first_name} ${user.last_name || ""}`,
+  //         username: user.username || "",
+  //         referralCode: referralCode || null,
+  //       });
 
-        const data = res.data;
+  //       const data = res.data;
 
-        if (data.success) {
-          setApiUser(data.user);
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("userId", data.user.userId || data.user._id);
-          localStorage.setItem("user", JSON.stringify(data.user));
-        } else {
-          toast.error(data.message || "Login failed");
-        }
-      } catch (error) {
-        console.error("Telegram Login Error:", error);
-        toast.error("Failed to connect with server");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       if (data.success) {
+  //         setApiUser(data.user);
+  //         localStorage.setItem("token", data.token);
+  //         localStorage.setItem("userId", data.user.userId || data.user._id);
+  //         localStorage.setItem("user", JSON.stringify(data.user));
+  //       } else {
+  //         toast.error(data.message || "Login failed");
+  //       }
+  //     } catch (error) {
+  //       console.error("Telegram Login Error:", error);
+  //       toast.error("Failed to connect with server");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    initTelegram();
-  }, []);
+  //   initTelegram();
+  // }, []);
 
   // Dynamic Referral Link (Same as your Profile)
   const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode || "loading"}`;
