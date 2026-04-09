@@ -22,8 +22,8 @@ useEffect(() => {
   const initTelegram = async () => {
     try {
       const tg = window.Telegram?.WebApp;
+
       if (!tg) {
-        console.log("Not inside Telegram");
         setLoading(false);
         return;
       }
@@ -32,24 +32,38 @@ useEffect(() => {
 
       const user = tg.initDataUnsafe?.user;
       if (!user) {
-        console.log("No Telegram user found");
         setLoading(false);
         return;
       }
 
       setTgUser(user);
 
-      // Referral logic...
+      // ✅ Check already logged in
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        // 👉 Existing user → homepage
+        window.location.replace("/");
+        return;
+      }
+
+      // 🔥 Prevent multiple API calls
+      if (sessionStorage.getItem("creatingUser")) return;
+      sessionStorage.setItem("creatingUser", "true");
+
+      // ✅ Referral logic
       const urlParams = new URLSearchParams(window.location.search);
       const refFromUrl = urlParams.get("ref");
       const refFromTG = tg.initDataUnsafe?.start_param;
       const refFromStorage = localStorage.getItem("referral");
+
       const referralCode = refFromTG || refFromUrl || refFromStorage;
 
       if (referralCode) {
         localStorage.setItem("referral", referralCode);
       }
 
+      // 🔥 API CALL (AUTO CREATE)
       const res = await api.post("/user/telegram-login", {
         telegramId: user.id,
         name: `${user.first_name} ${user.last_name || ""}`,
@@ -60,23 +74,23 @@ useEffect(() => {
       const data = res.data;
 
       if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
         setApiUser(data.user);
 
-        // ✅ IMPORTANT: Save user data properly
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.user.userId || data.user._id);   // ← Added
-        localStorage.setItem("user", JSON.stringify(data.user));           // ← Most Important
-
-        console.log("User saved to localStorage:", data.user);
+        // 👉 redirect to homepage
+        window.location.replace("/");
       } else {
-        toast.error(data.message || "Login failed");
+        toast.error(data.message);
       }
 
-    } catch (error) {
-      console.error("Telegram Login Error:", error);
-      toast.error("API Error ❌");
+    } catch (err) {
+      console.error(err);
+      toast.error("Login failed ❌");
     } finally {
       setLoading(false);
+      sessionStorage.removeItem("creatingUser");
     }
   };
 
@@ -128,6 +142,14 @@ const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode |
     }
   };
 
+
+    if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  } 
   return (
     <div className="min-h-screen flex justify-center pb-24 px-2 py-3 text-white bg-[#0B0F19]">
       <div className="w-full max-w-md">

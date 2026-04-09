@@ -1,4 +1,5 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+// import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Homepage from "../Pages/Homepage";
@@ -27,6 +28,20 @@ function AppWrapper() {
   }, [location.pathname]);
 
 
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  // 🆕 New user → Profile page
+  if (!token && location.pathname === "/") {
+    window.location.replace("/settings/profile");
+  }
+
+  // 🔁 Existing user → Homepage
+  if (token && location.pathname === "/settings/profile") {
+    window.location.replace("/");
+  }
+}, [location.pathname]);
+
 
 
 if (!window.Telegram || !window.Telegram.WebApp) {
@@ -50,27 +65,33 @@ if (!ALLOW_BROWSER) {
       )} */}
 
       {/* 🔥 ROUTES */}
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/wallet" element={<Wallet />} />
-        <Route path="/invest" element={<Upgrade />} />
-        <Route path="/addfund" element={<AddFund />} />
-        <Route path="/payment" element={<PaymentScreen />} />
-        <Route path="/referral-team-tree" element={<ReferralTeamTree />} />
 
-        {/* SETTINGS ROUTES */}
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/settings/profile" element={<Settings />} />
-        <Route path="/settings/referral" element={<Settings />} />
-        <Route path="/settings/referral-earning-history" element={<Settings />} />
-        <Route path="/settings/investment-history" element={<Settings />} />
-        <Route path="/settings/deposit-history" element={<Settings />} />
-        <Route path="/settings/withdraw-usdt" element={<Settings />} />
-        <Route path="/settings/faqs" element={<Settings />} />
-        <Route path="/settings/privacy" element={<Settings />} />
-        <Route path="/settings/term-condition" element={<Settings />} />
-        
-      </Routes>
+
+<Routes>
+  {/* Homepage */}
+  <Route path="/" element={<Homepage />} />
+
+  {/* Profile (New User Entry Point) */}
+  <Route path="/settings/profile" element={<Settings />} />
+
+  {/* Other Routes */}
+  <Route path="/wallet" element={<Wallet />} />
+  <Route path="/invest" element={<Upgrade />} />
+  <Route path="/addfund" element={<AddFund />} />
+  <Route path="/payment" element={<PaymentScreen />} />
+  <Route path="/referral-team-tree" element={<ReferralTeamTree />} />
+
+  {/* Settings */}
+  <Route path="/settings" element={<Settings />} />
+  <Route path="/settings/referral" element={<Settings />} />
+  <Route path="/settings/referral-earning-history" element={<Settings />} />
+  <Route path="/settings/investment-history" element={<Settings />} />
+  <Route path="/settings/deposit-history" element={<Settings />} />
+  <Route path="/settings/withdraw-usdt" element={<Settings />} />
+  <Route path="/settings/faqs" element={<Settings />} />
+  <Route path="/settings/privacy" element={<Settings />} />
+  <Route path="/settings/term-condition" element={<Settings />} />
+</Routes>
     </>
   );
 }
