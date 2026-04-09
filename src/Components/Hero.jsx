@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   DollarSign,
   Wallet,
@@ -64,33 +65,16 @@ const HomeDashboard = () => {
 
   // Fetch Dashboard Data from Backend
   useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        setLoading(true);
-     const res = await api.get("/user/dashboard", {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
+    const { data, isLoading, error } = useQuery({
+  queryKey: ["dashboard"],
+  queryFn: () =>
+    api.get("/user/dashboard", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }).then(res => res.data),
+  staleTime: 1000 * 60 * 5,
 });
-
-const data = res.data;
-
-        if (data.success) {
-          setDashboardData(data);
-        } else {
-          setError(data.message || "Failed to load dashboard");
-          toast.error(data.message || "Failed to load dashboard");
-        }
-      } catch (err) {
-        console.error("Dashboard fetch error:", err);
-        setError("Something went wrong. Please try again.");
-        toast.error("Failed to connect to server");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboard();
   }, []);
 
   // Share Handler
@@ -194,24 +178,24 @@ const data = res.data;
   };
 
   // Loading State
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <p className="text-lg">Loading your dashboard...</p>
-      </div>
-    );
-  }
+if (isLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      <p>Loading...</p>
+    </div>
+  );
+}
 
   // Error State
-  if (error || !dashboardData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <p className="text-red-400">{error || "Failed to load dashboard"}</p>
-      </div>
-    );
-  }
+if (error || !data) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      <p>Error loading dashboard</p>
+    </div>
+  );
+}
 
-  const { user, dashboard } = dashboardData;
+const { user, dashboard } = data;
   const stats = dashboard.stats || [];
 
   return (

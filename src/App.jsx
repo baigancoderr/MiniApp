@@ -6,11 +6,12 @@ import Loader from "./Context/Loader";
 import MagicRings from "./Layout/MagicRings";
 import { Toaster } from "react-hot-toast";
 import ScrollToTop from "./Components/utils/ScrollToTop";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 
 function App() {
 
-
+const queryClient = new QueryClient();
   const [isTelegram, setIsTelegram] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
   // const ALLOW_BROWSER = false;
@@ -57,10 +58,10 @@ useEffect(() => {
   );
 }
 
-  return (
+ return (
+  <QueryClientProvider client={queryClient}>
     <div className="relative min-h-screen text-white overflow-hidden">
 
-      {/* ✅ FIRST LOAD SCREEN */}
       {initialLoading ? (
         <div className="fixed inset-0 flex items-center justify-center bg-black z-[99999]">
           <Loader />
@@ -84,14 +85,15 @@ useEffect(() => {
 
           {/* ROUTER */}
           <BrowserRouter>
-               <ScrollToTop />
+            <ScrollToTop />
             <Toaster position="top-center" reverseOrder={false} />
             <AppWrapper />
           </BrowserRouter>
         </>
       )}
     </div>
-  );
+  </QueryClientProvider>
+);
 }
 
 export default App;
