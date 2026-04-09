@@ -68,26 +68,37 @@ if (referralCode) {
 
       const data = res.data;
 
-      if (data.success) {
-        setApiUser(data.user);
+    if (data.success) {
+  setApiUser(data.user);
 
-        // ✅ IMPORTANT: Save user data properly
-      localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.user.userId || data.user._id);   // ← Added
-        localStorage.setItem("user", JSON.stringify(data.user));           // ← Most Important
+//   setTimeout(() => {
+//   const storedUser = JSON.parse(localStorage.getItem("user"));
+//   if (storedUser) {
+//     setApiUser(storedUser);
+//   }
+// }, 300);
 
-        console.log("User saved to localStorage:", data.user);
-      } else {
-        toast.error(data.message || "Login failed");
-      }
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("userId", data.user.userId || data.user._id);
+  localStorage.setItem("user", JSON.stringify(data.user));
+
+  console.log("User saved to localStorage:", data.user);
+
+  setLoading(false); // ✅ ADD THIS
+} else {
+  toast.error(data.message || "Login failed");
+  setLoading(false); // ✅ ADD THIS
+}
 
     } catch (error) {
   console.error("Telegram Login Error:", error);
   toast.error("API Error ❌");
 
-  // 🔥 fallback
   setShowReferralPopup(true);
+  setLoading(false); // ✅ ADD THIS
 }
+
+
   };
 
   initTelegram();
@@ -98,19 +109,27 @@ useEffect(() => {
 }, [showReferralPopup]);
 
 const handleReferralSubmit = async () => {
+  // 🔥 Start loading
+  setLoading(true);
+
+  // ✅ Validation
   if (!/^CPR[A-Z0-9]{6}$/.test(inputReferral)) {
     toast.error("Invalid Referral Code ❌");
+    setLoading(false);
     return;
   }
 
   try {
     const tg = window.Telegram?.WebApp;
     const user = tg?.initDataUnsafe?.user;
-    if (!user) {
-  toast.error("Telegram user not found");
-  return;
-}
 
+    if (!user) {
+      toast.error("Telegram user not found ❌");
+      setLoading(false);
+      return;
+    }
+
+    // ✅ API Call
     const res = await api.post("/user/telegram-login", {
       telegramId: user.id,
       name: `${user.first_name} ${user.last_name || ""}`,
@@ -120,21 +139,30 @@ const handleReferralSubmit = async () => {
 
     const data = res.data;
 
-  if (data.success) {
-  setApiUser(data.user);
+    if (data.success) {
+      // ✅ Set state
+      setApiUser(data.user);
 
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("referral", inputReferral); // ✅ RIGHT PLACE
-  localStorage.setItem("userId", data.user.userId);
-  localStorage.setItem("user", JSON.stringify(data.user));
+      // ✅ Save to localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("referral", inputReferral);
+      localStorage.setItem("userId", data.user.userId || data.user._id);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-  setShowReferralPopup(false);
-  toast.success("Login Success ✅");
-} else {
-      toast.error(data.message);
+      // ✅ Close popup
+      setShowReferralPopup(false);
+
+      toast.success("Login Success ✅");
+    } else {
+      toast.error(data.message || "Login failed ❌");
     }
+
   } catch (err) {
-    toast.error("Error ❌");
+    console.error("Referral Submit Error:", err);
+    toast.error("Something went wrong ❌");
+  } finally {
+    // 🔥 Stop loading (VERY IMPORTANT)
+    setLoading(false);
   }
 };
 
@@ -231,14 +259,18 @@ const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode |
               <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
                 <p className="text-xs text-gray-400">USER ID</p>
                 <p className="text-white">
-                  {loading ? "Loading..." : apiUser?.userId || "N/A"}
+                {loading 
+  ? "Loading..." 
+  : apiUser?.userId || "N/A"}
                 </p>
               </div>
 
               <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
                 <p className="text-xs text-gray-400">PARENT ID</p>
                 <p className="text-white">
-                  {loading ? "Loading..." : apiUser?.referredBy || "N/A"}
+                {loading 
+  ? "Loading..." 
+  : apiUser?.referredBy || "N/A"}
                 </p>
               </div>
             </div>
