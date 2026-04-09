@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
+import api from "../api/axios";
 import {
   Chart as ChartJS,
   LineElement,
@@ -66,15 +67,13 @@ const HomeDashboard = () => {
     const fetchDashboard = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/user/dashboard", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${localStorage.getItem("token")}`, // Uncomment if using JWT
-          },
-        });
+     const res = await api.get("/user/dashboard", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+});
 
-        const data = await response.json();
+const data = res.data;
 
         if (data.success) {
           setDashboardData(data);
