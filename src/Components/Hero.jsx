@@ -192,18 +192,18 @@ const stats = [
       : item.value,
   })),
 
-  {
-    title: "TOTAL INVESTED",
-    value: `$${dashboard.profitTracker?.totalInvested || 0}`,
-  },
-  {
-    title: "DAILY INCOME",
-    value: `$${dashboard.profitTracker?.dailyIncome || 0}`,
-  },
-  {
-    title: "REFERRALS",
-    value: dashboard.teamStats?.totalReferrals || 0,
-  },
+  // {
+  //   title: "TOTAL INVESTED",
+  //   value: `$${dashboard.profitTracker?.totalInvested || 0}`,
+  // },
+  // {
+  //   title: "DAILY INCOME",
+  //   value: `$${dashboard.profitTracker?.dailyIncome || 0}`,
+  // },
+  // {
+  //   title: "REFERRALS",
+  //   value: dashboard.teamStats?.totalReferrals || 0,
+  // },
 ];
 
   return (
