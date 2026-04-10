@@ -124,12 +124,18 @@ const Referral = () => {
   }, [selectedLevel]);
 
 
-const user = JSON.parse(localStorage.getItem("user"));
+useEffect(() => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-if (user?.referralCode) {
-  const link = `https://t.me/cipera_bot?startapp=${user.referralCode}`;
-  setReferralLink(link);
-}
+    if (user?.referralCode) {
+      const link = `https://t.me/cipera_bot?startapp=${user.referralCode}`;
+      setReferralLink(link);
+    }
+  } catch (err) {
+    console.error("Referral link error:", err);
+  }
+}, []);
 
 const handleShare = () => {
   const text = "Join and earn 🚀";
