@@ -21,23 +21,19 @@ const AddFundPage = () => {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
 
-  // ✅ Only your 5 required networks
   const networks = [
-    { label: "Web20 USDT",     value: "WEB20_USDT",   icon: usdt, coin: "USDT" },
-    { label: "Base USDT",      value: "BASE_USDT",    icon: usdt, coin: "USDT" },
-    { label: "Base USDC",      value: "BASE_USDC",    icon: usdc, coin: "USDC" },
-    // { label: "ETH USDT",       value: "WEB20_USDT",   icon: usdt, coin: "USDT" },
-    { label: "Polygon USDT",   value: "POLYGON_USDT", icon: usdt, coin: "USDT" },
-    { label: "BEP20 USDT",     value: "BEP20_USDT",   icon: usdt, coin: "USDT" }
+    { label: "Web20 USDT",   value: "WEB20_USDT",   icon: usdt, coin: "USDT" },
+    { label: "Base USDT",    value: "BASE_USDT",    icon: usdt, coin: "USDT" },
+    { label: "Base USDC",    value: "BASE_USDC",    icon: usdc, coin: "USDC" },
+    { label: "Polygon USDT", value: "POLYGON_USDT", icon: usdt, coin: "USDT" },
+    { label: "BEP20 USDT",   value: "BEP20_USDT",   icon: usdt, coin: "USDT" },
   ];
 
   const [selectedNetwork, setSelectedNetwork] = useState("WEB20_USDT");
 
-  // Get UserId
   const getUserId = () => {
     const savedUserId = localStorage.getItem("userId");
     if (savedUserId) return savedUserId;
-
     try {
       const userStr = localStorage.getItem("user");
       if (userStr) {
@@ -50,36 +46,28 @@ const AddFundPage = () => {
     return null;
   };
 
-  // Click outside handler
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(e.target)
+        dropdownRef.current && !dropdownRef.current.contains(e.target) &&
+        buttonRef.current && !buttonRef.current.contains(e.target)
       ) {
         setOpen(false);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  // Dynamic Dropdown Position
   useEffect(() => {
     if (open && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const dropdownHeight = 260;
-
       let topPosition = rect.bottom + 8;
-
       if (topPosition + dropdownHeight > viewportHeight - 20) {
         topPosition = Math.max(rect.top - dropdownHeight - 8, 20);
       }
-
       setDropdownStyle({
         position: "fixed",
         top: `${topPosition}px`,
@@ -95,94 +83,70 @@ const AddFundPage = () => {
   };
 
   const handleDeposit = async () => {
-  const userId = getUserId();
+    const userId = getUserId();
 
-  if (!userId) {
-    toast.error("Session expired. Please login again ❌");
-    setTimeout(() => navigate("/settings"), 1500);
-    return;
-  }
-
-  if (!amount || Number(amount) <= 0) {
-    toast.error("Please Enter Your Amount ❌");
-    return;
-  }
-
-  if (!isChecked) {
-    toast.error("Please Accept Terms & Conditions ❌");
-    return;
-  }
-
-  if (Number(amount) < 0.2) {
-    toast.error("Minimum deposit is $0.2 USDT");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const selected = networks.find(n => n.value === selectedNetwork);
-
-    if (!selected) {
-      toast.error("Invalid network selected");
+    if (!userId) {
+      toast.error("Session expired. Please login again ❌");
+      setTimeout(() => navigate("/settings"), 1500);
+      return;
+    }
+    if (!amount || Number(amount) <= 0) {
+      toast.error("Please Enter Your Amount ❌");
+      return;
+    }
+    if (!isChecked) {
+      toast.error("Please Accept Terms & Conditions ❌");
+      return;
+    }
+    if (Number(amount) < 0.2) {
+      toast.error("Minimum deposit is $0.2 USDT");
       return;
     }
 
-    console.log(`🔄 Creating deposit:`, {
-      userId,
-      amount: Number(amount),
-      network: selectedNetwork,
-      coin: selected.coin
-    });
+    setLoading(true);
 
-    const res = await api.post("/user/deposit/create", {
-      userId,
-      amount: Number(amount),
-      network: selectedNetwork,
-    });
+    try {
+      const selected = networks.find((n) => n.value === selectedNetwork);
+      if (!selected) {
+        toast.error("Invalid network selected");
+        return;
+      }
 
-    const data = res.data;
-
-    if (data.success && data.data?.address_in) {
-      toast.success("Payment address generated successfully ✅");
-
-      navigate("/payment", {
-        state: {
-          amount,
-          coin: selected.coin,
-          network: selected.label,
-          walletAddress: data.data.address_in,
-          qrData: data.data.address_in,
-          callbackInfo: data.data,
-        },
+      const res = await api.post("/user/deposit/create", {
+        userId,
+        amount: Number(amount),
+        network: selectedNetwork,
       });
-    } else {
-      const errorMsg = data.message || data.error || "Failed to generate address";
-      console.warn("API returned failure:", data);
-      toast.error(errorMsg);
+
+      const data = res.data;
+
+      if (data.success && data.data?.address_in) {
+        toast.success("Payment address generated successfully ✅");
+        navigate("/payment", {
+          state: {
+            amount,
+            coin: selected.coin,
+            network: selected.label,
+            networkKey: selectedNetwork,  // ← added
+            walletAddress: data.data.address_in,
+            qrData: data.data.address_in,
+            callbackInfo: data.data,
+          },
+        });
+      } else {
+        const errorMsg = data.message || data.error || "Failed to generate address";
+        toast.error(errorMsg);
+      }
+    } catch (error) {
+      let msg = "Something went wrong. Please try again.";
+      if (error.response?.data?.message) msg = error.response.data.message;
+      else if (error.response?.data?.error) msg = error.response.data.error;
+      else if (error.message?.includes("Network Error")) msg = "Network error. Please check your internet connection.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("❌ Deposit API Error Details:", {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-    });
-
-    let msg = "Something went wrong. Please try again.";
-
-    if (error.response?.data?.message) {
-      msg = error.response.data.message;
-    } else if (error.response?.data?.error) {
-      msg = error.response.data.error;
-    } else if (error.message && error.message.includes("Network Error")) {
-      msg = "Network error. Please check your internet connection.";
-    }
-
-    toast.error(msg);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen pb-24 text-white px-3 py-3">
@@ -199,12 +163,9 @@ const AddFundPage = () => {
             </button>
             <h1 className="text-lg font-semibold">Add Fund</h1>
           </div>
-
           <div
             onClick={() => navigate("/settings")}
-            className="w-10 h-10 flex items-center justify-center rounded-xl 
-              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
-              shadow-lg shadow-blue-500/20 cursor-pointer active:scale-95 transition"
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r from-[#587FFF] to-[#09239F] shadow-lg shadow-blue-500/20 cursor-pointer active:scale-95 transition"
           >
             <User size={18} />
           </div>
@@ -214,12 +175,10 @@ const AddFundPage = () => {
         <div className="rounded-2xl border-2 border-[#444385] overflow-visible mb-5 relative">
           <div className="bg-[#00000033] p-4 backdrop-blur-[20px] rounded-2xl">
             <p className="text-gray-400 text-xs mb-2">Enter Amount</p>
-
-            <div 
+            <div
               ref={buttonRef}
               className="flex items-center bg-black border border-[#444385] rounded-lg px-3 py-2 relative"
             >
-              {/* INPUT */}
               <input
                 type="number"
                 placeholder="0.00"
@@ -227,29 +186,23 @@ const AddFundPage = () => {
                 onChange={(e) => setAmount(e.target.value)}
                 className="bg-transparent outline-none text-white flex-1 min-w-0"
               />
-
-              {/* NETWORK SELECT BUTTON */}
               <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpen(!open);
-                }}
+                onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
                 className="flex items-center gap-2 cursor-pointer ml-3 shrink-0"
               >
                 <div className="flex items-center gap-2">
                   <img
-                    src={networks.find(n => n.value === selectedNetwork)?.icon}
+                    src={networks.find((n) => n.value === selectedNetwork)?.icon}
                     alt="coin"
                     className="w-4 h-4"
                   />
                   <span className="text-sm whitespace-nowrap">
-                    {networks.find(n => n.value === selectedNetwork)?.label}
+                    {networks.find((n) => n.value === selectedNetwork)?.label}
                   </span>
                 </div>
                 <span className="text-xs text-gray-400">▼</span>
               </div>
             </div>
-
             <p className="text-xs text-blue-400 mt-2">Minimum: $0.2 USDT</p>
           </div>
         </div>
@@ -279,7 +232,6 @@ const AddFundPage = () => {
                 <p className="text-xs text-gray-400">Complete payment within 20 minutes.</p>
               </div>
             </div>
-
             <div className="flex gap-3">
               <Package className="text-blue-400" size={18} />
               <div>
@@ -287,7 +239,6 @@ const AddFundPage = () => {
                 <p className="text-xs text-gray-400">Send exact amount in one transaction.</p>
               </div>
             </div>
-
             <div className="flex gap-3">
               <ShieldCheck className="text-blue-400" size={18} />
               <div>
@@ -308,17 +259,11 @@ const AddFundPage = () => {
           />
           <p className="text-xs text-gray-400 leading-relaxed">
             I agree to the{" "}
-            <Link 
-              to="/settings/term-condition" 
-              className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition"
-            >
+            <Link to="/settings/term-condition" className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link 
-              to="/settings/privacy" 
-              className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition"
-            >
+            <Link to="/settings/privacy" className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition">
               Privacy Policy
             </Link>
           </p>
@@ -348,14 +293,9 @@ const AddFundPage = () => {
                   setSelectedNetwork(net.value);
                   setOpen(false);
                 }}
-                className="px-4 py-3.5 cursor-pointer text-sm hover:bg-[#444385]/70 
-                           transition-colors flex items-center gap-3 active:bg-[#444385]"
+                className="px-4 py-3.5 cursor-pointer text-sm hover:bg-[#444385]/70 transition-colors flex items-center gap-3 active:bg-[#444385]"
               >
-                <img 
-                  src={net.icon} 
-                  alt="coin" 
-                  className="w-5 h-5" 
-                />
+                <img src={net.icon} alt="coin" className="w-5 h-5" />
                 <span>{net.label}</span>
               </div>
             ))}
