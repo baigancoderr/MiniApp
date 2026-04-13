@@ -118,7 +118,20 @@ const SettingsComponent = () => {
   </button>
   <button
   onClick={() => setShowLogoutPopup(true)}
-  className="absolute top-4 right-4 px-3 py-1 text-xs bg-red-500/20 border border-red-500 text-red-400 rounded-lg"
+  className="absolute top-4 right-4 px-4 py-1.5 text-xs font-medium
+  text-[#fff] rounded-lg
+
+  bg-gradient-to-b from-red-500 to-red-800/40
+  border border-[#fff] backdrop-blur-md
+
+  shadow-[0_4px_0_#7f1d1d]
+  hover:from-red-400/40 hover:to-red-700/50
+  hover:scale-105
+
+  active:translate-y-[2px]
+  active:shadow-[0_2px_0_#7f1d1d]
+
+  transition-all duration-150"
 >
   Logout
 </button>
@@ -174,34 +187,49 @@ const SettingsComponent = () => {
       </div>
     </div>
     </div>
+
+    
     {showLogoutPopup && (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-    <div className="bg-[#111] p-6 rounded-xl w-[300px] text-center border border-[#444]">
+    <div className="bg-gradient-to-r from-[#587FFF] to-[#09239F] p-6 rounded-xl w-[300px] text-center border border-[#fff]">
 
       <h2 className="text-lg font-semibold mb-3">
         Confirm Logout
       </h2>
 
-      <p className="text-sm text-gray-400 mb-5">
+      <p className="text-sm text-[#fff] mb-5">
         Are you sure you want to logout?
       </p>
 
       <div className="flex gap-3">
         {/* Cancel */}
-        <button
-          onClick={() => setShowLogoutPopup(false)}
-          className="w-full py-2 rounded-lg bg-gray-700"
-        >
-          Cancel
-        </button>
+       <button
+  onClick={() => setShowLogoutPopup(false)}
+  className="w-full py-2 rounded-lg 
+  bg-gradient-to-b from-gray-600 to-gray-800 
+  shadow-[0_4px_0_#1f2937] 
+  active:shadow-[0_2px_0_#1f2937] 
+  active:translate-y-[2px]
+  hover:from-gray-500 hover:to-gray-700
+  transition-all duration-150"
+>
+  Cancel
+</button>
 
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="w-full py-2 rounded-lg bg-red-500"
-        >
-          Logout
-        </button>
+{/* Logout */}
+<button
+  onClick={handleLogout}
+  className="w-full py-2 rounded-lg 
+  bg-gradient-to-b from-red-400 to-red-700 
+  shadow-[0_4px_0_#7f1d1d] 
+  active:shadow-[0_2px_0_#7f1d1d] 
+  active:translate-y-[2px]
+  hover:from-red-300 hover:to-red-600
+  transition-all duration-150"
+>
+  Logout
+</button>
+
       </div>
 
     </div>
