@@ -15,6 +15,17 @@ import { useEffect, useState } from "react";
 const SettingsComponent = () => {
   const navigate = useNavigate();
  const [tgUser, setTgUser] = useState(null);
+ const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
+const handleLogout = () => {
+  localStorage.clear();
+
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.close(); // ✅ mini app close karega
+  } else {
+    navigate("/login"); // fallback (browser case)
+  }
+};
 
  useEffect(() => {
   if (window.Telegram?.WebApp) {
@@ -92,6 +103,7 @@ const SettingsComponent = () => {
   ];
 
   return (
+    <>
     <div className="min-h-screen  text-white pb-24">
   <div className="max-w-md mx-auto w-full">
 
@@ -99,12 +111,21 @@ const SettingsComponent = () => {
       <div className="relative h-48 bg-gradient-to-b from-[#587FFF] to-black rounded-b-[50px] flex flex-col items-center justify-end pb-6">
 
   {/* 🔙 Back Button (Top Left) */}
-  <button
-    onClick={() => navigate("/")}
-    className="absolute top-4 left-4 p-2 rounded-lg bg-[#000] border border-[#444385]"
-  >
-    <ArrowLeft size={18} />
-  </button>
+{/* 🔙 Back Button */}
+<button
+  onClick={() => navigate("/")}
+  className="absolute top-4 left-4 p-2 rounded-lg bg-[#000] border border-[#444385]"
+>
+  <ArrowLeft size={18} />
+</button>
+
+{/* 🚪 Logout Button (Right Side) */}
+<button
+  onClick={() => setShowLogoutPopup(true)}
+  className="absolute top-4 right-4 p-2 rounded-lg bg-red-500/20 border border-red-500 text-red-400 text-xs"
+>
+  Logout
+</button>
 
   {/* 👤 Profile */}
   <div className="flex flex-col items-center">
@@ -157,6 +178,42 @@ const SettingsComponent = () => {
       </div>
     </div>
     </div>
+
+    {/* 🔥 Logout Popup */}
+{showLogoutPopup && (
+  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div className="bg-[#111] p-6 rounded-xl w-[300px] text-center border border-[#444]">
+
+      <h2 className="text-lg font-semibold mb-3">
+        Confirm Logout
+      </h2>
+
+      <p className="text-sm text-gray-400 mb-5">
+        Are you sure you want to logout?
+      </p>
+
+      <div className="flex gap-3">
+        {/* Cancel */}
+        <button
+          onClick={() => setShowLogoutPopup(false)}
+          className="w-full py-2 rounded-lg bg-gray-700"
+        >
+          Cancel
+        </button>
+
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="w-full py-2 rounded-lg bg-red-500"
+        >
+          Logout
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+</>
   );
 };
 
