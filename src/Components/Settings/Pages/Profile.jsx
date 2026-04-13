@@ -5,19 +5,97 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
 
+
 const Profile = () => {
   const navigate = useNavigate();
 
   const [tgUser, setTgUser] = useState(null);
   const [apiUser, setApiUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const [walletAddress, setWalletAddress] = useState("0xA1b2C3d4E5F6...");
-  const [isEditing, setIsEditing] = useState(false);
 
+
+  const [walletAddress, setWalletAddress] = useState("");
+const [isSaved, setIsSaved] = useState(false);
+const [isEditing, setIsEditing] = useState(true);
+
+
+
+const handleSave = async () => {
+  if (!walletAddress.trim()) {
+    toast.error("Enter wallet address ❌");
+    return;
+  }
+
+  if (saving) return; 
+
+  try {
+    setSaving(true);
+
+    const token = localStorage.getItem("token");
+
+    let res;
+
+    if (!apiUser || !apiUser.walletAddress) {
+      res = await api.post(
+        "/user/add-wallet",
+        { walletAddress },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    } else {
+      res = await api.put(
+        "/user/update-wallet",
+        { walletAddress },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    }
+
+    if (res.data.success) {
+      const updatedUser = res.data.user;
+
+      setApiUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      setIsSaved(true);
+      setIsEditing(false);
+
+      toast.success(res.data.message || "Success ✅");
+    } else {
+      toast.error(res.data.message || "Failed ❌");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error(err?.response?.data?.message || "API Error ❌");
+  } finally {
+    setSaving(false);
+  }
+};
+
+
+
+const handleUpdate = () => {
+  setIsEditing(true);
+};
+
+
+useEffect(() => {
+  if (apiUser?.walletAddress) {
+    setWalletAddress(apiUser.walletAddress);
+    setIsSaved(true);
+    setIsEditing(false);
+  }
+}, [apiUser]);
 
   const [showReferralPopup, setShowReferralPopup] = useState(false);
 const [inputReferral, setInputReferral] = useState("");
+
+
+
 
   // ✅ Telegram + API Integration
 
@@ -277,50 +355,45 @@ const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode |
           </div>
         </div>
 
+
         {/* WALLET */}
-        <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020] mb-5">
-          <p className="text-sm text-gray-300 mb-2">Wallet Address</p>
+        
+    <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020] mb-5">
+  <p className="text-sm text-gray-300 mb-2">Wallet Address</p>
 
-          <input
-            type="text"
-            value={walletAddress}
-            disabled={!isEditing}
-            onChange={(e) => setWalletAddress(e.target.value)}
-            className={`w-full px-3 py-2 rounded-lg text-sm bg-black border 
-              ${isEditing ? "border-[#81ECFF]" : "border-[#444B55]"} 
-              text-white outline-none`}
-          />
+  {/* Input */}
+  <input
+    type="text"
+    value={walletAddress}
+    disabled={!isEditing}
+    onChange={(e) => setWalletAddress(e.target.value)}
+    placeholder="Enter wallet address"
+    className={`w-full px-3 py-2 rounded-lg text-sm bg-black border 
+      ${isEditing ? "border-[#81ECFF]" : "border-[#444B55]"} 
+      text-white mb-3`}
+  />
 
-          <div className="flex gap-2 mt-3">
-            {!isEditing ? (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="flex-1 bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg text-sm"
-              >
-                Edit Address
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={() => {
-                    setIsEditing(false);
-                    toast.success("Wallet Updated ✅");
-                  }}
-                  className="flex-1 bg-green-500 py-2 rounded-lg text-sm"
-                >
-                  Update
-                </button>
+  {/* Button */}
+{isEditing ? (
+  <button
+    onClick={handleSave}
+    className="w-full bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg text-sm"
+  >
+    {apiUser?.walletAddress ? "Update Wallet" : "Save Wallet"}
+  </button>
+) : (
+  <button
+    onClick={handleUpdate}
+    className="w-full bg-green-500 py-2 rounded-lg text-sm"
+  >
+    Edit
+  </button>
+)}
 
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="flex-1 bg-gray-600 py-2 rounded-lg text-sm"
-                >
-                  Cancel
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+
+</div>
+
+
 
         {/* REFERRAL */}
         <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020]">
