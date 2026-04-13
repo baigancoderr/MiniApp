@@ -103,6 +103,7 @@ useEffect(() => {
   const initTelegram = async () => {
     try {
       const tg = window.Telegram?.WebApp;
+
       if (!tg) {
         console.log("Not inside Telegram");
         setLoading(false);
@@ -112,6 +113,7 @@ useEffect(() => {
       tg.ready();
 
       const user = tg.initDataUnsafe?.user;
+
       if (!user) {
         console.log("No Telegram user found");
         setLoading(false);
@@ -120,62 +122,56 @@ useEffect(() => {
 
       setTgUser(user);
 
-      // Referral logic...
+      // ✅ Referral detect (ONLY from TG or URL)
       const urlParams = new URLSearchParams(window.location.search);
       const refFromUrl = urlParams.get("ref");
       const refFromTG = tg.initDataUnsafe?.start_param;
-      // const refFromStorage = localStorage.getItem("referral");
-const referralCode = refFromTG || refFromUrl || localStorage.getItem("referral");
 
-if (referralCode) {
-  localStorage.setItem("referral", referralCode);
-} else {
-  // ❌ Only when NO referral from TG or URL
-  setShowReferralPopup(true);
-  setLoading(false);
-  return;
-}
+      const referralCode = refFromTG || refFromUrl || "";
 
+      // 🔥 ALWAYS call API first
       const res = await api.post("/user/telegram-login", {
         telegramId: user.id,
         name: `${user.first_name} ${user.last_name || ""}`,
         username: user.username || "",
-        referralCode: referralCode,
+        referralCode: referralCode, // empty bhi chalega
       });
 
       const data = res.data;
 
-    if (data.success) {
-  setApiUser(data.user);
+      if (data.success) {
+        setApiUser(data.user);
 
-//   setTimeout(() => {
-//   const storedUser = JSON.parse(localStorage.getItem("user"));
-//   if (storedUser) {
-//     setApiUser(storedUser);
-//   }
-// }, 300);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.user.userId || data.user._id);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("userId", data.user.userId || data.user._id);
-  localStorage.setItem("user", JSON.stringify(data.user));
+        console.log("User saved:", data.user);
 
-  console.log("User saved to localStorage:", data.user);
+        // ✅ IMPORTANT LOGIC
+        if (data.isNewUser && !referralCode) {
+          setShowReferralPopup(true); // only new user without ref
+        } else {
+          setShowReferralPopup(false);
+        }
 
-  setLoading(false); // ✅ ADD THIS
-} else {
-  toast.error(data.message || "Login failed");
-  setLoading(false); // ✅ ADD THIS
-}
+        // optional: referral save karna ho to
+        if (referralCode) {
+          localStorage.setItem("referral", referralCode);
+        }
+
+      } else {
+        toast.error(data.message || "Login failed");
+      }
 
     } catch (error) {
-  console.error("Telegram Login Error:", error);
-  toast.error("API Error ❌");
+      console.error("Telegram Login Error:", error);
 
-  setShowReferralPopup(true);
-  setLoading(false); // ✅ ADD THIS
-}
-
-
+      // ❌ API fail → popup mat dikha blindly
+      toast.error("Something went wrong ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   initTelegram();
