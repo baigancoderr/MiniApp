@@ -23,7 +23,7 @@ const AddFundPage = () => {
 
   // ✅ Only your 5 required networks
   const networks = [
-    { label: "Web20 USDT",     value: "WEB20_USDT",   icon: usdt, coin: "USDT" },
+    { label: "ERC20 USDT",     value: "WEB20_USDT",   icon: usdt, coin: "USDT" },
     { label: "Base USDT",      value: "BASE_USDT",    icon: usdt, coin: "USDT" },
     { label: "Base USDC",      value: "BASE_USDC",    icon: usdc, coin: "USDC" },
     // { label: "ETH USDT",       value: "WEB20_USDT",   icon: usdt, coin: "USDT" },
@@ -83,8 +83,8 @@ const AddFundPage = () => {
       setDropdownStyle({
         position: "fixed",
         top: `${topPosition}px`,
-        left: `${rect.right - 200}px`,
-        width: "200px",
+        left: `${rect.right - 170}px`,
+        width: "170px",
         zIndex: 9999,
       });
     }
