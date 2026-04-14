@@ -443,12 +443,23 @@ const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode |
       />
 
       {/* Button */}
-      <button
-        onClick={handleReferralSubmit}
-        className="w-full bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg"
-      >
-        Continue
-      </button>
+     <button
+  onClick={handleReferralSubmit}
+  disabled={loading}
+  className={`w-full py-2 rounded-lg flex items-center justify-center gap-2
+  bg-gradient-to-r from-[#587FFF] to-[#09239F]
+  ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+>
+  {loading ? (
+    <>
+      {/* 🔄 Spinner */}
+      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+      Processing...
+    </>
+  ) : (
+    "Continue"
+  )}
+</button>
 
     </div>
   </div>

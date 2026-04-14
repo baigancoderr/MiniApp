@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, User, Wallet, Send ,ChevronDown  } from "lucide-react";
+import { ArrowLeft, User, Wallet, Send, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
@@ -10,87 +10,87 @@ const WithdrawUSDT = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [referralBalance, setReferralBalance] = useState();
-const [roiBalance, setRoiBalance] = useState();
+  const [roiBalance, setRoiBalance] = useState();
 
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [walletType, setWalletType] = useState("referral");
 
- const handleWithdraw = async () => {
-  if (!walletType || !amount || !address) {
-    return toast.error("All fields are required ❌");
-  }
-
-  if (amount < 5) {
-    return toast.error("Minimum withdrawal is 5 USDC ❌");
-  }
-
-  if (loading) return;
-
-  try {
-    setLoading(true);
-
-    const token = localStorage.getItem("token");
-
-    const res = await api.post(
-      "/user/withdraw",
-      {
-        amount: Number(amount),
-        walletType,
-        walletAddress: address,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data = res.data;
-
-    if (data.success) {
-      toast.success(data.message || "Withdraw Success ✅");
-
-      // 🔥 Reset input
-      setAmount("");
-
-      // 🔥 Update balances instantly (PRO 🔥)
-      if (data.data?.balances) {
-        setReferralBalance(data.data.balances.referral);
-        setRoiBalance(data.data.balances.roi);
-      }
-
-    } else {
-      toast.error(data.message || "Failed ❌");
+  const handleWithdraw = async () => {
+    if (!walletType || !amount || !address) {
+      return toast.error("All fields are required ❌");
     }
 
-  } catch (err) {
-    console.error(err);
-    toast.error(err?.response?.data?.message || "API Error ❌");
-  } finally {
-    setLoading(false);
-  }
-};
+    if (amount < 5) {
+      return toast.error("Minimum withdrawal is 5 USDC ❌");
+    }
 
-useEffect(() => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (user?.walletAddress) {
-    setAddress(user.walletAddress);
-  }
-}, []);
+    if (loading) return;
 
-useEffect(() => {
-  const user = JSON.parse(localStorage.getItem("user"));
+    try {
+      setLoading(true);
 
-  if (user?.wallets) {
-    setReferralBalance(user.wallets.referral?.amount || 0);
-    setRoiBalance(user.wallets.roi?.amount || 0);
-  }
+      const token = localStorage.getItem("token");
 
-  if (user?.walletAddress) {
-    setAddress(user.walletAddress);
-  }
-}, []);
+      const res = await api.post(
+        "/user/withdraw",
+        {
+          amount: Number(amount),
+          walletType,
+          walletAddress: address,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = res.data;
+
+      if (data.success) {
+        toast.success(data.message || "Withdraw Success ✅");
+
+        // 🔥 Reset input
+        setAmount("");
+
+        // 🔥 Update balances instantly (PRO 🔥)
+        if (data.data?.balances) {
+          setReferralBalance(data.data.balances.referral);
+          setRoiBalance(data.data.balances.roi);
+        }
+
+      } else {
+        toast.error(data.message || "Failed ❌");
+      }
+
+    } catch (err) {
+      console.error(err);
+      toast.error(err?.response?.data?.message || "API Error ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.walletAddress) {
+      setAddress(user.walletAddress);
+    }
+  }, []);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user?.wallets) {
+      setReferralBalance(user.wallets.referral?.amount || 0);
+      setRoiBalance(user.wallets.roi?.amount || 0);
+    }
+
+    if (user?.walletAddress) {
+      setAddress(user.walletAddress);
+    }
+  }, []);
 
   // 🔥 Dummy Data
   const withdrawHistory = Array.from({ length: 25 }, (_, i) => ({
@@ -137,115 +137,115 @@ useEffect(() => {
         </div>
 
         {/* 🔥 BALANCE */}
-    <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="grid grid-cols-2 gap-3 mb-5">
 
-  {/* Referral Wallet */}
-  <div className="rounded-2xl border border-[#444385] p-4 bg-[#00000033]">
-    <div className="flex gap-3 items-center">
-      <Wallet size={18} />
-      <div>
-        <p className="text-xs text-gray-400">Referral Wallet</p>
-      <p className="text-lg font-bold">
-  ${referralBalance ?? 0}
-</p>
-      </div>
-    </div>
-  </div>
+          {/* Referral Wallet */}
+          <div className="rounded-2xl border border-[#444385] p-4 bg-[#00000033]">
+            <div className="flex gap-3 items-center">
+              <Wallet size={18} />
+              <div>
+                <p className="text-xs text-gray-400">Referral Wallet</p>
+                <p className="text-lg font-bold">
+                  ${referralBalance ?? 0}
+                </p>
+              </div>
+            </div>
+          </div>
 
-  {/* ROI Wallet */}
-  <div className="rounded-2xl border border-[#444385] p-4 bg-[#00000033]">
-    <div className="flex gap-3 items-center">
-      <Wallet size={18} />
-      <div>
-        <p className="text-xs text-gray-400">ROI Wallet</p>
-      <p className="text-lg font-bold">
-  ${roiBalance ?? 0}
-</p>
-      </div>
-    </div>
-  </div>
+          {/* ROI Wallet */}
+          <div className="rounded-2xl border border-[#444385] p-4 bg-[#00000033]">
+            <div className="flex gap-3 items-center">
+              <Wallet size={18} />
+              <div>
+                <p className="text-xs text-gray-400">ROI Wallet</p>
+                <p className="text-lg font-bold">
+                  ${roiBalance ?? 0}
+                </p>
+              </div>
+            </div>
+          </div>
 
-</div>
+        </div>
 
         {/* 🔥 FORM */}
-       <div className="rounded-2xl border border-[#81ECFF66] p-[1px] mb-5
+        <div className="rounded-2xl border border-[#81ECFF66] p-[1px] mb-5
       bg-[linear-gradient(217deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
 
-      <div className="rounded-2xl bg-[#0B0F1A] p-4 space-y-4">
+          <div className="rounded-2xl bg-[#0B0F1A] p-4 space-y-4">
 
-        {/* ✅ Wallet Type Select (Styled) */}
-<div>
-  <label className="text-xs text-[#81ECFF]">Select Wallet</label>
+            {/* ✅ Wallet Type */}
+            <div>
+              <label className="text-xs text-[#81ECFF]">Select Wallet</label>
 
-  <div className="relative mt-1">
-    <select
-      value={walletType}
-      onChange={(e) => setWalletType(e.target.value)}
-      className="w-full px-3 py-2 pr-10 rounded-lg 
+              <div className="relative mt-1">
+                <select
+                  value={walletType}
+                  onChange={(e) => setWalletType(e.target.value)}
+                  className="w-full px-3 py-2 pr-10 rounded-lg 
       bg-[#0B0F1A] text-white border border-[#444B55]
       focus:outline-none focus:ring-2 focus:ring-[#587FFF]
       appearance-none"
-    >
-      <option className="bg-[#0B0F1A] text-white" value="referral">
-        Referral Wallet
-      </option>
-      <option className="bg-[#0B0F1A] text-white" value="roi">
-        ROI Wallet
-      </option>
-    </select>
+                >
+                  <option className="bg-[#0B0F1A] text-white" value="referral">
+                    Referral Wallet
+                  </option>
+                  <option className="bg-[#0B0F1A] text-white" value="roi">
+                    ROI Wallet
+                  </option>
+                </select>
 
-    {/* 🔽 Custom Arrow */}
-    <ChevronDown
-      size={18}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-    />
-  </div>
-</div>
+                {/* 🔽 Custom Arrow */}
+                <ChevronDown
+                  size={18}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                />
+              </div>
+            </div>
 
-        {/* ✅ Amount */}
-        <div>
-          <label className="text-xs text-[#81ECFF]">Amount</label>
-          <input
-            type="number"
-            placeholder="Enter amount (min 5 USDC)"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full mt-1 px-3 py-2 rounded-lg 
+            {/* ✅ Amount */}
+            <div>
+              <label className="text-xs text-[#81ECFF]">Amount</label>
+              <input
+                type="number"
+                placeholder="Enter amount (min 5 USDC)"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full mt-1 px-3 py-2 rounded-lg 
             bg-[#00000033] border border-[#444B55] text-white
             focus:outline-none focus:ring-2 focus:ring-[#587FFF]"
-          />
-        </div>
+              />
+            </div>
 
-        {/* ✅ Wallet Address */}
-        <div>
-          <label className="text-xs text-[#81ECFF]">Wallet Address</label>
-          <input
-            type="text"
-            placeholder="Enter wallet address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full mt-1 px-3 py-2 rounded-lg 
+            {/* ✅ Wallet Address */}
+            <div>
+              <label className="text-xs text-[#81ECFF]">Wallet Address</label>
+              <input
+                type="text"
+                placeholder="Enter wallet address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full mt-1 px-3 py-2 rounded-lg 
             bg-[#00000033] border border-[#444B55] text-white
             focus:outline-none focus:ring-2 focus:ring-[#587FFF]"
-          />
-        </div>
+              />
+            </div>
 
-        {/* ✅ Button */}
-       <button
-  onClick={handleWithdraw}
-  disabled={loading}
-  className={`w-full py-3 rounded-full
+            {/* ✅ Button */}
+            <button
+              onClick={handleWithdraw}
+              disabled={loading}
+              className={`w-full py-3 rounded-full
   bg-gradient-to-r from-[#587FFF] to-[#09239F]
   flex items-center justify-center gap-2
   ${loading ? "opacity-50 cursor-not-allowed" : "hover:scale-105"}
   transition`}
->
-  <Send size={16} />
-  {loading ? "Processing..." : "Withdraw Now"}
-</button>
+            >
+              <Send size={16} />
+              {loading ? "Processing..." : "Withdraw Now"}
+            </button>
 
-      </div>
-    </div>
+          </div>
+        </div>
 
         {/* 🔥 HISTORY */}
         <div className="space-y-3">
@@ -295,11 +295,10 @@ useEffect(() => {
                         <td className="px-3 py-3">{item.date}</td>
 
                         <td className="px-3 py-3 text-right">
-                          <span className={`px-2 py-1 rounded-full text-xs ${
-                            item.status === "Success"
+                          <span className={`px-2 py-1 rounded-full text-xs ${item.status === "Success"
                               ? "bg-green-500/20 text-green-300"
                               : "bg-yellow-500/20 text-yellow-300"
-                          }`}>
+                            }`}>
                             {item.status}
                           </span>
                         </td>
