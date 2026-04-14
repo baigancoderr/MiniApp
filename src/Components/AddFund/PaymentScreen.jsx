@@ -5,26 +5,28 @@ import Footer from "../Footer";
 import bgImg from "../../assets/bgImg.png";
 import toast from "react-hot-toast";
 import usdt from "../../assets/usdt.png";
-import usdc from "../../assets/usdc.png";
 
 const PaymentScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Receive data from AddFundPage
   const {
     amount,
     coin,
-    network,        // e.g., "Base USDT", "Polygon USDT"
+    network,        // e.g. "Base USDT"
+    networkIcon,    // Blockchain network icon URL
     walletAddress,
     qrData,
   } = location.state || {};
 
-  const [time, setTime] = useState(1200);
+  const [time, setTime] = useState(1200); // 20 minutes
   const [isExpired, setIsExpired] = useState(false);
 
   // Timer
   useEffect(() => {
     if (time <= 0) return;
+
     const timer = setInterval(() => {
       setTime((prev) => {
         if (prev <= 1) {
@@ -34,13 +36,17 @@ const PaymentScreen = () => {
         return prev - 1;
       });
     }, 1000);
+
     return () => clearInterval(timer);
   }, [time]);
 
+  // Auto redirect on expiry
   useEffect(() => {
     if (isExpired) {
       toast.error("Payment Time Expired ⏳", { duration: 2000 });
-      setTimeout(() => navigate("/addfund", { replace: true }), 1500);
+      setTimeout(() => {
+        navigate("/addfund", { replace: true });
+      }, 1500);
     }
   }, [isExpired, navigate]);
 
@@ -61,6 +67,7 @@ const PaymentScreen = () => {
 
   const handleShare = async () => {
     const shareText = `Pay ${amount} ${coin || "USDT"} to this address:\n${walletAddress}`;
+
     if (window.Telegram?.WebApp) {
       try {
         window.Telegram.WebApp.openTelegramLink(
@@ -82,22 +89,7 @@ const PaymentScreen = () => {
     }
   };
 
-  // Get network-specific icon
-  const getNetworkIcon = () => {
-    const net = network?.toLowerCase() || "";
-    if (net.includes("base")) {
-      return "https://cryptologos.cc/logos/base-logo.png";           // Base network icon
-    }
-    if (net.includes("polygon")) {
-      return "https://cryptologos.cc/logos/polygon-matic-logo.png";  // Polygon icon
-    }
-    if (net.includes("bep20") || net.includes("binance")) {
-      return "https://cryptologos.cc/logos/binance-coin-bnb-logo.png"; // BSC / BEP20
-    }
-    // Default for Web20 / Ethereum-style
-    return "https://cryptologos.cc/logos/ethereum-eth-logo.png";
-  };
-
+  // Safety check
   if (!amount || !walletAddress || !network) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
@@ -132,7 +124,7 @@ const PaymentScreen = () => {
             </div>
           </div>
 
-          {/* QR CODE WITH BLOCKCHAIN NETWORK ICON IN CENTER */}
+          {/* QR CODE WITH BLOCKCHAIN NETWORK ICON */}
           <div className="rounded-2xl border-2 border-[#444385] overflow-hidden text-center">
             <div className="bg-[#00000033] p-6 backdrop-blur-[20px]">
               <div className="relative bg-white p-4 rounded-2xl inline-block mx-auto">
@@ -146,20 +138,21 @@ const PaymentScreen = () => {
                   className="w-[220px] h-[220px]"
                 />
 
-                {/* Blockchain Network Icon in Center */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-2.5 rounded-full shadow-xl border border-gray-200">
+                {/* Blockchain Network Icon in the Center of QR */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                               bg-white p-3 rounded-full shadow-2xl border-2 border-gray-100">
                   <img
-                    src={getNetworkIcon()}
-                    alt="Network"
-                    className="w-14 h-14 object-contain"
+                    src={networkIcon}
+                    alt={network}
+                    className="w-16 h-16 object-contain"
                     onError={(e) => {
-                      e.target.src = usdt; // fallback
+                      e.target.src = usdt; // Fallback to USDT icon
                     }}
                   />
                 </div>
               </div>
 
-              {/* Scan to Pay + Network Name */}
+              {/* Scan to Pay + Selected Network Name */}
               <p className="text-sm text-gray-400 mt-4">Scan to Pay</p>
               <p className="text-base font-semibold text-white mt-1 tracking-wide">
                 {network}
@@ -171,6 +164,7 @@ const PaymentScreen = () => {
           <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
             <div className="bg-[#00000033] p-4 backdrop-blur-[20px]">
               <p className="text-sm text-gray-300 mb-2">Wallet Address</p>
+
               <div className="bg-black border border-[#81ECFF] rounded-lg p-3 text-xs mb-4 break-all font-mono">
                 {walletAddress}
               </div>
