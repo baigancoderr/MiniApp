@@ -135,12 +135,12 @@ const PaymentScreen = () => {
           <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate("/settings")}
+              onClick={() => navigate(-1)}
               className="p-2 rounded-lg bg-[#00000033] border border-[#444385]"
             >
               <ArrowLeft size={18} />
             </button>
-            <h1 className="text-lg font-semibold">Add Fund</h1>
+            <h1 className="text-lg font-semibold">Scan QR Code</h1>
           </div>
 
           <div
@@ -154,7 +154,7 @@ const PaymentScreen = () => {
         </div>
 
           {/* TIMER */}
-          <div className="rounded-2xl border-2 border-[#444385] overflow-hidden">
+          <div className="rounded-2xl border-2 border-[#444385] mb-5 overflow-hidden">
             <div className="bg-[#00000033] p-4 backdrop-blur-[20px] flex justify-between items-center">
               <div className="flex items-center gap-2 text-blue-400 text-sm">
                 <Clock size={16} />
@@ -167,7 +167,7 @@ const PaymentScreen = () => {
           </div>
 
           {/* QR CODE */}
-          <div className="rounded-2xl border-2 border-[#444385] overflow-hidden text-center">
+          <div className="rounded-2xl border-2 border-[#444385] overflow-hidden text-center mb-5">
             <div className="bg-[#00000033] p-5 backdrop-blur-[20px]">
               <div className="bg-white p-3 rounded-xl inline-block">
                 <img
