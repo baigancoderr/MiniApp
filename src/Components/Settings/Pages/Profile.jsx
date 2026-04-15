@@ -96,8 +96,7 @@ useEffect(() => {
 
   const [showReferralPopup, setShowReferralPopup] = useState(false);
   const [inputReferral, setInputReferral] = useState("");
-
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   const {
     data: meUser,
@@ -170,26 +169,26 @@ useEffect(() => {
 
       const data = res.data;
 
-   if (data.success) {
-  setApiUser(data.user);
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.user.userId || data.user._id);
 
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("userId", data.user.userId || data.user._id);
-  localStorage.setItem("user", JSON.stringify(data.user));
+        setToken(data.token);
+        queryClient.invalidateQueries(["me"]);
 
-  if (referralCode) {
-    localStorage.setItem("referral", referralCode);
-  }
+        if (referralCode) {
+          localStorage.setItem("referral", referralCode);
+        }
 
-  setShowReferralPopup(false);
-} 
-// 🔥 UPDATED LOGIC
-else if (data.isNewUser || data.message?.toLowerCase().includes("referral")) {
-  setShowReferralPopup(true);
-} 
-else {
-  toast.error(data.message || "Login failed");
-}
+        setShowReferralPopup(false);
+      } 
+      // 🔥 UPDATED LOGIC
+      else if (data.isNewUser || data.message?.toLowerCase().includes("referral")) {
+        setShowReferralPopup(true);
+      } 
+      else {
+        toast.error(data.message || "Login failed");
+      }
 
     } catch (error) {
       console.error("Telegram Login Error:", error);
@@ -240,16 +239,13 @@ const handleReferralSubmit = async () => {
     const data = res.data;
 
     if (data.success) {
-      // ✅ Set state
-      setApiUser(data.user);
-
-      // ✅ Save to localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("referral", inputReferral);
       localStorage.setItem("userId", data.user.userId || data.user._id);
-      localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ Close popup
+      setToken(data.token);
+      queryClient.invalidateQueries(["me"]);
+
       setShowReferralPopup(false);
 
       toast.success("Login Success ✅");
