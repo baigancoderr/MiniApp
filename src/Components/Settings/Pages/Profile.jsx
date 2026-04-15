@@ -24,7 +24,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [refLoading, setRefLoading] = useState(false);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  // const [token, setToken] = useState(localStorage.getItem("token"));
 
   const [tgUser, setTgUser] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -36,19 +36,23 @@ const Profile = () => {
   const [inputReferral, setInputReferral] = useState("");
 
   // ✅ TanStack Query
+const token = localStorage.getItem("token");
 
 const {
   data: apiUser,
   isLoading,
   isError,
 } = useQuery({
-  queryKey: ["me"],
+ queryKey: ["me", token],
   queryFn: fetchMe,
   enabled: !!token,
+  retry: false,
 });
 
+
   // ✅ Telegram Login
-  const telegramLogin = async (tgUser, referralCode) => {
+ const telegramLogin = async (tgUser, referralCode) => {
+  try {
     const res = await api.post("/user/telegram-login", {
       telegramId: tgUser.id,
       name: `${tgUser.first_name} ${tgUser.last_name || ""}`,
@@ -56,42 +60,54 @@ const {
       referralCode,
     });
 
-    if (res.data.success) {
-      localStorage.setItem("token", res.data.token);
-      setToken(res.data.token);
-
-      // 🔥 Trigger /me once
-     queryClient.invalidateQueries({ queryKey: ["me"] });
-    } else if (res.data.isNewUser) {
+    // ✅ New user case (referral required)
+    if (res.data.isNewUser) {
       setShowReferralPopup(true);
-    } else {
-      throw new Error(res.data.message);
+      return;
     }
-  };
+
+    // ❌ backend error
+    if (!res.data.success) {
+      throw new Error(res.data.message || "Login failed");
+    }
+
+    // ✅ ALWAYS set token (important fix)
+    const newToken = res.data.token;
+
+    if (!newToken) {
+      throw new Error("Token missing from server");
+    }
+
+    const oldToken = localStorage.getItem("token");
+
+    // 🔥 overwrite always (prevents stale/corrupt token issues)
+    if (oldToken !== newToken) {
+      localStorage.setItem("token", newToken);
+    }
+
+    // 🔥 refresh /me query
+    queryClient.invalidateQueries({ queryKey: ["me"] });
+
+  } catch (err) {
+    console.error("Telegram login error:", err);
+    toast.error(err.message || "Login failed ❌");
+  }
+};
 
   // ✅ Init Telegram
-  useEffect(() => {
-    const init = async () => {
-      const tg = window.Telegram?.WebApp;
-      const user = tg?.initDataUnsafe?.user;
+useEffect(() => {
+  const tg = window.Telegram?.WebApp;
+  const user = tg?.initDataUnsafe?.user;
 
-      if (!user) return;
+  if (!user) return;
 
-      setTgUser(user);
+  setTgUser(user);
 
-      const token = localStorage.getItem("token");
+  // 🔥 already token hai to login mat karo
+  if (localStorage.getItem("token")) return;
 
-      if (!token) {
-        try {
-          await telegramLogin(user, "");
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
-
-    init();
-  }, []);
+  telegramLogin(user, "");
+}, []);
 
   // ✅ Wallet sync
   useEffect(() => {
@@ -173,7 +189,7 @@ const {
 
     if (res.data.success) {
       localStorage.setItem("token", res.data.token);
-      setToken(res.data.token);
+      
 
       queryClient.invalidateQueries({ queryKey: ["me"] });
       setShowReferralPopup(false);
