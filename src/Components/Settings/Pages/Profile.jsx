@@ -4,6 +4,7 @@ import userimg2 from "../../../assets/setting/user-img.jpeg";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
+import SkeletonPage from "../../../Layout/Skeleton";
 
 
 const Profile = () => {
@@ -100,10 +101,10 @@ const [inputReferral, setInputReferral] = useState("");
   // ✅ Telegram + API Integration
 useEffect(() => {
   const init = async () => {
+    const start = Date.now();
+
     try {
       const token = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("user");
-
       const tg = window.Telegram?.WebApp;
 
       if (tg) tg.ready();
@@ -111,12 +112,7 @@ useEffect(() => {
       const tgUserData = tg?.initDataUnsafe?.user;
       if (tgUserData) setTgUser(tgUserData);
 
-      if (storedUser) {
-        setApiUser(JSON.parse(storedUser));
-        setLoading(false);
-      }
-
-      if (token && storedUser) {
+      if (token) {
         try {
           const res = await api.get("/user/me", {
             headers: { Authorization: `Bearer ${token}` },
@@ -127,81 +123,38 @@ useEffect(() => {
             localStorage.setItem("user", JSON.stringify(res.data.user));
           }
         } catch (err) {
-          if (
-            err.response?.status === 401 ||
-            err.response?.status === 404
-          ) {
+          if (err.response?.status === 401 || err.response?.status === 404) {
             localStorage.clear();
-
-            const user = tg?.initDataUnsafe?.user;
-
-            if (tg && user) {
-              const res = await api.post("/user/telegram-login", {
-                telegramId: user.id,
-                name: `${user.first_name} ${user.last_name || ""}`,
-                username: user.username || "",
-                referralCode: "",
-              });
-
-              const data = res.data;
-
-              if (data.success) {
-                setApiUser(data.user);
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("user", JSON.stringify(data.user));
-                localStorage.setItem(
-                  "userId",
-                  data.user.userId || data.user._id
-                );
-              } else if (data.isNewUser) {
-                setShowReferralPopup(true);
-              }
-            }
           }
         }
-
-        return;
       }
 
-      if (!tg) {
-        setLoading(false);
-        return;
+      // Telegram login fallback...
+      const user = tg?.initDataUnsafe?.user;
+
+      if (user && !apiUser) {
+        const res = await api.post("/user/telegram-login", {
+          telegramId: user.id,
+          name: `${user.first_name} ${user.last_name || ""}`,
+          username: user.username || "",
+          referralCode: "",
+        });
+
+        if (res.data.success) {
+          setApiUser(res.data.user);
+        }
       }
 
-      const user = tg.initDataUnsafe?.user;
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const refFromUrl = urlParams.get("ref");
-      const refFromTG = tg.initDataUnsafe?.start_param;
-
-      const referralCode = refFromTG || refFromUrl || "";
-
-      const res = await api.post("/user/telegram-login", {
-        telegramId: user.id,
-        name: `${user.first_name} ${user.last_name || ""}`,
-        username: user.username || "",
-        referralCode,
-      });
-
-      const data = res.data;
-
-      if (data.success) {
-        setApiUser(data.user);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("userId", data.user.userId || data.user._id);
-        setShowReferralPopup(false);
-      } else if (data.isNewUser) {
-        setShowReferralPopup(true);
-      }
     } catch (err) {
       toast.error("Something went wrong ❌");
     } finally {
-      setLoading(false);
+      // ✅ minimum 400ms skeleton show
+      const elapsed = Date.now() - start;
+      const delay = Math.max(400 - elapsed, 0);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, delay);
     }
   };
 
@@ -309,6 +262,13 @@ const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode |
       toast.error("Copy failed ❌");
     }
   };
+
+
+
+ if (loading && !showReferralPopup) {
+  return <SkeletonPage type="profile" />;
+}
+  
 
   return (
     <div className="min-h-screen flex justify-center pb-24 px-2 py-3 text-white ">

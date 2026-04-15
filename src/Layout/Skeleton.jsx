@@ -105,6 +105,73 @@ export const ReferralSkeleton = () => {
   );
 };
 
+
+// profile skeloton
+export const ProfileSkeleton = () => {
+  return (
+    <div className="min-h-screen flex justify-center pb-24 px-2 py-3 text-white">
+      <div className="w-full max-w-md space-y-5">
+
+        {/* HEADER */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <Skeleton className="w-8 h-8 rounded-lg" />
+            <Skeleton className="w-32 h-5" />
+          </div>
+          <Skeleton className="w-10 h-10 rounded-xl" />
+        </div>
+
+        {/* PROFILE CARD */}
+        <div className="rounded-2xl border border-[#81ECFF99] p-[1px]">
+          <div className="rounded-2xl p-4 bg-[#0B0F19]">
+
+            <div className="flex items-center gap-4 mb-4">
+              <Skeleton className="w-20 h-20 rounded-full" />
+
+              <div className="flex-1">
+                <Skeleton className="w-40 h-5 mb-2" />
+                <Skeleton className="w-24 h-3" />
+              </div>
+            </div>
+
+            {/* IDs */}
+            <div className="grid grid-cols-2 gap-3">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="p-3 rounded-xl border border-[#444B55]">
+                  <Skeleton className="w-20 h-3 mb-2" />
+                  <Skeleton className="w-24 h-4" />
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+
+        {/* WALLET */}
+        <div className="rounded-xl border border-[#444B55] p-4">
+          <Skeleton className="w-32 h-3 mb-3" />
+          <Skeleton className="w-full h-10 mb-3 rounded-lg" />
+          <Skeleton className="w-full h-10 rounded-lg" />
+        </div>
+
+        {/* REFERRAL */}
+        <div className="rounded-xl border border-[#444B55] p-4">
+          <Skeleton className="w-32 h-3 mb-3" />
+          <Skeleton className="w-full h-10 mb-3 rounded-lg" />
+
+          <div className="flex gap-2">
+            <Skeleton className="flex-1 h-10 rounded-lg" />
+            <Skeleton className="flex-1 h-10 rounded-lg" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+
+
 //////////////////////////////
 // 🔹 MAIN EXPORT CONTROLLER
 //////////////////////////////
@@ -112,6 +179,8 @@ const SkeletonPage = ({ type = "dashboard" }) => {
   switch (type) {
     case "referral":
       return <ReferralSkeleton />;
+    case "profile":
+      return <ProfileSkeleton />;
     case "dashboard":
     default:
       return <DashboardSkeleton />;
