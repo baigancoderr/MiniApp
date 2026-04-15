@@ -4,11 +4,13 @@ import userimg2 from "../../../assets/setting/user-img.jpeg";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 
 
 const Profile = () => {
   const navigate = useNavigate();
-
+const queryClient = useQueryClient();
   const [tgUser, setTgUser] = useState(null);
   const [apiUser, setApiUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,46 +30,38 @@ const handleSave = async () => {
     return;
   }
 
-  if (saving) return; 
+  if (saving) return;
 
   try {
     setSaving(true);
 
-    const token = localStorage.getItem("token");
-
     let res;
 
-    if (!apiUser || !apiUser.walletAddress) {
-      res = await api.post(
-        "/user/add-wallet",
-        { walletAddress },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+    // ✅ Add ya Update decide
+    if (!apiUser?.walletAddress) {
+      res = await api.post("/user/add-wallet", { walletAddress });
     } else {
-      res = await api.put(
-        "/user/update-wallet",
-        { walletAddress },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      res = await api.put("/user/update-wallet", { walletAddress });
     }
 
     if (res.data.success) {
       const updatedUser = res.data.user;
 
+      // ✅ Local update (instant UI)
       setApiUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      // ✅ React Query refresh
+      queryClient.invalidateQueries({ queryKey: ["user"] });
 
       setIsSaved(true);
       setIsEditing(false);
 
-      toast.success(res.data.message || "Success ✅");
+      toast.success(res.data.message || "Wallet saved ✅");
     } else {
       toast.error(res.data.message || "Failed ❌");
     }
+
   } catch (err) {
     console.error(err);
     toast.error(err?.response?.data?.message || "API Error ❌");
@@ -105,46 +99,29 @@ useEffect(() => {
       const token = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
 
-      // ✅ Telegram user always set karo
-     const tg = window.Telegram?.WebApp;
+      const tg = window.Telegram?.WebApp;
 
-if (tg) {
-  tg.ready();
-}
+      if (tg) tg.ready();
 
-const tgUserData = tg?.initDataUnsafe?.user;
+      const tgUserData = tg?.initDataUnsafe?.user;
       if (tgUserData) setTgUser(tgUserData);
 
-      // ✅ Instant UI load from cache
+      // ✅ 1. Cache se UI show
       if (storedUser) {
         setApiUser(JSON.parse(storedUser));
       }
 
-      // ✅ Token hai → fresh data lao
+      // ✅ 2. AGAR TOKEN HAI → LOGIN NAHI KARNA
       if (token) {
-        try {
-          const res = await api.get("/user/me", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
-          if (res.data.success) {
-            setApiUser(res.data.user);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
-            return;
-          }
-        } catch (err) {
-          console.log("Token invalid → fallback to login");
-          localStorage.clear();
-        }
+        setLoading(false);
+        return; // 🚀 IMPORTANT
       }
 
-      // ❌ No token → Telegram login
-    if (!tg) {
-  toast.error("Open inside Telegram ❌");
-  return;
-}
-
-      tg.ready();
+      // ❌ No token → login
+      if (!tg) {
+        toast.error("Open inside Telegram ❌");
+        return;
+      }
 
       const user = tg.initDataUnsafe?.user;
       if (!user) return;
@@ -162,26 +139,14 @@ const tgUserData = tg?.initDataUnsafe?.user;
         referralCode,
       });
 
-      const data = res.data;
+      if (res.data.success) {
+        setApiUser(res.data.user);
 
-      if (data.success) {
-        setApiUser(data.user);
-
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("userId", data.user.userId || data.user._id);
-
-        setShowReferralPopup(false);
-      } 
-      else if (data.isNewUser || data.message?.toLowerCase().includes("referral")) {
-        setShowReferralPopup(true);
-      } 
-      else {
-        toast.error(data.message);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
       }
 
     } catch (err) {
-      console.error(err);
       toast.error("Something went wrong ❌");
     } finally {
       setLoading(false);
@@ -191,24 +156,46 @@ const tgUserData = tg?.initDataUnsafe?.user;
   init();
 }, []);
 
-const refreshUser = async () => {
-  const token = localStorage.getItem("token");
-
-  const res = await api.get("/user/me", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (res.data.success) {
-    setApiUser(res.data.user);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-    toast.success("Updated ✅");
-  }
+const refreshUser = () => {
+ queryClient.invalidateQueries({ queryKey: ["user"] });
 };
 
 const handleLogout = () => {
   localStorage.clear();
   window.location.reload();
 };
+
+const fetchUser = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await api.get("/user/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return res.data.user;
+};
+
+
+//  Use Query for User Data with React Query
+const {
+  data: userData,
+  isLoading: queryLoading,
+} = useQuery({
+  queryKey: ["user"],
+  queryFn: fetchUser,
+  enabled: !!localStorage.getItem("token"),
+  staleTime: 5 * 60 * 1000, // optional (already global hai)
+});
+
+
+
+
+useEffect(() => {
+  if (userData) {
+    setApiUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  }
+}, [userData]);
 
 useEffect(() => {
   document.body.style.overflow = showReferralPopup ? "hidden" : "auto";
@@ -366,7 +353,7 @@ const referralLink = apiUser?.referralCode
               <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
                 <p className="text-xs text-gray-400">USER ID</p>
                 <p className="text-white">
-                {loading 
+                {queryLoading  
   ? "Loading..." 
   : apiUser?.userId || "N/A"}
                 </p>
@@ -375,7 +362,7 @@ const referralLink = apiUser?.referralCode
               <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
                 <p className="text-xs text-gray-400">PARENT ID</p>
                 <p className="text-white">
-                {loading 
+                {queryLoading  
   ? "Loading..." 
   : apiUser?.referredBy || "N/A"}
                 </p>
