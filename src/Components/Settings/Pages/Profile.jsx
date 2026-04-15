@@ -4,6 +4,7 @@ import userimg2 from "../../../assets/setting/user-img.jpeg";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
+import SkeletonPage from "../../../Layout/Skeleton";
 
 
 const Profile = () => {
@@ -274,6 +275,10 @@ const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode |
       toast.error("Copy failed ❌");
     }
   };
+
+  if (loading) {
+    return <SkeletonPage type="referral" />;
+  }
 
   return (
     <div className="min-h-screen flex justify-center pb-24 px-2 py-3 text-white ">
