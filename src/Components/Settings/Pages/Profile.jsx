@@ -141,7 +141,7 @@ const {
   },
 
 
-enabled: !!tgPayload && !token,
+enabled: !!tgPayload,
   staleTime: 10 * 60 * 1000, // 10 min 
   cacheTime: 30 * 60 * 1000, // 30 min 
   retry: 1,
@@ -150,8 +150,6 @@ enabled: !!tgPayload && !token,
 
 useEffect(() => {
   if (!data) return;
-
-  const existingUser = localStorage.getItem("user");
 
   if (data.success) {
     setApiUser(data.user);
@@ -162,12 +160,15 @@ useEffect(() => {
 
     setShowReferralPopup(false);
   } 
-  else if (!existingUser && data.isNewUser) {
-    // ✅ ONLY new user → popup
+  else if (data.isNewUser) {
     setShowReferralPopup(true);
   } 
   else {
-    toast.error(data.message || "Login failed");
+    // 🔥 important
+    localStorage.clear(); // invalid user remove
+    setApiUser(null);
+
+    toast.error("Session expired, please login again");
   }
 }, [data]);
 
