@@ -4,56 +4,71 @@ import Tree from "react-d3-tree";
 import { ArrowLeft, User } from "lucide-react";
 import api from "../../../api/axios";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 const ReferralTeamTree = () => {
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const [searchTerm, setSearchTerm] = useState("");
-  const [treeData, setTreeData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [treeData, setTreeData] = useState([]);
+  // const [loading, setLoading] = useState(true);
   const treeContainer = useRef(null);
 
   // Fetch Actual Team Tree from API
-  useEffect(() => {
-    const fetchTeamTree = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get("/user/team-tree-view");
+  const {
+  data: treeDataRaw,
+  isLoading: loading,
+  isError,
+} = useQuery({
+  queryKey: ["teamTree"],
+  queryFn: async () => {
+    const res = await api.get("/user/team-tree-view");
 
-        if (res.data.status === "success") {
-          const apiTree = res.data.data.tree || [];
-          const transformedTree = transformTreeForD3(apiTree);
-          setTreeData(transformedTree);
-        } else {
-          throw new Error(res.data.message || "Failed to fetch team tree");
-        }
-      } catch (err) {
-        console.error("Team tree fetch error:", err);
-        toast.error("Failed to load team tree");
-        setTreeData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (res.data.status !== "success") {
+      throw new Error(res.data.message || "Failed to fetch");
+    }
 
-    fetchTeamTree();
-  }, []);
+    return res.data.data.tree || [];
+  },
+  staleTime: 5 * 60 * 1000, // 5 min tak fresh (no refetch)
+  cacheTime: 10 * 60 * 1000, // 10 min tak cache
+});
+
+
+
+
+
+const treeData = useMemo(() => {
+  if (!treeDataRaw) return [];
+
+  const transformNode = (node) => ({
+    name: node.name || node.username || "Unknown",
+    attributes: {
+      Name: (node.name || node.username || "Unknown User").trim(),
+      UserId: node.userId || node.referralCode || "N/A",
+      SelfInvestment: node.selfInvestment || 0,
+    },
+    children: node.children ? node.children.map(transformNode) : [],
+  });
+
+  return treeDataRaw.map(transformNode);
+}, [treeDataRaw]);
 
   // Transform API data to react-d3-tree format
-  const transformTreeForD3 = (apiNodes) => {
-    if (!apiNodes || apiNodes.length === 0) return [];
+  // const transformTreeForD3 = (apiNodes) => {
+  //   if (!apiNodes || apiNodes.length === 0) return [];
 
-    const transformNode = (node) => ({
-      name: node.name || node.username || "Unknown",
-      attributes: {
-        Name: (node.name || node.username || "Unknown User").trim(),
-        UserId: node.userId || node.referralCode || "N/A",
-        SelfInvestment: node.selfInvestment || 0,
-      },
-      children: node.children ? node.children.map(transformNode) : [],
-    });
+  //   const transformNode = (node) => ({
+  //     name: node.name || node.username || "Unknown",
+  //     attributes: {
+  //       Name: (node.name || node.username || "Unknown User").trim(),
+  //       UserId: node.userId || node.referralCode || "N/A",
+  //       SelfInvestment: node.selfInvestment || 0,
+  //     },
+  //     children: node.children ? node.children.map(transformNode) : [],
+  //   });
 
-    return apiNodes.map(transformNode);
-  };
+  //   return apiNodes.map(transformNode);
+  // };
 
   // Search Filter
   const filteredTreeData = useMemo(() => {
@@ -92,11 +107,19 @@ const ReferralTeamTree = () => {
     }
   }, [loading, treeData]);
 
+    useEffect(() => {
+  if (isError) {
+    toast.error("Failed to load team tree");
+  }
+}, [isError]);
+
   // Custom Node Renderer - Self Investment always shown below ID
   const renderCustomNode = useCallback(({ nodeDatum, toggleNode }) => {
     const attrs = nodeDatum.attributes || {};
     const hasChildren = nodeDatum.children && nodeDatum.children.length > 0;
     const isExpanded = !nodeDatum._collapsed;
+
+  
 
     return (
       <g>
