@@ -123,7 +123,7 @@ export const ProfileSkeleton = () => {
 
         {/* PROFILE CARD */}
         <div className="rounded-2xl border border-[#444B55] p-[1px]">
-          <div className="rounded-2xl p-4 bg-[#444B55]">
+          <div className="rounded-2xl p-4 ">
 
             <div className="flex items-center gap-4 mb-4">
               <Skeleton className="w-20 h-20 rounded-full" />
