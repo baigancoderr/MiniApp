@@ -98,7 +98,6 @@ const [inputReferral, setInputReferral] = useState("");
 
 
   // ✅ Telegram + API Integration
-
 useEffect(() => {
   const init = async () => {
     try {
@@ -109,46 +108,39 @@ useEffect(() => {
 
       if (tg) tg.ready();
 
-      // ✅ Telegram user set
       const tgUserData = tg?.initDataUnsafe?.user;
       if (tgUserData) setTgUser(tgUserData);
 
-      // ✅ 1. CACHE SHOW (instant UI)
       if (storedUser) {
         setApiUser(JSON.parse(storedUser));
       }
 
-      // ===============================
-      //  2. if TOKEN  → /user/me
-      // ===============================
-      if (token) {
-  try {
-    const res = await api.get("/user/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+      if (token && storedUser) {
+        try {
+          const res = await api.get("/user/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
-    if (res.data.success) {
-      setApiUser(res.data.user);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-    }
-  } catch (err) {
-    if (err.response?.status === 401) {
-      localStorage.clear();
-      window.location.reload();
-    } else {
-      toast.error("Failed to fetch user ❌");
-    }
-  }
+          if (res.data.success) {
+            setApiUser(res.data.user);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+          }
+        } catch (err) {
+          if (
+            err.response?.status === 401 ||
+            err.response?.status === 404
+          ) {
+            localStorage.clear();
+            window.location.reload();
+            return;
+          }
+        }
 
-  setLoading(false);
-  return;
-}
+        setLoading(false);
+        return;
+      }
 
-      // ===============================
-      //  3. if dont have TOKEN  → TELEGRAM LOGIN
-      // ===============================
       if (!tg) {
-        toast.error("Open inside Telegram ❌");
         setLoading(false);
         return;
       }
@@ -176,22 +168,15 @@ useEffect(() => {
 
       if (data.success) {
         setApiUser(data.user);
-
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("userId", data.user.userId || data.user._id);
-
         setShowReferralPopup(false);
-      } 
-      else if (data.isNewUser) {
+      } else if (data.isNewUser) {
         setShowReferralPopup(true);
-      } 
-      else {
-        toast.error(data.message);
       }
 
     } catch (err) {
-      console.error(err);
       toast.error("Something went wrong ❌");
     } finally {
       setLoading(false);
