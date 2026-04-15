@@ -4,304 +4,219 @@ import userimg2 from "../../../assets/setting/user-img.jpeg";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-
-
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Profile = () => {
   const navigate = useNavigate();
-const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+
   const [tgUser, setTgUser] = useState(null);
-  const [apiUser, setApiUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-
-
   const [walletAddress, setWalletAddress] = useState("");
-const [isSaved, setIsSaved] = useState(false);
-const [isEditing, setIsEditing] = useState(true);
-
-
-
-const handleSave = async () => {
-  if (!walletAddress.trim()) {
-    toast.error("Enter wallet address ❌");
-    return;
-  }
-
-  if (saving) return;
-
-  try {
-    setSaving(true);
-
-    let res;
-
-    // ✅ Add ya Update decide
-    if (!apiUser?.walletAddress) {
-      res = await api.post("/user/add-wallet", { walletAddress });
-    } else {
-      res = await api.put("/user/update-wallet", { walletAddress });
-    }
-
-    if (res.data.success) {
-      const updatedUser = res.data.user;
-
-      // ✅ Local update (instant UI)
-      setApiUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      // ✅ React Query refresh
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-
-      setIsSaved(true);
-      setIsEditing(false);
-
-      toast.success(res.data.message || "Wallet saved ✅");
-    } else {
-      toast.error(res.data.message || "Failed ❌");
-    }
-
-  } catch (err) {
-    console.error(err);
-    toast.error(err?.response?.data?.message || "API Error ❌");
-  } finally {
-    setSaving(false);
-  }
-};
-
-
-
-const handleUpdate = () => {
-  setIsEditing(true);
-};
-
-
-useEffect(() => {
-  if (apiUser?.walletAddress) {
-    setWalletAddress(apiUser.walletAddress);
-    setIsSaved(true);
-    setIsEditing(false);
-  }
-}, [apiUser]);
-
+  const [isEditing, setIsEditing] = useState(false);
   const [showReferralPopup, setShowReferralPopup] = useState(false);
-const [inputReferral, setInputReferral] = useState("");
+  const [inputReferral, setInputReferral] = useState("");
 
-
-
-
-  // ✅ Telegram + API Integration
-
-useEffect(() => {
-  const init = async () => {
-    try {
+  // Fetch User Data using TanStack Query
+  const {
+    data: apiUser,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
       const token = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("user");
+      if (!token) throw new Error("No token found");
 
+      const res = await api.get("/user/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.user;
+    },
+    enabled: !!localStorage.getItem("token"),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: 2,
+  });
+
+  // Initialize Telegram + Auto Login / Referral Check
+  useEffect(() => {
+    const initTelegram = async () => {
       const tg = window.Telegram?.WebApp;
-
-      if (tg) tg.ready();
-
-      const tgUserData = tg?.initDataUnsafe?.user;
-      if (tgUserData) setTgUser(tgUserData);
-
-      // ✅ 1. Cache se UI show
-      if (storedUser) {
-        setApiUser(JSON.parse(storedUser));
-      }
-
-      // ✅ 2. AGAR TOKEN HAI → LOGIN NAHI KARNA
-      if (token) {
-        setLoading(false);
-        return; // 🚀 IMPORTANT
-      }
-
-      // ❌ No token → login
       if (!tg) {
-        toast.error("Open inside Telegram ❌");
+        console.log("Not inside Telegram WebApp");
         return;
       }
 
+      tg.ready();
       const user = tg.initDataUnsafe?.user;
-      if (!user) return;
 
-      const urlParams = new URLSearchParams(window.location.search);
-      const refFromUrl = urlParams.get("ref");
-      const refFromTG = tg.initDataUnsafe?.start_param;
-
-      const referralCode = refFromTG || refFromUrl || "";
-
-      const res = await api.post("/user/telegram-login", {
-        telegramId: user.id,
-        name: `${user.first_name} ${user.last_name || ""}`,
-        username: user.username || "",
-        referralCode,
-      });
-
-      if (res.data.success) {
-        setApiUser(res.data.user);
-
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+      if (!user) {
+        console.log("No Telegram user found");
+        return;
       }
 
-    } catch (err) {
-      toast.error("Something went wrong ❌");
-    } finally {
-      setLoading(false);
+      setTgUser(user);
+
+      const token = localStorage.getItem("token");
+
+      // If no token → Try auto login first
+      if (!token) {
+        try {
+          const res = await api.post("/user/telegram-login", {
+            telegramId: user.id,
+            name: `${user.first_name} ${user.last_name || ""}`,
+            username: user.username || "",
+            referralCode: "", // First attempt without referral
+          });
+
+          if (res.data.success) {
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+            queryClient.invalidateQueries({ queryKey: ["user"] });
+          } else if (res.data.isNewUser) {
+            setShowReferralPopup(true);
+          }
+        } catch (err) {
+          console.error("Auto login failed:", err);
+          // If it requires referral, popup will show via query error handling or retry
+        }
+      }
+    };
+
+    initTelegram();
+  }, [queryClient]);
+
+  // Wallet Save Mutation
+  const saveWalletMutation = useMutation({
+    mutationFn: async (address) => {
+      const token = localStorage.getItem("token");
+      const isUpdate = !!apiUser?.walletAddress;
+
+      const res = await api[isUpdate ? "put" : "post"](
+        isUpdate ? "/user/update-wallet" : "/user/add-wallet",
+        { walletAddress: address },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Wallet saved successfully ✅");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      setIsEditing(false);
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message || "Failed to save wallet ❌");
+    },
+  });
+
+  const handleSaveWallet = () => {
+    if (!walletAddress.trim()) {
+      toast.error("Please enter wallet address ❌");
+      return;
+    }
+    saveWalletMutation.mutate(walletAddress);
+  };
+
+  const handleUpdateWallet = () => {
+    setIsEditing(true);
+  };
+
+  // Sync wallet address when user data loads
+  useEffect(() => {
+    if (apiUser?.walletAddress) {
+      setWalletAddress(apiUser.walletAddress);
+      setIsEditing(false);
+    }
+  }, [apiUser]);
+
+  // Referral Link
+  const referralLink = `https://t.me/cipera_bot?startapp=${apiUser?.referralCode || "loading"}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      toast.success("Referral link copied! 🚀");
+    } catch {
+      toast.error("Failed to copy ❌");
     }
   };
 
-  init();
-}, []);
+  const handleShare = () => {
+    const text = "Join Cipera and earn rewards! 🚀";
+    const url = referralLink;
 
-const refreshUser = () => {
- queryClient.invalidateQueries({ queryKey: ["user"] });
-};
+    if (window.Telegram?.WebApp) {
+      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+      window.Telegram.WebApp.openTelegramLink(shareUrl);
+    } else if (navigator.share) {
+      navigator.share({ title: "Join Now", text, url });
+    } else {
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, "_blank");
+    }
+  };
 
-const handleLogout = () => {
-  localStorage.clear();
-  window.location.reload();
-};
+  // Referral Submit (for new users)
+  const handleReferralSubmit = async () => {
+    if (!/^CPR[A-Z0-9]{6}$/.test(inputReferral)) {
+      toast.error("Invalid Referral Code ❌");
+      return;
+    }
 
-const fetchUser = async () => {
-  const token = localStorage.getItem("token");
-
-  const res = await api.get("/user/me", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  return res.data.user;
-};
-
-
-//  Use Query for User Data with React Query
-const {
-  data: userData,
-  isLoading: queryLoading,
-} = useQuery({
-  queryKey: ["user"],
-  queryFn: fetchUser,
-  enabled: !!localStorage.getItem("token"),
-  staleTime: 5 * 60 * 1000, // optional (already global hai)
-});
-
-
-
-
-useEffect(() => {
-  if (userData) {
-    setApiUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-  }
-}, [userData]);
-
-useEffect(() => {
-  document.body.style.overflow = showReferralPopup ? "hidden" : "auto";
-}, [showReferralPopup]);
-
-const handleReferralSubmit = async () => {
-  // 🔥 Start loading
-  setLoading(true);
-
-  // ✅ Validation
-  if (!/^CPR[A-Z0-9]{6}$/.test(inputReferral)) {
-    toast.error("Invalid Referral Code ❌");
-    setLoading(false);
-    return;
-  }
-
-  try {
     const tg = window.Telegram?.WebApp;
     const user = tg?.initDataUnsafe?.user;
 
     if (!user) {
-      toast.error("Telegram user not found ❌");
-      setLoading(false);
+      toast.error("Telegram user not found");
       return;
     }
 
-    // ✅ API Call
-    const res = await api.post("/user/telegram-login", {
-      telegramId: user.id,
-      name: `${user.first_name} ${user.last_name || ""}`,
-      username: user.username || "",
-      referralCode: inputReferral,
-    });
-
-    const data = res.data;
-
-    if (data.success) {
-      // ✅ Set state
-      setApiUser(data.user);
-
-      // ✅ Save to localStorage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("referral", inputReferral);
-      localStorage.setItem("userId", data.user.userId || data.user._id);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // ✅ Close popup
-      setShowReferralPopup(false);
-
-      toast.success("Login Success ✅");
-    } else {
-      toast.error(data.message || "Login failed ❌");
-    }
-
-  } catch (err) {
-    console.error("Referral Submit Error:", err);
-    toast.error("Something went wrong ❌");
-  } finally {
-    // 🔥 Stop loading (VERY IMPORTANT)
-    setLoading(false);
-  }
-};
-
-  // ✅ Referral Dynamic 
-const referralLink = apiUser?.referralCode
-  ? `https://t.me/cipera_bot?startapp=${apiUser.referralCode}`
-  : "Loading...";
-  // ✅ Share
-  const handleShare = () => {
-    const text = "Join and earn 🚀";
-    const url = referralLink;
-
-    if (window.Telegram?.WebApp) {
-      const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(
-        url
-      )}&text=${encodeURIComponent(text)}`;
-
-      window.Telegram.WebApp.openTelegramLink(telegramShareUrl);
-    } else if (navigator.share) {
-      navigator.share({
-        title: "Join Now 🚀",
-        text,
-        url,
-      });
-    } else {
-      window.open(
-        `https://t.me/share/url?url=${encodeURIComponent(
-          url
-        )}&text=${encodeURIComponent(text)}`,
-        "_blank"
-      );
-    }
-  };
-
-  // ✅ Copy
-  const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(referralLink);
-      toast.success("Copied 🚀");
-    } catch {
-      toast.error("Copy failed ❌");
+      const res = await api.post("/user/telegram-login", {
+        telegramId: user.id,
+        name: `${user.first_name} ${user.last_name || ""}`,
+        username: user.username || "",
+        referralCode: inputReferral,
+      });
+
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        setShowReferralPopup(false);
+        toast.success("Login successful ✅");
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+      } else {
+        toast.error(res.data.message || "Login failed");
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Something went wrong ❌");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <div className="flex flex-col items-center">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-400">
+        <p>Error loading profile: {error?.message}</p>
+        <button onClick={() => refetch()} className="mt-4 px-4 py-2 bg-blue-600 rounded-lg">
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex justify-center pb-24 px-2 py-3 text-white ">
+    <div className="min-h-screen flex justify-center pb-24 px-2 py-3 text-white">
       <div className="w-full max-w-md">
 
         {/* HEADER */}
@@ -319,8 +234,7 @@ const referralLink = apiUser?.referralCode
           <div
             onClick={() => navigate("/settings")}
             className="w-10 h-10 flex items-center justify-center rounded-xl 
-              bg-gradient-to-r from-[#587FFF] to-[#09239F] 
-              shadow-lg shadow-blue-500/20 cursor-pointer active:scale-95 transition"
+              bg-gradient-to-r from-[#587FFF] to-[#09239F] shadow-lg shadow-blue-500/20 cursor-pointer active:scale-95 transition"
           >
             <User size={18} />
           </div>
@@ -329,18 +243,15 @@ const referralLink = apiUser?.referralCode
         {/* PROFILE CARD */}
         <div className="relative rounded-2xl border border-[#81ECFF99] p-[1px] mb-5 bg-gradient-to-br from-blue-500/20 to-black/30">
           <div className="rounded-2xl p-4 bg-[#0B0F19]">
-
             <div className="flex items-center gap-4 mb-4">
               <img
                 src={tgUser?.photo_url || userimg2}
                 className="w-20 h-20 rounded-full border border-white/20 object-cover"
+                alt="profile"
               />
-
               <div>
                 <h2 className="text-xl font-bold">
-                  {tgUser
-                    ? `${tgUser.first_name} ${tgUser.last_name || ""}`
-                    : "Guest User"}
+                  {tgUser ? `${tgUser.first_name} ${tgUser.last_name || ""}` : apiUser?.name || "User"}
                 </h2>
                 <p className="text-xs text-gray-400">
                   {tgUser?.username ? `@${tgUser.username}` : ""}
@@ -348,75 +259,57 @@ const referralLink = apiUser?.referralCode
               </div>
             </div>
 
-            {/* IDs */}
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
                 <p className="text-xs text-gray-400">USER ID</p>
-                <p className="text-white">
-                {queryLoading  
-  ? "Loading..." 
-  : apiUser?.userId || "N/A"}
-                </p>
+                <p className="text-white font-medium">{apiUser?.userId || "N/A"}</p>
               </div>
-
               <div className="bg-[#00000020] p-3 rounded-xl border border-[#444B55]">
                 <p className="text-xs text-gray-400">PARENT ID</p>
-                <p className="text-white">
-                {queryLoading  
-  ? "Loading..." 
-  : apiUser?.referredBy || "N/A"}
-                </p>
+                <p className="text-white font-medium">{apiUser?.referredBy || "N/A"}</p>
               </div>
             </div>
-
           </div>
         </div>
 
+        {/* WALLET SECTION */}
+        <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020] mb-5">
+          <p className="text-sm text-gray-300 mb-2">Wallet Address</p>
 
-        {/* WALLET */}
-        
-    <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020] mb-5">
-  <p className="text-sm text-gray-300 mb-2">Wallet Address</p>
+          <input
+            type="text"
+            value={walletAddress}
+            disabled={!isEditing}
+            onChange={(e) => setWalletAddress(e.target.value)}
+            placeholder="Enter your wallet address"
+            className={`w-full px-3 py-2 rounded-lg text-sm bg-black border 
+              ${isEditing ? "border-[#81ECFF]" : "border-[#444B55]"} 
+              text-white mb-3`}
+          />
 
-  {/* Input */}
-  <input
-    type="text"
-    value={walletAddress}
-    disabled={!isEditing}
-    onChange={(e) => setWalletAddress(e.target.value)}
-    placeholder="Enter wallet address"
-    className={`w-full px-3 py-2 rounded-lg text-sm bg-black border 
-      ${isEditing ? "border-[#81ECFF]" : "border-[#444B55]"} 
-      text-white mb-3`}
-  />
+          {isEditing ? (
+            <button
+              onClick={handleSaveWallet}
+              disabled={saveWalletMutation.isPending}
+              className="w-full bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg text-sm disabled:opacity-70"
+            >
+              {saveWalletMutation.isPending ? "Saving..." : apiUser?.walletAddress ? "Update Wallet" : "Save Wallet"}
+            </button>
+          ) : (
+            <button
+              onClick={handleUpdateWallet}
+              className="w-full bg-green-500 py-2 rounded-lg text-sm"
+            >
+              Edit Wallet
+            </button>
+          )}
+        </div>
 
-  {/* Button */}
-{isEditing ? (
-  <button
-    onClick={handleSave}
-    className="w-full bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg text-sm"
-  >
-    {apiUser?.walletAddress ? "Update Wallet" : "Save Wallet"}
-  </button>
-) : (
-  <button
-    onClick={handleUpdate}
-    className="w-full bg-green-500 py-2 rounded-lg text-sm"
-  >
-    Edit
-  </button>
-)}
-
-
-</div>
-
-
-
-        {/* REFERRAL */}
+        {/* REFERRAL SECTION */}
         <div className="rounded-xl border border-[#444B55] p-4 bg-[#00000020]">
           <p className="text-sm text-gray-300 mb-2">Referral Link</p>
 
-          <div className="bg-black border border-[#81ECFF] rounded-lg p-2 text-xs mb-3 break-all">
+          <div className="bg-black border border-[#81ECFF] rounded-lg p-3 text-xs mb-3 break-all font-mono">
             {referralLink}
           </div>
 
@@ -436,66 +329,42 @@ const referralLink = apiUser?.referralCode
             </button>
           </div>
         </div>
-
       </div>
-      
 
+      {/* REFERRAL POPUP FOR NEW USERS */}
       {showReferralPopup && (
-  <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-    <div className="bg-[#0B0F19] border border-[#81ECFF] rounded-2xl p-5 w-[90%] max-w-sm text-center">
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
+          <div className="bg-[#0B0F19] border border-[#81ECFF] rounded-2xl p-6 w-full max-w-sm text-center">
+            <h2 className="text-lg font-semibold mb-4">Enter Referral Code</h2>
 
-      <h2 className="text-lg font-semibold mb-2">Enter Referral Code</h2>
+            <div className="flex flex-col items-center mb-5">
+              <img
+                src={tgUser?.photo_url || userimg2}
+                className="w-20 h-20 rounded-full mb-3 border border-white/20"
+                alt="avatar"
+              />
+              <p className="font-medium">{tgUser?.first_name} {tgUser?.last_name}</p>
+              <p className="text-xs text-gray-400">@{tgUser?.username}</p>
+            </div>
 
-      {/* Telegram User Info */}
-      <div className="flex flex-col items-center mb-3">
-        <img
-          src={tgUser?.photo_url || userimg2}
-          className="w-16 h-16 rounded-full mb-2"
-        />
-        <p className="text-sm">
-          {tgUser?.first_name} {tgUser?.last_name}
-        </p>
-        <p className="text-xs text-gray-400">@{tgUser?.username}</p>
-      </div>
+            <input
+              type="text"
+              value={inputReferral}
+              onChange={(e) => setInputReferral(e.target.value.toUpperCase())}
+              placeholder="CPRXXXXXX"
+              className="w-full px-4 py-3 rounded-xl bg-black border border-[#444] text-white mb-4 text-center tracking-widest"
+            />
 
-      {/* Input */}
-      <input
-        type="text"
-        value={inputReferral}
-        onChange={(e) => setInputReferral(e.target.value.toUpperCase())}
-        placeholder="Enter CPRXXXXXX"
-        className="w-full px-3 py-2 rounded-lg bg-black border border-[#444] text-white mb-3"
-      />
-
-      {/* Button */}
-     <button
-  onClick={handleReferralSubmit}
-  disabled={loading}
-  className={`w-full py-2 rounded-lg flex items-center justify-center gap-2
-  bg-gradient-to-r from-[#587FFF] to-[#09239F]
-  ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
->
-  {loading ? (
-    <>
-      {/* 🔄 Spinner */}
-      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-      Processing...
-    </>
-  ) : (
-    "Continue"
-  )}
-</button>
-
+            <button
+              onClick={handleReferralSubmit}
+              className="w-full py-3 bg-gradient-to-r from-[#587FFF] to-[#09239F] rounded-xl font-medium"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-)}
-
-
-    </div>
-
-
-
-
   );
 };
 
