@@ -144,7 +144,7 @@ const AddFundPage = () => {
     const data = res.data;
 
    if (data.success && data.deposit?.address) {
-  toast.success("Payment address generated successfully ✅");
+  toast.success("Payment address generated ✅");
 
   navigate("/payment", {
     state: {
