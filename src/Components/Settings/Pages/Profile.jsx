@@ -48,10 +48,10 @@ const Profile = () => {
 
   enabled: !!localStorage.getItem("token"),
 
-  staleTime: 5 * 60 * 1000,        // 🔥 key fix
-  refetchOnWindowFocus: false,     // already good
-  refetchOnMount: false,           // 🔥 prevent tab switch refetch
-  refetchOnReconnect: false,       // optional (extra safety)
+  staleTime: 5 * 60 * 1000,        
+  refetchOnWindowFocus: false,    
+  refetchOnMount: false,         
+  refetchOnReconnect: false,      
 
   retry: (failureCount, error) => {
     if (error?.message === "NO_TOKEN") {
@@ -319,7 +319,7 @@ if (showSkeleton) {
               disabled={saving}
               className="w-full bg-gradient-to-r from-[#587FFF] to-[#09239F] py-2 rounded-lg text-sm disabled:opacity-50"
             >
-              {saving ? "Saving..." : apiUser?.walletAddress ? "Update Wallet" : "Save Wallet"}
+              {saving ? "Processing..." : apiUser?.walletAddress ? "Update Wallet" : "Save Wallet"}
             </button>
           ) : (
             <button onClick={handleUpdate} className="w-full bg-green-500 py-2 rounded-lg text-sm">

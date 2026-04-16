@@ -15,6 +15,8 @@ const WithdrawUSDT = () => {
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [walletType, setWalletType] = useState("referral");
+  const [withdrawHistory, setWithdrawHistory] = useState([]);
+const [historyLoading, setHistoryLoading] = useState(false);
 
   const handleWithdraw = async () => {
     if (!walletType || !amount || !address) {
@@ -93,13 +95,41 @@ const WithdrawUSDT = () => {
   }, []);
 
   // 🔥 Dummy Data
-  const withdrawHistory = Array.from({ length: 25 }, (_, i) => ({
-    id: "#W" + (12345 + i),
-    amount: "$" + (50 + i * 10),
-    address: "0xA1B2C3D4...XYZ" + i,
-    date: "12 Mar 2026",
-    status: i % 2 === 0 ? "Success" : "Pending",
-  }));
+  // const withdrawHistory = Array.from({ length: 25 }, (_, i) => ({
+  //   id: "#W" + (12345 + i),
+  //   amount: "$" + (50 + i * 10),
+  //   address: "0xA1B2C3D4...XYZ" + i,
+  //   date: "12 Mar 2026",
+  //   status: i % 2 === 0 ? "Success" : "Pending",
+  // }));
+
+  useEffect(() => {
+  const fetchHistory = async () => {
+    try {
+      setHistoryLoading(true);
+
+      const token = localStorage.getItem("token");
+
+      const res = await api.get("/user/withdrawal-history", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.data?.status === "success") {
+        setWithdrawHistory(res.data.data.withdrawals || []);
+      }
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to load history ❌");
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  fetchHistory();
+}, []);
 
   // 🔥 Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -108,7 +138,15 @@ const WithdrawUSDT = () => {
   const totalPages = Math.ceil(withdrawHistory.length / itemsPerPage);
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentData = withdrawHistory.slice(indexOfFirst, indexOfLast);
+
+      // Mapping
+const currentData = withdrawHistory.slice(indexOfFirst, indexOfLast).map((item) => ({
+  id: item.transactionHash,
+  amount: `$${item.amount}`,
+  address: item.walletAddress,
+  date: new Date(item.createdAt).toLocaleDateString(),
+  status: item.status,
+}));
 
   return (
     <div className="min-h-screen flex justify-center px-2 py-3 pb-24 text-white ">
@@ -259,68 +297,106 @@ const WithdrawUSDT = () => {
 
           {/* TABLE */}
           <div className="rounded-2xl border border-[#81ECFF66] p-[1px]
-          bg-[linear-gradient(217deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
+bg-[linear-gradient(217deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
 
-            <div className="rounded-2xl bg-[#0B0F1A]">
+  <div className="rounded-2xl bg-[#0B0F1A]">
 
-              <div className="overflow-x-auto">
+    <div className="overflow-x-auto">
 
-                <table className="min-w-[700px] w-full text-sm">
+      <table className="min-w-[700px] w-full text-sm">
 
-                  <thead className="bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)] uppercase rounded-lg">
-                    <tr className="text-gray-400 border-b border-[#1f2430]">
-                      <th className="px-3 py-3 text-left">S.No</th>
-                      <th className="px-3 py-3 text-left">Txn ID</th>
-                      <th className="px-3 py-3 text-left">Amount</th>
-                      <th className="px-3 py-3 text-left">Address</th>
-                      <th className="px-3 py-3 text-left">Date</th>
-                      <th className="px-3 py-3 text-right">Status</th>
-                    </tr>
-                  </thead>
+        {/* HEADER */}
+        <thead className="bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)] uppercase">
+          <tr className="text-gray-400 border-b border-[#1f2430]">
+            <th className="px-3 py-3 text-left">S.No</th>
+            <th className="px-3 py-3 text-left">Txn ID</th>
+            <th className="px-3 py-3 text-left">Amount</th>
+            <th className="px-3 py-3 text-left">Address</th>
+            <th className="px-3 py-3 text-left">Date</th>
+            <th className="px-3 py-3 text-right">Status</th>
+          </tr>
+        </thead>
 
-                  <tbody>
-                    {currentData.map((item, i) => (
-                      <tr key={i}
-                        className="border-b border-[#1f2430]
-                        hover:bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)]">
+        {/* BODY */}
+        <tbody>
 
-                        {/* S.NO */}
-                        <td className="px-3 py-3 text-blue-400 font-medium">
-                          {indexOfFirst + i + 1}
-                        </td>
+          {/* LOADING STATE */}
+          {historyLoading ? (
+            <tr>
+              <td colSpan="6" className="text-center py-5 text-gray-400">
+                Loading withdrawal history...
+              </td>
+            </tr>
+          ) : currentData.length > 0 ? (
 
-                        <td className="px-3 py-3">{item.id}</td>
-                        <td className="px-3 py-3">{item.amount}</td>
-                        <td className="px-3 py-3 truncate max-w-[120px]">{item.address}</td>
-                        <td className="px-3 py-3">{item.date}</td>
+            currentData.map((item, i) => (
+              <tr
+                key={item.id || i}
+                className="border-b border-[#1f2430]
+                hover:bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)]"
+              >
 
-                        <td className="px-3 py-3 text-right">
-                          <span className={`px-2 py-1 rounded-full text-xs ${item.status === "Success"
-                              ? "bg-green-500/20 text-green-300"
-                              : "bg-yellow-500/20 text-yellow-300"
-                            }`}>
-                            {item.status}
-                          </span>
-                        </td>
+                {/* S.NO */}
+                <td className="px-3 py-3 text-blue-400 font-medium">
+                  {indexOfFirst + i + 1}
+                </td>
 
-                      </tr>
-                    ))}
+                {/* TXN ID */}
+                <td className="px-3 py-3 text-white">
+                  {item.id}
+                </td>
 
-                    {currentData.length === 0 && (
-                      <tr>
-                        <td colSpan="6" className="text-center py-5 text-gray-400">
-                          No Records Found
-                        </td>
-                      </tr>
-                    )}
+                {/* AMOUNT */}
+                <td className="px-3 py-3 text-white">
+                  {item.amount}
+                </td>
 
-                  </tbody>
+                {/* ADDRESS */}
+                <td className="px-3 py-3 truncate max-w-[120px] text-gray-300">
+                  {item.address}
+                </td>
 
-                </table>
+                {/* DATE */}
+                <td className="px-3 py-3 text-gray-300">
+                  {item.date}
+                </td>
 
-              </div>
-            </div>
-          </div>
+                {/* STATUS */}
+                <td className="px-3 py-3 text-right">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium
+                    ${item.status === "success" || item.status === "Success"
+                        ? "bg-green-500/20 text-green-300"
+                        : item.status === "pending"
+                          ? "bg-yellow-500/20 text-yellow-300"
+                          : "bg-red-500/20 text-red-300"
+                      }`}
+                  >
+                    {item.status}
+                  </span>
+                </td>
+
+              </tr>
+            ))
+
+          ) : (
+
+            /* EMPTY STATE */
+            <tr>
+              <td colSpan="6" className="text-center py-5 text-gray-400">
+                No Withdrawal Records Found
+              </td>
+            </tr>
+
+          )}
+
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
+</div>
 
           {/* 🔥 PAGINATION */}
           {totalPages > 1 && (
