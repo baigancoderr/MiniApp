@@ -143,20 +143,22 @@ const AddFundPage = () => {
 
     const data = res.data;
 
-    if (data.success && data.data?.address_in) {
-      toast.success("Payment address generated successfully ✅");
+   if (data.success && data.deposit?.address) {
+  toast.success("Payment address generated successfully ✅");
 
-      navigate("/payment", {
-        state: {
-          amount,
-          coin: selected.coin,
-          network: selected.label,
-          walletAddress: data.data.address_in,
-          qrData: data.data.address_in,
-          callbackInfo: data.data,
-        },
-      });
-    } else {
+  navigate("/payment", {
+    state: {
+      amount,
+      coin: selected.coin,
+      network: selected.label,
+      walletAddress: data.deposit.address,
+      qrData: data.deposit.qr_code || data.deposit.address,
+    },
+  });
+}
+    
+    
+    else {
       const errorMsg = data.message || data.error || "Failed to generate address";
       console.warn("API returned failure:", data);
       toast.error(errorMsg);
