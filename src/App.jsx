@@ -87,38 +87,48 @@ useEffect(() => {
           <BrowserRouter>
             <ScrollToTop />
             {/* <Toaster position="top-center" reverseOrder={false} /> */}
-
-            <Toaster
+            
+<Toaster
   position="top-center"
   reverseOrder={false}
   toastOptions={{
     style: {
-      background: "#1a1a2e",   // background color
-      color: "#fff",           // text color
-      border: "1px solid #444385",
+      background: "rgba(11, 15, 26, 0.85)",
+      color: "#E6EDFF",
+      border: "1px solid rgba(68, 67, 133, 0.4)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      boxShadow: "0 0 20px rgba(66, 252, 255, 0.15)",
+      borderRadius: "12px",
+      padding: "12px 16px",
     },
+
     success: {
       style: {
-        background: "#0f5132",
-        color: "#d1e7dd",
+        background: "rgba(11, 15, 26, 0.9)",
+        border: "1px solid rgba(66, 252, 255, 0.5)",
+        boxShadow: "0 0 15px rgba(66, 252, 255, 0.4)",
       },
       iconTheme: {
-        primary: "#00ffae",
-        secondary: "#0f5132",
+        primary: "#42fcff",   // neon cyan
+        secondary: "#0B0F1A",
       },
     },
+
     error: {
       style: {
-        background: "#842029",
-        color: "#f8d7da",
+        background: "rgba(11, 15, 26, 0.9)",
+        border: "1px solid rgba(252, 66, 255, 0.5)",
+        boxShadow: "0 0 15px rgba(252, 66, 255, 0.4)",
       },
       iconTheme: {
-        primary: "#ff4d6d",
-        secondary: "#842029",
+        primary: "#fc42ff",   // neon pink
+        secondary: "#0B0F1A",
       },
     },
   }}
 />
+
             <AppWrapper />
           </BrowserRouter>
         </>
