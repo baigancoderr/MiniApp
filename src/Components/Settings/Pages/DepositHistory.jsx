@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
+import CustomDateInput from "../../utils/CustomDateInput"
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -86,6 +87,9 @@ const DepositHistory = () => {
   const [startDate, setStartDate] = useState("");
 const [endDate, setEndDate] = useState("");
 
+const [tempStartDate, setTempStartDate] = useState("");
+const [tempEndDate, setTempEndDate] = useState("");
+
   // 🔥 Cached Query — won't hit API again for 5 minutes
   const { data, isLoading, isError } = useQuery({
    queryKey: ["deposit-history", currentPage, startDate, endDate],
@@ -148,9 +152,9 @@ const totalPages = pagination.pages || 1;
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium transition-all duration-200 border
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all duration-200 border
                 ${activeTab === tab.key
-                  ? "bg-gradient-to-r from-[#587FFF] to-[#09239F] border-transparent text-white shadow-lg shadow-blue-500/20"
+                  ? "bg-gradient-to-r from-[#587FFF] to-[#09239F] border-transparent text-white shadow-md shadow-blue-500/20"
                   : "bg-[#00000033] border-[#444385] text-gray-400 hover:text-white"
                 }`}
             >
@@ -194,67 +198,62 @@ const totalPages = pagination.pages || 1;
 
 
 
+{/* FILTER SECTION - Custom DD/MM/YYYY Date Inputs */}
 <div className="flex flex-col gap-4 mb-4">
 
   {/* START DATE */}
-  <div className="flex flex-col">
-    <label className="text-[10px] text-gray-400 mb-1">Start Date</label>
-    <input
-      type="date"
-      value={startDate}
-      onChange={(e) => setStartDate(e.target.value)}
-      className="bg-[#0B0F1A] border border-[#444385] text-xs px-3 py-2 rounded-lg
-                 text-gray-300 focus:outline-none focus:border-blue-500
-                 transition-all duration-200 [color-scheme:dark]"
-    />
-  </div>
+  <CustomDateInput 
+    label="Start Date" 
+    value={tempStartDate} 
+    onChange={setTempStartDate} 
+  />
 
   {/* END DATE */}
-  <div className="flex flex-col">
-    <label className="text-[10px] text-gray-400 mb-1">End Date</label>
-    <input
-      type="date"
-      value={endDate}
-      onChange={(e) => setEndDate(e.target.value)}
-      className="bg-[#0B0F1A] border border-[#444385] text-xs px-3 py-2 rounded-lg
-                 text-gray-300 focus:outline-none focus:border-blue-500
-                 transition-all duration-200 [color-scheme:dark]"
-    />
-  </div>
+  <CustomDateInput 
+    label="End Date" 
+    value={tempEndDate} 
+    onChange={setTempEndDate} 
+  />
 
   {/* BUTTONS SIDE BY SIDE */}
   <div className="grid grid-cols-2 gap-3 pt-1">
 
-    {/* CLEAR BUTTON */}
-   <button
-  onClick={() => {
+    {/* CLEAR BUTTON - 3D Style */}
+    <button
+      onClick={() => {
+    setTempStartDate("");
+    setTempEndDate("");
     setStartDate("");
     setEndDate("");
     setCurrentPage(1);
   }}
-  className=" py-2.5 text-sm font-semibold rounded-md
-             bg-gradient-to-br from-gray-700 to-gray-900
-             border border-gray-500/50
-             text-gray-200
-             shadow-[0_4px_14px_-2px_rgba(0,0,0,0.6),inset_0_-2px_6px_rgba(255,255,255,0.08)]
-             transition-all duration-200 ease-out
-             hover:scale-[1.04] hover:shadow-[0_6px_10px_-4px_rgba(0,0,0,0.7)]
-             active:scale-[0.96] active:translate-y-[1px] active:shadow-inner
-             hover:border-gray-400/60"
->
-  Clear
-</button>
+      className="py-2 text-sm font-semibold rounded-md  
+                 bg-gradient-to-br from-gray-700 to-gray-900
+                 border border-gray-500/50
+                 text-gray-200
+                 shadow-[0_4px_14px_-2px_rgba(0,0,0,0.6),inset_0_-2px_6px_rgba(255,255,255,0.08)]
+                 transition-all duration-200 ease-out
+                 hover:scale-[1.04] hover:shadow-[0_6px_20px_-4px_rgba(0,0,0,0.7)]
+                 active:scale-[0.96] active:translate-y-[1px] active:shadow-inner
+                 hover:border-gray-400/60"
+    >
+      Clear
+    </button>
 
-    {/* APPLY FILTER BUTTON */}
+    {/* APPLY FILTER BUTTON - 3D Style */}
     <button
-      onClick={() => setCurrentPage(1)}
+       onClick={() => {
+    setStartDate(tempStartDate);
+    setEndDate(tempEndDate);
+    setCurrentPage(1);
+  }}
       className="py-2 text-sm font-semibold rounded-md
                  bg-gradient-to-br from-[#587FFF] via-[#3B6EFF] to-[#09239F]
                  shadow-[0_4px_8px_-2px_rgb(88,127,255,0.5),inset_0_-3px_8px_rgba(0,0,0,0.4)]
                  border border-blue-400/30
-                 transition-all duration-200
-                 hover:scale-[1.04]
-                 active:scale-[0.96]
+                 transition-all duration-200 ease-out
+                 hover:scale-[1.04] hover:shadow-[0_6px_10px_-4px_rgb(88,127,255,0.6)]
+                 active:scale-[0.96] active:translate-y-[1px] active:shadow-inner
                  text-white"
     >
       Apply Filter
@@ -265,11 +264,14 @@ const totalPages = pagination.pages || 1;
 </div>
 
 
+
+
               <div className="rounded-lg border border-[#81ECFF66] p-[1px]
                 bg-[linear-gradient(217deg,_rgba(88,127,255,0.4),_rgba(0,7,64,0.2))]">
                 <div className="rounded-lg bg-[#0B0F1A] backdrop-blur-xl">
                   <div className="overflow-x-auto">
                     <table className="min-w-[600px] w-full text-sm">
+                    
 
                       {/* HEADER */}
                       <thead className="bg-[linear-gradient(90deg,_rgba(88,127,255,0.1),_transparent)] uppercase">
