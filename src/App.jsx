@@ -108,7 +108,7 @@ useEffect(() => {
         background: "rgba(248, 248, 248, 0.9)",
         border: "1px solid rgba(0, 0, 0, 0.5)",
         boxShadow: "0 0 10px rgba(66, 186, 255, 0.4)",
-        color: "#4fe041",
+        color: "#000000",
       },
       iconTheme: {
         primary: "#4fe041",   
