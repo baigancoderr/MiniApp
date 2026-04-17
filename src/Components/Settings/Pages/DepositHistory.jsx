@@ -196,52 +196,70 @@ const totalPages = pagination.pages || 1;
 
 <div className="flex flex-col gap-4 mb-4">
 
-  {/* DATE INPUTS - Vertical Stack */}
-  <div className="flex flex-col gap-3">
-
-    {/* START DATE */}
-    <div className="flex flex-col">
-      <label className="text-[10px] text-gray-400 mb-1">Start Date</label>
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-        className="bg-[#0B0F1A] border border-[#444385] text-xs px-3 py-2 rounded-lg
-                   text-gray-300 focus:outline-none focus:border-blue-500
-                   transition-all duration-200 [color-scheme:dark]"
-      />
-    </div>
-
-    {/* END DATE */}
-    <div className="flex flex-col">
-      <label className="text-[10px] text-gray-400 mb-1">End Date</label>
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-        className="bg-[#0B0F1A] border border-[#444385] text-xs px-3 py-2 rounded-lg
-                   text-gray-300 focus:outline-none focus:border-blue-500
-                   transition-all duration-200 [color-scheme:dark]"
-      />
-    </div>
-
+  {/* START DATE */}
+  <div className="flex flex-col">
+    <label className="text-[10px] text-gray-400 mb-1">Start Date</label>
+    <input
+      type="date"
+      value={startDate}
+      onChange={(e) => setStartDate(e.target.value)}
+      className="bg-[#0B0F1A] border border-[#444385] text-xs px-3 py-2 rounded-lg
+                 text-gray-300 focus:outline-none focus:border-blue-500
+                 transition-all duration-200 [color-scheme:dark]"
+    />
   </div>
 
-  {/* PREMIUM 3D FILTER BUTTON */}
-  <div className="flex justify-end pt-1">
+  {/* END DATE */}
+  <div className="flex flex-col">
+    <label className="text-[10px] text-gray-400 mb-1">End Date</label>
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e) => setEndDate(e.target.value)}
+      className="bg-[#0B0F1A] border border-[#444385] text-xs px-3 py-2 rounded-lg
+                 text-gray-300 focus:outline-none focus:border-blue-500
+                 transition-all duration-200 [color-scheme:dark]"
+    />
+  </div>
+
+  {/* BUTTONS SIDE BY SIDE */}
+  <div className="grid grid-cols-2 gap-3 pt-1">
+
+    {/* CLEAR BUTTON */}
+   <button
+  onClick={() => {
+    setStartDate("");
+    setEndDate("");
+    setCurrentPage(1);
+  }}
+  className=" py-2.5 text-sm font-semibold rounded-md
+             bg-gradient-to-br from-gray-700 to-gray-900
+             border border-gray-500/50
+             text-gray-200
+             shadow-[0_4px_14px_-2px_rgba(0,0,0,0.6),inset_0_-2px_6px_rgba(255,255,255,0.08)]
+             transition-all duration-200 ease-out
+             hover:scale-[1.04] hover:shadow-[0_6px_10px_-4px_rgba(0,0,0,0.7)]
+             active:scale-[0.96] active:translate-y-[1px] active:shadow-inner
+             hover:border-gray-400/60"
+>
+  Clear
+</button>
+
+    {/* APPLY FILTER BUTTON */}
     <button
       onClick={() => setCurrentPage(1)}
-      className="px-6 py-2.5 text-xs font-semibold rounded-xl
+      className="py-2 text-sm font-semibold rounded-md
                  bg-gradient-to-br from-[#587FFF] via-[#3B6EFF] to-[#09239F]
                  shadow-[0_4px_8px_-2px_rgb(88,127,255,0.5),inset_0_-3px_8px_rgba(0,0,0,0.4)]
                  border border-blue-400/30
-                 transition-all duration-200 ease-out
-                 hover:scale-[1.04] hover:shadow-[0_4px_5px_-2px_rgb(88,127,255,0.6)]
-                 active:scale-[0.96] active:shadow-inner active:translate-y-[1px]
+                 transition-all duration-200
+                 hover:scale-[1.04]
+                 active:scale-[0.96]
                  text-white"
     >
       Apply Filter
     </button>
+
   </div>
 
 </div>
