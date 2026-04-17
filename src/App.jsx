@@ -96,21 +96,21 @@ useEffect(() => {
       background: "rgba(11, 15, 26, 0.85)",
       color: "#E6EDFF",
       border: "1px solid rgba(68, 67, 133, 0.4)",
-      backdropFilter: "blur(12px)",
-      WebkitBackdropFilter: "blur(12px)",
-      boxShadow: "0 0 20px rgba(66, 252, 255, 0.15)",
-      borderRadius: "12px",
-      padding: "12px 16px",
+      backdropFilter: "blur(10px)",
+      WebkitBackdropFilter: "blur(10px)",
+      boxShadow: "0 0 10px rgba(66, 252, 255, 0.15)",
+      borderRadius: "8px",
+      padding: "6px 14px",
     },
 
     success: {
       style: {
         background: "rgba(11, 15, 26, 0.9)",
-        border: "1px solid rgba(66, 252, 255, 0.5)",
-        boxShadow: "0 0 15px rgba(66, 252, 255, 0.4)",
+        border: "1px solid rgba(81, 238, 8, 0.5)",
+        boxShadow: "0 0 10px rgba(66, 252, 255, 0.4)",
       },
       iconTheme: {
-        primary: "#42fcff",   // neon cyan
+        primary: "#4fe041",   
         secondary: "#0B0F1A",
       },
     },
@@ -118,11 +118,11 @@ useEffect(() => {
     error: {
       style: {
         background: "rgba(11, 15, 26, 0.9)",
-        border: "1px solid rgba(252, 66, 255, 0.5)",
-        boxShadow: "0 0 15px rgba(252, 66, 255, 0.4)",
+        border: "1px solid rgba(235, 113, 56, 0.5)",
+        boxShadow: "0 0 5px rgba(252, 66, 255, 0.4)",
       },
       iconTheme: {
-        primary: "#fc42ff",   // neon pink
+        primary: "#f70b0b",   // neon pink
         secondary: "#0B0F1A",
       },
     },
