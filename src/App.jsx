@@ -93,7 +93,7 @@ useEffect(() => {
   reverseOrder={false}
   toastOptions={{
     style: {
-      background: "rgba(11, 15, 26, 0.85)",
+      background: "rgba(255, 255, 255, 0.85)",
       color: "#E6EDFF",
       border: "1px solid rgba(68, 67, 133, 0.4)",
       backdropFilter: "blur(10px)",
@@ -105,9 +105,10 @@ useEffect(() => {
 
     success: {
       style: {
-        background: "rgba(11, 15, 26, 0.9)",
-        border: "1px solid rgba(81, 238, 8, 0.5)",
-        boxShadow: "0 0 10px rgba(66, 252, 255, 0.4)",
+        background: "rgba(248, 248, 248, 0.9)",
+        border: "1px solid rgba(0, 0, 0, 0.5)",
+        boxShadow: "0 0 10px rgba(66, 186, 255, 0.4)",
+        color: "#4fe041",
       },
       iconTheme: {
         primary: "#4fe041",   
@@ -117,9 +118,10 @@ useEffect(() => {
 
     error: {
       style: {
-        background: "rgba(11, 15, 26, 0.9)",
-        border: "1px solid rgba(235, 113, 56, 0.5)",
-        boxShadow: "0 0 5px rgba(252, 66, 255, 0.4)",
+        background: "rgba(255, 255, 255, 0.9)",
+        border: "1px solid rgb(0, 0, 0)",
+        boxShadow: "0 0 5px rgba(219, 87, 26, 0.4)",
+        color: "#f70b0b",
       },
       iconTheme: {
         primary: "#f70b0b",   // neon pink
