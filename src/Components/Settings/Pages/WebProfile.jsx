@@ -164,8 +164,8 @@ const WebProfile = () => {
   // Not Logged In - Show Registration Form
   if (!apiUser) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 bg-[#0A0E1A]">
-        <div className="w-full max-w-md bg-[#0B0F19] border border-[#444B55] rounded-3xl p-8">
+      <div className="min-h-screen flex items-center justify-center px-4 ">
+        <div className="w-full max-w-md  border border-[#444B55] rounded-3xl p-8">
           <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
 
           <form onSubmit={handleWebSubmit} className="space-y-5">

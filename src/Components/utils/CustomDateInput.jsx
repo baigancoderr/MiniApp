@@ -14,22 +14,41 @@ const CustomDateInput = ({ label, value, onChange }) => {
     }
   }, [value]);
 
-  const handleInput = (e) => {
-    let input = e.target.value.replace(/\D/g, '').slice(0, 8);
-    let formatted = '';
-    if (input.length > 0) formatted = input.slice(0, 2);
-    if (input.length > 2) formatted += '/' + input.slice(2, 4);
-    if (input.length > 4) formatted += '/' + input.slice(4, 8);
+ const handleInput = (e) => {
+  let input = e.target.value.replace(/\D/g, '').slice(0, 8);
 
-    setDisplayValue(formatted);
+  let formatted = '';
 
-    if (input.length === 8) {
-      const isoDate = `${input.slice(4,8)}-${input.slice(2,4)}-${input.slice(0,2)}`;
-      onChange(isoDate);
-    } else {
-      onChange('');
-    }
-  };
+  if (input.length >= 2) {
+    formatted = input.slice(0, 2) + '/';
+  } else {
+    formatted = input;
+  }
+
+  if (input.length >= 4) {
+    formatted = input.slice(0, 2) + '/' + input.slice(2, 4) + '/';
+  } else if (input.length > 2) {
+    formatted = input.slice(0, 2) + '/' + input.slice(2);
+  }
+
+  if (input.length > 4) {
+    formatted =
+      input.slice(0, 2) +
+      '/' +
+      input.slice(2, 4) +
+      '/' +
+      input.slice(4, 8);
+  }
+
+  setDisplayValue(formatted);
+
+  if (input.length === 8) {
+    const isoDate = `${input.slice(4, 8)}-${input.slice(2, 4)}-${input.slice(0, 2)}`;
+    onChange(isoDate);
+  } else {
+    onChange('');
+  }
+};
 
   return (
     <div className="flex flex-col">

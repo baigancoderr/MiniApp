@@ -18,9 +18,9 @@ const WalletHero = () => {
 
   const walletData = [
   {
-    title: "TOTAL WALLET BALANCE",
+    title: "TOTAL BALANCE",
     value: "$1,540",
-    sub: "CPR + USDT Combined",
+    sub: "CPR + USDT",
   },
   
   {
@@ -34,7 +34,7 @@ const WalletHero = () => {
     sub: "Available Funds",
   },
   {
-    title: "AVAILABLE TO WITHDRAW",
+    title: "WITHDRAWABLE AMOUNT",
     value: "245 CPR",
     sub: "After 5% Burn",
   },
@@ -75,7 +75,7 @@ const WalletHero = () => {
         {/* ===== WALLET OVERVIEW ===== */}
         <div className="rounded-2xl p-3 border border-blue-500/20 shadow-2xl">
 
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-2">
             <h2 className="text-white font-semibold text-lg">
               Wallet Overview
             </h2>
@@ -156,8 +156,8 @@ const WalletHero = () => {
 
                       <div>
                         <div className="flex items-center gap-2">
-                          <Coins size={18} className="text-purple-400" />
-                          <span className="text-white font-semibold">
+                          <Coins size={16} className="text-purple-400" />
+                          <span className="text-white font-semibold text-xs">
                             {item.package} USDC
                           </span>
                         </div>
