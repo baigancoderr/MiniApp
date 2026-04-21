@@ -36,7 +36,7 @@ const ReferralEarningsHistory = () => {
     const currentData = filteredData.slice(indexOfFirst, indexOfLast);
 
     return (
-        <div className="min-h-screen flex justify-center px-2 py-3 pb-24 text-white bg-[#0B0F19]">
+        <div className="min-h-screen flex justify-center px-2 py-3 pb-24 text-white ">
             <div className="w-full max-w-md mx-auto">
 
                 {/* 🔷 HEADER */}
